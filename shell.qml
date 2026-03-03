@@ -3,18 +3,19 @@ import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell.Services.UPower
 import QtQuick
-import QtQuick.Layouts
+import QtQuick.Layouts 
+
 //import "~/.config/quickshell"
 
 /* Req:
     fonts: pixelon, orbitron
-
  */
+
 ShellRoot {
     id: root
 
     Colors {id:theme}
-
+    
     PanelWindow {
         id: bar
         height: 33
@@ -46,7 +47,7 @@ ShellRoot {
                     implicitHeight: 20
                     implicitWidth: 20
                     radius: 10
-                    color: modelData.active ? theme.primary : theme.on_primary_fixed
+                    color: modelData.active ? theme.primary : theme.on_primary
 
                     MouseArea {
                         anchors.fill: parent
