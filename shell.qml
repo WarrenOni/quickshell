@@ -16,6 +16,7 @@ import "./modules/Widget/"
 ShellRoot{ 
     id: root
     Colors {id:theme}
+    
 
      //pipewire_audio
     property var defaultAudioSink: Pipewire.defaultAudioSink

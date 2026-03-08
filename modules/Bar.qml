@@ -10,7 +10,10 @@ import QtQuick.Layouts
 
 
 PanelWindow {
-
+        Extnded_clk{
+            id: menu
+            anchors.top: bar.bottom
+        }
         //-------vol
         property int volume: 0
         property bool volumeMuted: false
@@ -18,7 +21,7 @@ PanelWindow {
         //----------
 
         id: bar
-        height: 33
+        height: 33 + menu.height
         color:"transparent"
 
         anchors{
@@ -67,7 +70,7 @@ PanelWindow {
                 anchors.right: parent.right
                 anchors.rightMargin: 10
                 radius: 20
-                border.color: UPower.displayDevice.percentage < 0.20 ? "#f00" : theme.on_primary
+                border.color: UPower.displayDevice.charging ? "#0f0" : (UPower.displayDevice.percentage < 0.20 ? "#f00" : theme.on_primary)
                 color: theme.background
                 border.width: 1
                 implicitHeight: 25
@@ -80,7 +83,7 @@ PanelWindow {
                 anchors.right: parent.right
                 radius: 20
                 border.width:0.5
-                color: UPower.displayDevice.percentage < 0.20 ? "#f00" : theme.on_primary
+                color: UPower.displayDevice.charging ? "#0f0" : (UPower.displayDevice.percentage < 0.20 ? "#f00" : theme.on_primary)
                 implicitHeight: 25
                 implicitWidth: UPower.displayDevice.percentage * 100
                 anchors.verticalCenterOffset: 0
@@ -107,15 +110,30 @@ PanelWindow {
             color: theme.on_primary
             anchors.centerIn: parent
             anchors.verticalCenterOffset: -0.5
-        Text {
+            MouseArea{
+                anchors.fill: parent
+                onClicked: menu.open = !menu.open
+            }
+
+        SystemClock{
             id: clock
+            precision: SystemClock.Minutes
+
+        }
+
+        Text {
             color: "white"
             anchors.centerIn:parent
             font.pixelSize: 18
             font.italic: true
             font.bold: true
             font.family: "Orbitron"
-            text: Qt.formatDateTime(new Date(), "hh:mm")
+            text: Qt.formatDateTime(clock.date, "hh:mm")
+             MouseArea{
+                anchors.fill: parent
+                onClicked: menu.open = !menu.open
+            }
+
         }}
 
         // Volume
@@ -158,19 +176,7 @@ PanelWindow {
             text: volumeMuted ? "Muted" : volume + "%"
         }
                 }
-/*
-        Volume {
-            id: volumeWidget
-            anchors{
-                right: parent.right
-                rightMargin: 5
-                verticalCenter: parent.verticalCenter
-                verticalCenterOffset: -0.5 
-            }
-            shell: bar
-            volume: bar.volume
-            volumeMuted: bar.volumeMuted
-        }*/
-        
+
     }
-    }
+}
+
