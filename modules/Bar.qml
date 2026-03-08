@@ -62,11 +62,12 @@ PanelWindow {
             
             // 🔹 Battery
             Rectangle{
+                id: containerRect
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin: 10
                 radius: 20
-                border.color: theme.on_primary
+                border.color: UPower.displayDevice.percentage < 0.20 ? "#f00" : theme.on_primary
                 color: theme.background
                 border.width: 1
                 implicitHeight: 25
@@ -74,27 +75,27 @@ PanelWindow {
                 anchors.verticalCenterOffset: -0.5
             
             Rectangle{
+                id: innerFill
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 radius: 20
+                border.width:0.5
                 color: UPower.displayDevice.percentage < 0.20 ? "#f00" : theme.on_primary
                 implicitHeight: 25
                 implicitWidth: UPower.displayDevice.percentage * 100
-                anchors.verticalCenterOffset: -0.5
-            
+                anchors.verticalCenterOffset: 0
+            }
             Text {
+                id: innerText
                 color: "white"
                 anchors.centerIn: parent
                 font.pixelSize: 15
                 font.italic: true
                 font.family: "Pixelon"
                 font.bold: UPower.displayDevice.percentage < 0.20 ? true : false
-                text: Math.round(UPower.displayDevice.percentage * 100) + " %"
+                text: Math.round(UPower.displayDevice.percentage * 100) + "%"
                 visible: UPower.displayDevice.present
-                //Layout.rightMargin: 2
-                anchors.verticalCenterOffset: 1.5
-                
-            }}
+            }
 
         }}
 
@@ -119,19 +120,35 @@ PanelWindow {
 
         // Volume
         Rectangle{
+            id: volumeContainer
             anchors{
                 right: parent.right
                 rightMargin: 100
                 verticalCenter: parent.verticalCenter
                 verticalCenterOffset: -0.5
             }
-            color: theme.on_primary
+            color: theme.background
             radius: 20
+            border.width: 1
+            border.color: theme.on_primary
             implicitWidth: 80
             implicitHeight: 25
+                
+        Rectangle{
+            anchors{
+                right: parent.right
+                rightMargin: 0
+                verticalCenter: parent.verticalCenter
+                verticalCenterOffset: -0.5
+            }
+            color: theme.on_primary
+            radius: 20
+            implicitWidth: volume * 0.8
+            implicitHeight: 25
+            }
         Text{
              color: "white"
-            anchors.centerIn: parent
+            anchors.centerIn: volumeContainer
             font.pixelSize: 15
             font.italic: true
             font.family: "Pixelon"
@@ -140,6 +157,7 @@ PanelWindow {
             anchors.verticalCenterOffset: 1.5
             text: volumeMuted ? "Muted" : volume + "%"
         }
+                }
 /*
         Volume {
             id: volumeWidget
@@ -153,6 +171,6 @@ PanelWindow {
             volume: bar.volume
             volumeMuted: bar.volumeMuted
         }*/
-        }
+        
     }
     }
