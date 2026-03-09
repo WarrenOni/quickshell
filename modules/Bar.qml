@@ -10,10 +10,7 @@ import QtQuick.Layouts
 
 
 PanelWindow {
-        Extnded_clk{
-            id: menu
-            anchors.top: bar.bottom
-        }
+
         //-------vol
         property int volume: 0
         property bool volumeMuted: false
@@ -21,8 +18,8 @@ PanelWindow {
         //----------
 
         id: bar
-        height: 33 + menu.height
-        color:"transparent"
+        height: 33 //+ menu.height
+        color: theme.background
 
         anchors{
             top: true
@@ -30,12 +27,14 @@ PanelWindow {
             right: true
         }
 
+        //MENU
+                    
+        Extnded_clk{
+            id: menu2
+            bar: bar
+            //anchors.bottom: parent.bottom
+        }
 
-        Rectangle{
-        anchors.fill: parent 
-        color: theme.background
-        bottomLeftRadius:20
-        bottomRightRadius: 20
 
         RowLayout {
             anchors.fill: parent     
@@ -70,7 +69,7 @@ PanelWindow {
                 anchors.right: parent.right
                 anchors.rightMargin: 10
                 radius: 20
-                border.color: UPower.displayDevice.charging ? "#0f0" : (UPower.displayDevice.percentage < 0.20 ? "#f00" : theme.on_primary)
+                border.color: UPower.displayDevice.percentage < 0.25 ? "#f00" : theme.on_primary
                 color: theme.background
                 border.width: 1
                 implicitHeight: 25
@@ -83,10 +82,11 @@ PanelWindow {
                 anchors.right: parent.right
                 radius: 20
                 border.width:0.5
-                color: UPower.displayDevice.charging ? "#0f0" : (UPower.displayDevice.percentage < 0.20 ? "#f00" : theme.on_primary)
+                color: UPower.displayDevice.percentage < 0.25 ? "#f00" : theme.on_primary
                 implicitHeight: 25
                 implicitWidth: UPower.displayDevice.percentage * 100
                 anchors.verticalCenterOffset: 0
+    
             }
             Text {
                 id: innerText
@@ -95,7 +95,7 @@ PanelWindow {
                 font.pixelSize: 15
                 font.italic: true
                 font.family: "Pixelon"
-                font.bold: UPower.displayDevice.percentage < 0.20 ? true : false
+                font.bold: UPower.displayDevice.percentage < 0.25 ? true : false
                 text: Math.round(UPower.displayDevice.percentage * 100) + "%"
                 visible: UPower.displayDevice.present
             }
@@ -112,7 +112,7 @@ PanelWindow {
             anchors.verticalCenterOffset: -0.5
             MouseArea{
                 anchors.fill: parent
-                onClicked: menu.open = !menu.open
+                onClicked: menu2.open = !menu2.open
             }
 
         SystemClock{
@@ -129,12 +129,8 @@ PanelWindow {
             font.bold: true
             font.family: "Orbitron"
             text: Qt.formatDateTime(clock.date, "hh:mm")
-             MouseArea{
-                anchors.fill: parent
-                onClicked: menu.open = !menu.open
-            }
-
         }}
+
 
         // Volume
         Rectangle{
@@ -177,6 +173,6 @@ PanelWindow {
         }
                 }
 
-    }
+    
 }
 

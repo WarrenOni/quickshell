@@ -1,15 +1,22 @@
-import QtQuick
-import QtQuick.Layouts
-import QtQuick.Controls
-import QtQuick.Window
-import QtQuick.Shapes 
 import Quickshell
+import QtQuick
 
-Item {
+PopupWindow {
+    property bool open: false
+    property var bar   // reference to the bar window
+    color: "transparent"
+    visible: open
+    implicitWidth: 720
+    implicitHeight: 450
+    
+    anchor.window: bar
+    anchor.rect.x: bar.width / 2 - implicitWidth / 2
+    anchor.rect.y: bar.height
 
-    width: 000
-    visible: false
-    Rectangle{
-        
+    Rectangle {
+        anchors.fill: parent
+        bottomLeftRadius: 15
+        bottomRightRadius: 15
+        color: theme.background
     }
 }
