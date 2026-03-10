@@ -10,7 +10,7 @@ import QtQuick.Layouts
 
 
 PanelWindow {
-
+    
         //-------vol
         property int volume: 0
         property bool volumeMuted: false
@@ -19,8 +19,7 @@ PanelWindow {
 
         id: bar
         height: 33 //+ menu.height
-        color: theme.background
-
+        color: "transparent"
         anchors{
             top: true
             left: true
@@ -35,7 +34,12 @@ PanelWindow {
             //anchors.bottom: parent.bottom
         }
 
-
+        Rectangle{
+            color: theme.background
+            anchors.fill: parent
+            bottomLeftRadius: 30
+            bottomRightRadius: 30
+            
         RowLayout {
             anchors.fill: parent     
             anchors.leftMargin: 10       
@@ -173,6 +177,6 @@ PanelWindow {
         }
                 }
 
-    
+    }
 }
 
