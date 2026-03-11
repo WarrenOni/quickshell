@@ -17,7 +17,7 @@ get_icon() {
     fi
 }
 
-CURRENT_RAW=$(nmcli -t -f active,ssid,signal,security device wifi | grep "^yes")
+CURRENT_RAW=$(nmcli -t -f active,ssid,signal,security device wifi --rescan yes | grep "^yes")
 
 if [[ -n "$CURRENT_RAW" ]]; then
     IFS=':' read -r active ssid signal security <<< "$CURRENT_RAW"
