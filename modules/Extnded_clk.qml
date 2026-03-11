@@ -16,24 +16,38 @@ PopupWindow {
         id: get_connection_name
         running: true
 
-        command: ["bash","-c","~/.config/quickshell/modules/Widget/Wifi_backend.sh"]
+        command: ["sh", "-c","~/.config/quickshell/modules/Widget/Wifi_backend.sh"]
 
         stdout: StdioCollector{
             // ✅ CHANGED: safer way to read output
             onTextChanged: {
                 try {
-                    wifiData = JSON.parse(text)
+                    wifiData = JSON.parse(text.trim())
                 } catch(e) {
-                    console.log("wifi parse error", e)
+                    console.log("wifi passed", data)
                 }
             }
+            onRead: (wifiData) => { try { wifiData = JSON.parse(data) } catch(e){console.log("wifi parse error", e)} }
         }
+        
     }
     Timer {
-    interval: 5000
-    running: menu.open
-    repeat: true
-    onTriggered: get_connection_name.start()
+        id: wifiRefresh
+        interval: 5000
+        running: menu.open
+        repeat: true
+        onTriggered: { 
+            get_connection_name.running = false
+            get_connection_name.running = true
+
+            }
+    }
+    
+    onOpenChanged:{
+        if(open) { 
+        get_connection_name.running = false
+        get_connection_name.running = true
+        }
     }
 
     property var bar
@@ -70,7 +84,7 @@ PopupWindow {
         width: 190
         height: 190
         radius: 100
-        color: "#6faed1"
+        color: theme.secondary
 
         anchors.centerIn: parent
 
@@ -102,7 +116,7 @@ PopupWindow {
         height: 90
         radius: 40
 
-        color: theme.on_primary
+        color: theme.on_secondary
         anchors{
             bottom: parent.verticalCenter
             left: parent.horizontalCenter
@@ -131,17 +145,19 @@ PopupWindow {
             anchors.right: parent.right
             id: scan_pan
             visible: scan_vis 
-            height: 30
-            width: 20
+            height: 200
+            width: 300
             radius: 20
-            color: theme.background
+            color: theme.on_secondary
+            anchors.centerIn: parent
+            z: 4
         Column{
             id: networkList
             
             spacing: 8
             anchors{
                 right: parent.right
-                rightMargin: 40
+                rightMargin: parent.width/6
                 verticalCenter: parent.verticalCenter
 
             }
@@ -153,7 +169,7 @@ PopupWindow {
                     width: 200
                     height: 40
                     radius: 10
-                    color: "lightgreen"
+                    color: theme.secondary
                     MouseArea{
                             anchors.fill: parent
                             onClicked:{
@@ -190,9 +206,18 @@ PopupWindow {
             anchors.fill: parent
             onClicked: menu.scan_vis = !menu.scan_vis
         }
+        Column{
+            anchors.centerIn: parent
         Text{
             text: "Scan Networks" 
-            color: "white"
+            color: "black"
+            font.pixelSize:17
+            font.family: "ESPACION"
+            font.italic: true
+        }
+        Text{
+            text:"--"
+        }
         }
 
     }

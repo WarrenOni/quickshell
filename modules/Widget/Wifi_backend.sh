@@ -34,8 +34,8 @@ else
     CONNECTED_JSON="null"
 fi
 
-NETWORKS_JSON=$(nmcli -t -f active,ssid,signal,security device wifi list --rescan yes | \
-    awk -F: '!seen[$2]++ && $2 != "" && $1 != "yes" {print $2":"$3":"$4}' | \
+NETWORKS_JSON=$(nmcli -t -f active,ssid,signal,security device wifi list | \
+    awk -F: '$3 > 10 && !seen[$2]++ && $2 != "" && $1 != "yes" {print $2":"$3":"$4}' | \
     head -n 20 | \
     while IFS=':' read -r ssid signal security; do
         icon=$(get_icon "$signal")
