@@ -7,7 +7,6 @@ import Quickshell.Io
 PopupWindow {
     id: menu
 
-    // ✅ ADDED: property so QML can bind the value
     property string activename: ""
     property var wifiData: ({})
 
@@ -19,7 +18,6 @@ PopupWindow {
         command: ["sh", "-c","~/.config/quickshell/modules/Widget/Wifi_backend.sh"]
 
         stdout: StdioCollector{
-            // ✅ CHANGED: safer way to read output
             onTextChanged: {
                 try {
                     wifiData = JSON.parse(text.trim())
@@ -81,13 +79,14 @@ PopupWindow {
         }
 
     Rectangle {
+        id: circ_cent
         width: 190
         height: 190
         radius: 100
         color: theme.secondary
-
+        border.width: 20
+        border.color: "#80ffffff"
         anchors.centerIn: parent
-
         Column {
             anchors.centerIn: parent
             spacing: 3
@@ -108,7 +107,7 @@ PopupWindow {
                 text: wifiData.connected ? "Connected" : "Disconnected"
                 font.pixelSize: 12
             }
-        }   
+        }  
 
     
     Rectangle{
@@ -125,7 +124,7 @@ PopupWindow {
         Column{
             anchors.centerIn: parent
             Text{
-                color: wifi.connected && wifiData.connected.signal < 30 ? "red"  : "black"
+                color: wifiData.connected && wifiData.connected.signal < 30 ? "red"  : "black"
                 text: wifiData.connected ? wifiData.connected.signal + " % " : "---"
                 font.pixelSize: 20
                 font.family: "Pixelon"
@@ -145,19 +144,38 @@ PopupWindow {
             anchors.right: parent.right
             id: scan_pan
             visible: scan_vis 
-            height: 200
-            width: 300
+            height: scan_vis ? networkList.implicitHeight + 40 : 0
+            width: scan_vis ? 250 : 0
+            opacity: scan_vis ? 1: 0
             radius: 20
+            clip: true
             color: theme.on_secondary
             anchors.centerIn: parent
             z: 4
-        Column{
+
+            Behavior on width {
+            NumberAnimation{
+                duration: 200
+                easing.type: Easing.InCubic
+            }}
+            Behavior on height {
+            NumberAnimation{
+                duration: 400
+                easing.type: Easing.InCubic
+            }}
+            Behavior on opacity {
+            NumberAnimation{
+                duration: 200
+                easing.type: Easing.InCubic
+            }}
+
+            Column{
             id: networkList
             
             spacing: 8
             anchors{
                 right: parent.right
-                rightMargin: parent.width/6
+                rightMargin: parent.width/9.5
                 verticalCenter: parent.verticalCenter
 
             }
@@ -191,6 +209,7 @@ PopupWindow {
             }
         }
     }
+
     Rectangle{
         width: 190
         height: 90
@@ -209,14 +228,15 @@ PopupWindow {
         Column{
             anchors.centerIn: parent
         Text{
-            text: "Scan Networks" 
-            color: "black"
+            text: "Scan Networks"
+            color: "white"
             font.pixelSize:17
             font.family: "ESPACION"
             font.italic: true
         }
         Text{
             text:"--"
+            color: "white"
         }
         }
 

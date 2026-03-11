@@ -19,7 +19,7 @@ PanelWindow {
         //----------
 
         id: bar
-        height: 33 //+ menu.height
+        implicitHeight: 33 //+ menu.height
         color: "transparent"
         anchors{
             top: true
@@ -70,12 +70,11 @@ PanelWindow {
             // 🔹 Battery
             Rectangle{
                 id: containerRect
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: 10
+                Layout.alignment:Qt.AlignRight
+                Layout.rightMargin: 10
                 radius: 20
                 border.color: UPower.displayDevice.percentage < 0.25 ? "#f00" : theme.on_primary
-                color: theme.background
+                color: "transparent"
                 border.width: 1
                 implicitHeight: 25
                 implicitWidth: 80
@@ -102,7 +101,6 @@ PanelWindow {
                 font.family: "Pixelon"
                 font.bold: UPower.displayDevice.percentage < 0.25 ? true : false
                 text: Math.round(UPower.displayDevice.percentage * 100) + "%"
-                visible: UPower.displayDevice.present
             }
 
         }}
