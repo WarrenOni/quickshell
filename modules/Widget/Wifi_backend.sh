@@ -17,7 +17,7 @@ get_icon() {
     fi
 }
 
-CURRENT_RAW=$(nmcli -t -f active,ssid,signal,security device wifi --rescan yes | grep "^yes")
+CURRENT_RAW=$(nmcli -t -f active,ssid,signal,security device wifi | grep "^yes")
 
 if [[ -n "$CURRENT_RAW" ]]; then
     IFS=':' read -r active ssid signal security <<< "$CURRENT_RAW"
@@ -34,7 +34,7 @@ else
     CONNECTED_JSON="null"
 fi
 
-NETWORKS_JSON=$(nmcli -t -f active,ssid,signal,security device wifi list | \
+NETWORKS_JSON=$(nmcli -t -f active,ssid,signal,security device wifi list --rescan yes | \
     awk -F: '!seen[$2]++ && $2 != "" && $1 != "yes" {print $2":"$3":"$4}' | \
     head -n 20 | \
     while IFS=':' read -r ssid signal security; do
