@@ -10,7 +10,7 @@ import "./modules/Widget/"
 //import "~/.config/quickshell"
 
 /* Req:
-    fonts: pixelon, orbitron
+    fonts: pixelon, orbitron, Whispering Signature\-Personal use
  */
 
 ShellRoot{ 
@@ -19,6 +19,7 @@ ShellRoot{
     
 
      //pipewire_audio
+    property string whispering: "Whispering Signature\-Personal use"
     property var defaultAudioSink: Pipewire.defaultAudioSink
     property int volume: defaultAudioSink && defaultAudioSink.audio 
         ? Math.round(defaultAudioSink.audio.volume * 100) : 0
@@ -33,6 +34,7 @@ ShellRoot{
         active: true
         sourceComponent: Bar {
             // forward audio properties from the shell root
+            whispering: root.whispering
             volume: root.volume
             volumeMuted: root.volumeMuted
             defaultAudioSink: root.defaultAudioSink

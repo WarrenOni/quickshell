@@ -9,24 +9,36 @@ PopupWindow {
 
     // ✅ ADDED: property so QML can bind the value
     property string activename: ""
+    property var wifiData: ({})
 
+    Process{id:connectProc}
     Process{
         id: get_connection_name
         running: true
 
-        command: ["bash","-c","nmcli -g NAME connection show --active | head -n 1"]
+        command: ["bash","-c","~/.config/quickshell/modules/Widget/Wifi_backend.sh"]
 
         stdout: StdioCollector{
             // ✅ CHANGED: safer way to read output
             onTextChanged: {
-                activename = text.trim()
-                console.log("found:", activename)
+                try {
+                    wifiData = JSON.parse(text)
+                } catch(e) {
+                    console.log("wifi parse error", e)
+                }
             }
         }
+    }
+    Timer {
+    interval: 5000
+    running: menu.open
+    repeat: true
+    onTriggered: get_connection_name.start()
     }
 
     property var bar
     property bool open : false
+    property bool scan_vis : false
 
     visible: open || panel.height > 0
     color: "transparent"
@@ -54,34 +66,139 @@ PopupWindow {
             }
         }
 
-        Rectangle{
-            id: network
-            width: 150
-            height: 50
-            radius: 50
-            color: theme.primary
+    Rectangle {
+        width: 190
+        height: 190
+        radius: 100
+        color: "#6faed1"
 
-            anchors{
-                left: parent.left
-                top: parent.top
-                leftMargin: 20
-                topMargin: 20
+        anchors.centerIn: parent
+
+        Column {
+            anchors.centerIn: parent
+            spacing: 3
+
+            Text {
+                font.family: "Symbols Nerd Font"
+                text: wifiData.connected ? wifiData.connected.icon : "󰤮"
+                font.pixelSize: 50
             }
 
+            Text {
+                text: wifiData.connected ? wifiData.connected.ssid : "Not Connected"
+                font.pixelSize: 16
+            }
+
+            Text {
+                
+                text: wifiData.connected ? "Connected" : "Disconnected"
+                font.pixelSize: 12
+            }
+        }   
+
+    
+    Rectangle{
+        width: 190
+        height: 90
+        radius: 40
+
+        color: theme.on_primary
+        anchors{
+            bottom: parent.verticalCenter
+            left: parent.horizontalCenter
+            leftMargin: -320
+        }
+        Column{
+            anchors.centerIn: parent
             Text{
-                id: connection_text
-                color: "black"
-
-                text:"󰖩 " + "  |" + "  "+ activename
-
+                color: wifi.connected && wifiData.connected.signal < 30 ? "red"  : "black"
+                text: wifiData.connected ? wifiData.connected.signal + " % " : "---"
+                font.pixelSize: 20
                 font.family: "Pixelon"
-                font.pixelSize: 18
-                anchors.centerIn: parent
+                font.italic: true
+            }
+            Text{
+                text: "Signal Strength"
+                font.pixelSize:17
+                font.family: "ESPACION"
+                font.italic: true
+            }
+        }
 
-                MouseArea{
-                    onClicked: get_connection_name.running = true
+    }
+
+    Rectangle{
+            anchors.right: parent.right
+            id: scan_pan
+            visible: scan_vis 
+            height: 30
+            width: 20
+            radius: 20
+            color: theme.background
+        Column{
+            id: networkList
+            
+            spacing: 8
+            anchors{
+                right: parent.right
+                rightMargin: 40
+                verticalCenter: parent.verticalCenter
+
+            }
+
+            Repeater{
+                model: wifiData.networks ? wifiData.networks: []
+                visible: scan_vis 
+                Rectangle{
+                    width: 200
+                    height: 40
+                    radius: 10
+                    color: "lightgreen"
+                    MouseArea{
+                            anchors.fill: parent
+                            onClicked:{
+                                connectProc.command = [
+                                    "bash", "-c", "nmcli device wifi connect '" + modelData.ssid + "'"
+                                ]
+                                connectProc.start()
+                            }
+                        }
+
+                    Row{
+                        anchors.centerIn:parent
+                        spacing: 4
+                        Text{text: modelData.icon}
+                        Text{text: modelData.ssid}
+                        Text{text: modelData.signal + "%"}
+                    }
                 }
             }
         }
+    }
+    Rectangle{
+        width: 190
+        height: 90
+        radius: 40
+
+        color: theme.on_primary
+        anchors{
+            bottom: parent.bottom
+            right: parent.right
+            rightMargin: -220
+        }
+        MouseArea{
+            anchors.fill: parent
+            onClicked: menu.scan_vis = !menu.scan_vis
+        }
+        Text{
+            text: "Scan Networks" 
+            color: "white"
+        }
+
+    }
+
+
+    
+    }
     }
 }

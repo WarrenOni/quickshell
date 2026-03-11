@@ -12,6 +12,7 @@ import QtQuick.Layouts
 PanelWindow {
     
         //-------vol
+        property string whispering: ""
         property int volume: 0
         property bool volumeMuted: false
         property var defaultAudioSink
