@@ -9,6 +9,7 @@ PopupWindow {
 
     property string activename: ""
     property var wifiData: ({})
+    property int radii: 0
 
     Process{id:connectProc}
     Process{
@@ -77,15 +78,45 @@ PopupWindow {
                 easing.type: Easing.InOutCirc
             }
         }
+    Item{
+        anchors.centerIn:parent
+        width: circ_cent.width + 300
+        height: width
+    Rectangle{
+        id: raddii
 
+        width: circ_cent.height
+        height: width
+        radius: width/2
+        color: theme.on_tertiary
+        opacity: 1
+        anchors.centerIn:parent
+
+        ParallelAnimation{
+            running: menu.open
+            loops: Animation.Infinite
+
+            NumberAnimation{
+                target: raddii
+                property: "width"
+                to: circ_cent.height + 300
+                duration: 1200
+            }
+            NumberAnimation{
+                target: raddii
+                property: "opacity"
+                to: 0
+                duration: 1200
+            }
+            }
+    }
+            
     Rectangle {
         id: circ_cent
         width: 190
         height: 190
         radius: 100
         color: theme.secondary
-        border.width: 20
-        border.color: "#80ffffff"
         anchors.centerIn: parent
         Column {
             anchors.centerIn: parent
@@ -108,7 +139,6 @@ PopupWindow {
                 font.pixelSize: 12
             }
         }  
-
     
     Rectangle{
         width: 190
@@ -246,4 +276,5 @@ PopupWindow {
     
     }
     }
-}
+    }
+    }
