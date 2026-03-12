@@ -3,15 +3,20 @@ import Quickshell
 import QtQuick
 import Quickshell.Io
 //import QtQuick.Shapes
+import "./Widget"
 
 PopupWindow {
     id: menu
-
-    property string activename: ""
     property var wifiData: ({})
-    property int radii: 0
+    property var bar
+    property bool open : false
+    property bool scan_vis : false
 
-    Process{id:connectProc}
+    Process{
+        id:connectProc
+        onStarted : console.log("connect started")
+        onExited: console.log("connect finished")
+    }
     Process{
         id: get_connection_name
         running: true
@@ -23,7 +28,7 @@ PopupWindow {
                 try {
                     wifiData = JSON.parse(text.trim())
                 } catch(e) {
-                    console.log("wifi passed", data)
+                    console.log("wifi passed")
                 }
             }
             onRead: (wifiData) => { try { wifiData = JSON.parse(data) } catch(e){console.log("wifi parse error", e)} }
@@ -49,9 +54,6 @@ PopupWindow {
         }
     }
 
-    property var bar
-    property bool open : false
-    property bool scan_vis : false
 
     visible: open || panel.height > 0
     color: "transparent"
@@ -76,205 +78,28 @@ PopupWindow {
             NumberAnimation {
                 duration: 200
                 easing.type: Easing.InOutCirc
-            }
-        }
-    Item{
-        anchors.centerIn:parent
-        width: circ_cent.width + 300
-        height: width
-    Rectangle{
-        id: raddii
+            }}
 
-        width: circ_cent.height
-        height: width
-        radius: width/2
-        color: theme.on_tertiary
-        opacity: 1
-        anchors.centerIn:parent
-
-        ParallelAnimation{
-            running: menu.open
-            loops: Animation.Infinite
-
-            NumberAnimation{
-                target: raddii
-                property: "width"
-                to: circ_cent.height + 300
-                duration: 1200
-            }
-            NumberAnimation{
-                target: raddii
-                property: "opacity"
-                to: 0
-                duration: 1200
-            }
-            }
-    }
-            
-    Rectangle {
-        id: circ_cent
-        width: 190
-        height: 190
-        radius: 100
-        color: theme.secondary
-        anchors.centerIn: parent
-        Column {
+        Ripple {
             anchors.centerIn: parent
-            spacing: 3
-
-            Text {
-                font.family: "Symbols Nerd Font"
-                text: wifiData.connected ? wifiData.connected.icon : "󰤮"
-                font.pixelSize: 50
-            }
-
-            Text {
-                text: wifiData.connected ? wifiData.connected.ssid : "Not Connected"
-                font.pixelSize: 16
-            }
-
-            Text {
-                
-                text: wifiData.connected ? "Connected" : "Disconnected"
-                font.pixelSize: 12
-            }
-        }  
-    
-    Rectangle{
-        width: 190
-        height: 90
-        radius: 40
-
-        color: theme.on_secondary
-        anchors{
-            bottom: parent.verticalCenter
-            left: parent.horizontalCenter
-            leftMargin: -320
+            running: menu.open && menu.wifiData.connected
         }
-        Column{
+
+        Wifi_circle_comp {
             anchors.centerIn: parent
-            Text{
-                color: wifiData.connected && wifiData.connected.signal < 30 ? "red"  : "black"
-                text: wifiData.connected ? wifiData.connected.signal + " % " : "---"
-                font.pixelSize: 20
-                font.family: "Pixelon"
-                font.italic: true
-            }
-            Text{
-                text: "Signal Strength"
-                font.pixelSize:17
-                font.family: "ESPACION"
-                font.italic: true
-            }
+            wifiData: menu.wifiData
+            connectProc: connectProc
         }
-
-    }
-
-    Rectangle{
-            anchors.right: parent.right
-            id: scan_pan
-            visible: scan_vis 
-            height: scan_vis ? networkList.implicitHeight + 40 : 0
-            width: scan_vis ? 250 : 0
-            opacity: scan_vis ? 1: 0
-            radius: 20
+        
+        Wifi_scan_panel {
+            scan_vis : menu.scan_vis
+            wifiData: menu.wifiData
+            connectProc: connectProc
+        }
+        Background{
+            id: bg
+            open: menu.open
             clip: true
-            color: theme.on_secondary
-            anchors.centerIn: parent
-            z: 4
-
-            Behavior on width {
-            NumberAnimation{
-                duration: 200
-                easing.type: Easing.InCubic
-            }}
-            Behavior on height {
-            NumberAnimation{
-                duration: 400
-                easing.type: Easing.InCubic
-            }}
-            Behavior on opacity {
-            NumberAnimation{
-                duration: 200
-                easing.type: Easing.InCubic
-            }}
-
-            Column{
-            id: networkList
-            
-            spacing: 8
-            anchors{
-                right: parent.right
-                rightMargin: parent.width/9.5
-                verticalCenter: parent.verticalCenter
-
-            }
-
-            Repeater{
-                model: wifiData.networks ? wifiData.networks: []
-                visible: scan_vis 
-                Rectangle{
-                    width: 200
-                    height: 40
-                    radius: 10
-                    color: theme.secondary
-                    MouseArea{
-                            anchors.fill: parent
-                            onClicked:{
-                                connectProc.command = [
-                                    "bash", "-c", "nmcli device wifi connect '" + modelData.ssid + "'"
-                                ]
-                                connectProc.start()
-                            }
-                        }
-
-                    Row{
-                        anchors.centerIn:parent
-                        spacing: 4
-                        Text{text: modelData.icon}
-                        Text{text: modelData.ssid}
-                        Text{text: modelData.signal + "%"}
-                    }
-                }
-            }
         }
     }
-
-    Rectangle{
-        width: 190
-        height: 90
-        radius: 40
-
-        color: theme.on_primary
-        anchors{
-            bottom: parent.bottom
-            right: parent.right
-            rightMargin: -220
-        }
-        MouseArea{
-            anchors.fill: parent
-            onClicked: menu.scan_vis = !menu.scan_vis
-        }
-        Column{
-            anchors.centerIn: parent
-        Text{
-            text: "Scan Networks"
-            color: "white"
-            font.pixelSize:17
-            font.family: "ESPACION"
-            font.italic: true
-        }
-        Text{
-            text:"--"
-            color: "white"
-        }
-        }
-
-    }
-
-
-    
-    }
-    }
-    }
-    }
+}
