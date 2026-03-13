@@ -6,7 +6,7 @@ Item{
     property bool running: false
     property int circleSize: 190
 
-
+    
     anchors.centerIn:parent
 
     width: running ? parent.height : 0
@@ -27,24 +27,24 @@ Item{
         color: theme.on_tertiary
         opacity: 1
         anchors.centerIn:parent
-        
+
         ParallelAnimation{
             running: root.running
             loops: Animation.Infinite
-            
-
             NumberAnimation{
                 target: raddii
                 property: "width"
                 to: 490
-                duration: 1200
+                duration: 3000
             }
             NumberAnimation{
                 target: raddii
                 property: "opacity"
                 to: 0
-                duration: 1200
+                duration: 3000
+                easing: Easing.OutCirc
             }
             }
+
 }
 }

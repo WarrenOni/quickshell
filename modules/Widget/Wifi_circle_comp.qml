@@ -48,18 +48,24 @@ Item{
             Text {
                 font.family: "Symbols Nerd Font"
                 text: wifiData.connected ? wifiData.connected.icon : "󰤮"
-                font.pixelSize: 50
+                font.pixelSize: 60
+                anchors.horizontalCenter: parent.horizontalCenter
             }
 
             Text {
+                id: wifi_text1
                 text: wifiData.connected ? wifiData.connected.ssid : "Not Connected"
                 font.pixelSize: 16
+                font.family: whispering
+                anchors.horizontalCenter: parent.horizontalCenter
             }
 
             Text {
                 
                 text: wifiData.connected ? "Connected" : "Disconnected"
                 font.pixelSize: 12
+                font.family: wifi_text1.font.family
+                anchors.horizontalCenter: parent.horizontalCenter                
             }
         }  
     }

@@ -1,7 +1,8 @@
     import QtQuick
     import Quickshell
     import QtQuick.Layouts
-    
+    import QtQuick.Effects
+
     Item{
         id: root
         property var wifiData: ({})
@@ -21,8 +22,18 @@
             clip: true
             color: theme.on_secondary
             anchors.centerIn: parent
-            z: 4
 
+            MultiEffect{
+                source: parent
+                anchors.fill: parent
+                shadowBlur: 1.0
+                shadowEnabled: true
+                shadowColor: "black"
+                shadowVerticalOffset: 20
+                shadowHorizontalOffset: 20
+            }
+
+            z: 4
             Behavior on height {
             NumberAnimation{
                 duration: 400
@@ -73,6 +84,7 @@
             }
         }
     }
+    
 
     Rectangle{
         width: 190

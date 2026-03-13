@@ -7,7 +7,6 @@ Item{
     height: parent.height 
     opacity: 0.1
     visible: open
-    clip: true
 
     // --- Minimal Morphing Shape ---
 Rectangle {
@@ -17,6 +16,7 @@ Rectangle {
         opacity: 0.6
         rotation: 45
         radius: 50
+        clip: true
         
         // Starting position
         x: 0; y: 0
@@ -65,6 +65,7 @@ Rectangle {
         opacity: 0.6
         rotation: 45
         radius: 50
+        clip: true
         
         // Starting position
 

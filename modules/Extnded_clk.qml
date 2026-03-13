@@ -37,7 +37,7 @@ PopupWindow {
     }
     Timer {
         id: wifiRefresh
-        interval: 5000
+        interval: 3000
         running: menu.open
         repeat: true
         onTriggered: { 
@@ -64,7 +64,7 @@ PopupWindow {
     // position under bar
     anchor.window: bar
     anchor.rect.x: bar.width / 2 - implicitWidth / 2
-    anchor.rect.y: bar.height
+    anchor.rect.y: bar.height - 0.51
 
     Rectangle {
         id: panel
@@ -83,6 +83,7 @@ PopupWindow {
         Ripple {
             anchors.centerIn: parent
             running: menu.open && menu.wifiData.connected
+
         }
 
         Wifi_circle_comp {
