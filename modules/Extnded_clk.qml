@@ -102,5 +102,26 @@ PopupWindow {
             open: menu.open
             clip: true
         }
+
+
+        PillBut{
+            label: "Wi-Fi"
+            icon: ""
+            pillscale: 1.1
+            voff: 200
+            hoff: -45
+            fcus: true
+         }
+        PillBut{
+            label: "Bluetooth"
+            icon: ""
+            pillscale: 1.1
+            pillwidth: 1.5
+            voff: 200
+            fcus: false
+            hoff: 45
+        }
+
+
     }
 }
