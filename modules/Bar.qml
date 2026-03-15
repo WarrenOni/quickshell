@@ -47,7 +47,6 @@ PanelWindow {
             spacing: 5
             // 🔹 Workspaces
             Repeater {
-                
                 model: Hyprland.workspaces
 
                     Rectangle {
@@ -67,7 +66,7 @@ PanelWindow {
 
             Item { Layout.fillWidth: true }
             
-            // 🔹 Battery
+            // Battery
             Rectangle{
                 id: containerRect
                 Layout.alignment:Qt.AlignRight

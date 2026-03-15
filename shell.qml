@@ -5,7 +5,8 @@ import Quickshell.Io
 import Quickshell.Services.UPower
 import QtQuick
 import "./modules/"
-import "./modules/Widget/"
+//import "./modules/Widget/"
+import "./Extra/"
 
 //import "~/.config/quickshell"
 
@@ -16,8 +17,8 @@ import "./modules/Widget/"
 ShellRoot{ 
     id: root
     Colors {id:theme}
-    
 
+    property bool wallselect: false
      //pipewire_audio
     property string whispering: "Whispering Signature\-Personal use"
     property var defaultAudioSink: Pipewire.defaultAudioSink
@@ -28,7 +29,6 @@ ShellRoot{
     PwObjectTracker{ 
         objects: [Pipewire.defaultAudioSink]
          }
-    
 
     Loader {
         active: true
@@ -40,4 +40,18 @@ ShellRoot{
             defaultAudioSink: root.defaultAudioSink
         }
     }
+
+    Loader{
+        id: wallpaper_selector
+        active: root.wallselect
+        source:"Extra/Wallpaper.qml" 
+
+        IpcHandler {
+            target: "wallselect"
+            function open(): void {
+                root.wallselect = !root.wallselect
+                console.log("fixed")
+            }
+            }
+        }
 }
