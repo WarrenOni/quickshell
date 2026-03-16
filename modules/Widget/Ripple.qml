@@ -4,7 +4,6 @@ Item{
     id: root
     property int size: 100
     property bool running: false
-    property int circleSize: 190
 
     
     anchors.centerIn:parent
@@ -14,14 +13,14 @@ Item{
 
     onRunningChanged: {
         if (!running) {
-            raddii.width = circleSize
+            raddii.scale = 1
             raddii.opacity = 1
         }
     }
 
     Rectangle{
         id: raddii
-        width: root.circleSize
+        width: 190
         height: width
         radius: width/2
         color: theme.on_tertiary

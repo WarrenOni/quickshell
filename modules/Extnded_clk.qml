@@ -69,7 +69,7 @@ PopupWindow {
     Rectangle {
         id: panel
         width: parent.width
-        height: open ? parent.height : 0
+        height: menu.open ? parent.height : 0
         clip: true
         color:  theme.background
         radius: 20
