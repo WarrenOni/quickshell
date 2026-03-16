@@ -55,7 +55,7 @@ Rectangle {
             running: root.open
             loops: Animation.Infinite
             NumberAnimation { to: 1.1; duration: 2500; easing.type: Easing.InOutSine }
-            NumberAnimation { to: 1.0; duration: 2500; easing.type: Easing.InOutSine }
+            NumberAnimation { to: 0.9; duration: 2500; easing.type: Easing.InOutSine }
         }
     }
 Rectangle {
@@ -107,7 +107,7 @@ Rectangle {
             running: root.open
             loops: Animation.Infinite
             NumberAnimation { to: 1.1; duration: 2500; easing.type: Easing.InOutSine }
-            NumberAnimation { to: 1.0; duration: 2500; easing.type: Easing.InOutSine }
+            NumberAnimation { to: 0.9; duration: 2500; easing.type: Easing.InOutSine }
         }
     }
 }

@@ -10,7 +10,6 @@ Rectangle{
     property int voff: 0
     property int hoff: 0
     property bool fcus: false
-    
     width: 69 * pillwidth
     height: 40 * pillscale
     radius: height / 2

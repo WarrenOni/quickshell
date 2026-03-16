@@ -33,12 +33,12 @@ Item{
                 from: 1
                 to: 0.95
                 duration: 100
-                easing: Easing.InCubic
+                easing.type: Easing.InCubic
             }
             NumberAnimation{
                 to: 1
                 duration: 200
-                easing: Easing.OutCubic
+                easing.type: Easing.OutCubic
             }
         }
         Column {

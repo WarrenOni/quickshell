@@ -33,8 +33,8 @@ Item{
             loops: Animation.Infinite
             NumberAnimation{
                 target: raddii
-                property: "width"
-                to: 490
+                property: "scale"
+                to: 4
                 duration: 3000
             }
             NumberAnimation{
@@ -42,7 +42,7 @@ Item{
                 property: "opacity"
                 to: 0
                 duration: 3000
-                easing: Easing.OutCirc
+                easing.type: Easing.OutCirc
             }
             }
 
