@@ -3,10 +3,10 @@ import QtQuick.Layouts
 
 Item{
     id:main_circ_root
-    property var wifiData: ({})
+    property var bluetoothData: ({})
     property var connectProc: ({})
-    property bool wifi_panel: true
-    visible: main_circ_root.wifi_panel
+    property bool bluetooth_panel: true
+    visible: main_circ_root.bluetooth_panel
     width: 190
     height: 190
     Rectangle {
@@ -21,11 +21,10 @@ Item{
             anchors.fill: parent
             onClicked: {
                 main_circ_root.connectProc.command = [
-                "sh", "-c", "~/.config/quickshell/modules/Widget/wifi_on.sh"
+                "sh", "-c", "~/.config/quickshell/modules/Widget/bluetooth_on.sh"
                 ]
                 main_circ_root.connectProc.running = true
                 pop.running = true
-                
             }
         }
         SequentialAnimation on scale{
@@ -48,22 +47,36 @@ Item{
 
             Text {
                 font.family: "Symbols Nerd Font"
-                text: wifiData.connected ? wifiData.connected.icon : "󰤮"
+                text:{
+                    if (bluetoothData.power == "on") {
+                        if (bluetoothData.connected) {
+                           return "󰂱"
+                        }
+                        else{ return "󰂯"}
+                    }
+                    else{ return "󰂲" }
+                }
                 font.pixelSize: 60
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
             Text {
                 id: wifi_text1
-                text: wifiData.connected ? wifiData.connected.ssid : "Not Connected"
+                text: bluetoothData.connected ? bluetoothData.connected.name : "Not Connected"
                 font.pixelSize: 16
                 font.family: whispering
                 anchors.horizontalCenter: parent.horizontalCenter
             }
+            Text {
+                text: bluetoothData.connected ? bluetoothData.connected.type : ""
+                font.pixelSize: 12
+                font.family: wifi_text1.font.family
+                anchors.horizontalCenter: parent.horizontalCenter                
+            }
 
             Text {
                 
-                text: wifiData.connected ? "Connected" : "Disconnected"
+                text: bluetoothData.connected ? "" : "Disconnected"
                 font.pixelSize: 12
                 font.family: wifi_text1.font.family
                 anchors.horizontalCenter: parent.horizontalCenter                
@@ -86,14 +99,14 @@ Item{
         Column{
             anchors.centerIn: parent
             Text{
-                color: wifiData.connected && wifiData.connected.signal < 30 ? "red"  : "black"
-                text: wifiData.connected ? wifiData.connected.signal + " % " : "---"
+                color: "grey"
+                text: bluetoothData.connected ? bluetoothData.connected.mac : "---"
                 font.pixelSize: 20
                 font.family: "Pixelon"
                 font.italic: true
             }
             Text{
-                text: "Signal Strength"
+                text: "Mac Address."
                 font.pixelSize:17
                 font.family: "ESPACION"
                 font.italic: true

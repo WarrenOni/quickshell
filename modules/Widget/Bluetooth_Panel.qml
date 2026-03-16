@@ -1,27 +1,28 @@
-    import QtQuick
-    import Quickshell
-    import QtQuick.Layouts
-    import QtQuick.Effects
+import QtQuick
+import Quickshell
+import QtQuick.Layouts
 
-    Item{
+Item{
         id: root
-        property var wifiData: ({})
+        property var bluetoothData: ({})
         property var connectProc: ({})
         property bool scan_vis: false
+        property bool search : false
+
         height: parent.height
         width: parent.width
-
+        
         Rectangle{
             id: scan_pan
-            visible: root.scan_vis 
-            height: root.scan_vis ? networkList.implicitHeight + 40 : 0
+            visible: root.search
+            height: root.scan_vis ? bluetoothList.implicitHeight + 40 : 0
             width: root.scan_vis ? 250 : 0
             opacity: root.scan_vis ? 1: 0
             radius: 20
             clip: true
             color: theme.on_secondary
             anchors.centerIn: parent
-            z: 4
+            z: 3
             Behavior on height {
             NumberAnimation{
                 duration: 400
@@ -34,7 +35,7 @@
             }}
 
             Column{
-            id: networkList
+            id: bluetoothList
             
             spacing: 8
             anchors{
@@ -45,7 +46,7 @@
             }
 
             Repeater{
-                model: root.wifiData.networks ? root.wifiData.networks: []
+                model: root.bluetoothData.devices ? root.bluetoothData.devices: []
                 Rectangle{
                     width: 200
                     height: 40
@@ -55,7 +56,7 @@
                             anchors.fill: parent
                             onClicked:{
                                 root.connectProc.command = [
-                                    "sh", "-c", "nmcli device wifi connect '" + modelData.ssid + "'"
+                                    "sh", "-c", "bluetoothctl connect " + modelData.mac
                                 ]
                                 root.connectProc.running = true
                             }
@@ -64,9 +65,8 @@
                     Row{
                         anchors.centerIn:parent
                         spacing: 4
-                        Text{text: modelData.icon}
-                        Text{text: modelData.ssid}
-                        Text{text: modelData.signal + "%"}
+                        Text{text: "󰂰"}
+                        Text{text: modelData.name}
                     }
                 }
             }
@@ -82,7 +82,7 @@
         color: theme.on_primary
         border.width: 0.5
         border.color: theme.scrim
-        
+        visible: root.scan_vis
         anchors{
             centerIn: parent
             horizontalCenter: parent.horizontalCenter
@@ -91,12 +91,12 @@
         }
         MouseArea{
             anchors.fill: parent
-            onClicked: root.scan_vis = !root.scan_vis
-        }
+            onClicked: root.search = !root.search
+            }
         Column{
             anchors.centerIn: parent
         Text{
-            text: "Scan Networks"
+            text: "Scan Devices"
             color: "white"
             font.pixelSize:17
             font.family: "ESPACION"
