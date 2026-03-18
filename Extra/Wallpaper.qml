@@ -9,7 +9,6 @@ FloatingWindow {
     height: 600
     color: "transparent"
     
-    
     // Store the currently selected path
     property string currentWallPath: ""
 

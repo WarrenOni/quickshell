@@ -19,6 +19,7 @@ ShellRoot{
     Colors {id:theme}
 
     property bool wallselect: false
+    property bool launcher: false
      //pipewire_audio
     property string whispering: "Whispering Signature\-Personal use"
     property var defaultAudioSink: Pipewire.defaultAudioSink
@@ -51,6 +52,19 @@ ShellRoot{
             function open(): void {
                 root.wallselect = !root.wallselect
                 console.log("fixed")
+            }
+            }
+        }
+    Loader{
+        id: launcher
+        active: root.launcher
+        source:"Extra/Launcher.qml" 
+
+        IpcHandler {
+            target: "launcher"
+            function open(): void {
+                root.launcher = !root.launcher
+                console.log("application launcher started")
             }
             }
         }
