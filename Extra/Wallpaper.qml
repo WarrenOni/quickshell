@@ -15,7 +15,7 @@ FloatingWindow {
     function select_wall(path) {
         currentWallPath = path
         wall.visible = false
-        Quickshell.execDetached(["sh","-c","matugen image '" + path + "' --source-color-index 1"])
+        Quickshell.execDetached(["sh","-c","matugen image '" + path + "' --source-color-index 0"])
         console.log("Wallpaper And theme applied: " + path)
     }
     

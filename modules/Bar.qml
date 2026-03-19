@@ -19,7 +19,7 @@ PanelWindow {
         //----------
 
         id: bar
-        implicitHeight: 33 //+ menu.height
+        implicitHeight: 36 + mainbar.anchors.topMargin //+ menu.height
         color: "transparent"
         anchors{
             top: true
@@ -36,11 +36,16 @@ PanelWindow {
         }
 
         Rectangle{
+            id: mainbar
+            anchors.rightMargin: 1
+            anchors.topMargin: 1
+            anchors.bottomMargin: mainbar.anchors.topMargin
+            anchors.leftMargin: mainbar.anchors.rightMargin
             color: theme.background
             anchors.fill: parent
-            bottomLeftRadius: 30
-            bottomRightRadius: 30
-            
+            //bottomLeftRadius: 30
+            //bottomRightRadius: 30
+            radius: 9
         RowLayout {
             anchors.fill: parent     
             anchors.leftMargin: 10       

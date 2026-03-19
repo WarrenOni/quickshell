@@ -13,7 +13,7 @@ for file in /usr/share/applications/*.desktop ~/.local/share/applications/*.desk
     exec=$(grep -m1 "^Exec=" "$file" | cut -d= -f2 | sed 's/%.*//')
 
     if [[ -n "$name" && -n "$exec" && "$exec" != *"-jar"* ]];then
-        echo "$name|$exec"
+        jq -n --arg name "$name" --arg exec "$exec" '{name: $name, exec: $exec}'
     fi
 done > "$Cache"
 cat "$Cache"

@@ -32,10 +32,10 @@ PopupWindow {
                 try {
                     wifiData = JSON.parse(text.trim())
                 } catch(e) {
-                    console.log("wifi passed")
+                    console.log("wifi error")
                 }
             }
-            onRead: (wifiData) => { try { wifiData = JSON.parse(data) } catch(e){console.log("wifi parse error", e)} }
+            //onRead: (wifiData) => { try { wifiData = JSON.parse(data) } catch(e){console.log("wifi parse error", e)} }
         }
         
     }
