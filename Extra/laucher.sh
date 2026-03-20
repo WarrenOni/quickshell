@@ -15,5 +15,5 @@ for file in /usr/share/applications/*.desktop ~/.local/share/applications/*.desk
     if [[ -n "$name" && -n "$exec" && "$exec" != *"-jar"* ]];then
         jq -n --arg name "$name" --arg exec "$exec" '{name: $name, exec: $exec}'
     fi
-done > "$Cache"
+done | jq -s '.' > "$Cache"
 cat "$Cache"
