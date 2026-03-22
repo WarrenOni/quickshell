@@ -4,11 +4,13 @@ import Quickshell
 import Qt.labs.platform
 import QtQuick.Layouts
 import QtQuick.Controls
+import Quickshell.Services.UPower
+
 
 FloatingWindow{
     id: menu_list
-    width: 600
-    height: 300
+    implicitWidth: 600
+    implicitHeight: 300
     color: theme.background
     visible:true
     property var application:[]
@@ -18,7 +20,7 @@ FloatingWindow{
     function launchApp(exec){
         Quickshell.execDetached(["sh","-c",exec])
         menu_list.visible=false
-        console.log("request sent for launch")
+        console.log("request sent for launch",UPower.displayDevice.state)
     }
     //Process for reading the file and stdout
     Process{
@@ -36,6 +38,12 @@ FloatingWindow{
             }
         }
     }   
+    Rectangle{
+        width: parent.width
+        height: parent.height
+        color: "transparent"
+        border.width: 13
+        border.color: theme.background
     ColumnLayout{
         anchors.fill:parent
         spacing:5
@@ -58,25 +66,22 @@ FloatingWindow{
             }
         }
         Rectangle{
-        width: parent.width
-        height: parent.height-search.height
-        border.width:10
-        border.color: theme.background
+        Layout.fillHeight: true
+        Layout.fillWidth: true
         color: "transparent"
         radius: 20
         ListView{
             spacing: 4
             width: parent.width
-            height: parent.height-20
-            anchors.fill: parent
+            height: parent.height
             clip: true
             model: search.text ? menu_list.filtered : menu_list.application
             delegate: Rectangle{
                 id: del
                 radius: 10
-                width: parent.width - 5
-                anchors.horizontalCenter: parent.horizontalCenter
-                height: 30
+                width: menu_list.width
+                anchors.horizontalCenter: menu_list.horizontalCenter
+                height: 35
                 property bool hovered: false
                 color: hovered ? theme.primary : "transparent"
                 MouseArea{
@@ -96,6 +101,7 @@ FloatingWindow{
                 }
             }
         }
+    }
     }
     }
 }

@@ -77,7 +77,7 @@ PanelWindow {
                 Layout.alignment:Qt.AlignRight
                 Layout.rightMargin: 10
                 radius: 20
-                border.color: UPower.displayDevice.percentage < 0.25 ? "#f00" : theme.on_primary
+                border.color: UPower.displayDevice.state === 1 ? "#00ff00" : (UPower.displayDevice.percentage < 0.25 ? "#f00" : theme.on_primary)
                 color: "transparent"
                 border.width: 1
                 implicitHeight: 25
@@ -90,7 +90,7 @@ PanelWindow {
                 anchors.right: parent.right
                 radius: 20
                 border.width:0.5
-                color: UPower.displayDevice.percentage < 0.25 ? "#f00" : theme.on_primary
+                color: containerRect.border.color
                 implicitHeight: 25
                 implicitWidth: UPower.displayDevice.percentage * 100
                 anchors.verticalCenterOffset: 0
@@ -103,7 +103,7 @@ PanelWindow {
                 font.pixelSize: 15
                 font.italic: true
                 font.family: "Pixelon"
-                font.bold: UPower.displayDevice.percentage < 0.25 ? true : false
+                font.bold: containerRect.border.color != theme.on_primary ? true : false
                 text: Math.round(UPower.displayDevice.percentage * 100) + "%"
             }
 
