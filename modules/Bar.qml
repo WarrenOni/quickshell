@@ -83,6 +83,7 @@ PanelWindow {
                 border.width: 1
                 implicitHeight: 25
                 implicitWidth: 80
+                anchors.verticalCenter: parent.verticalCenter
                 anchors.verticalCenterOffset: -0.5
             
             Rectangle{
@@ -169,14 +170,14 @@ PanelWindow {
             implicitHeight: 25
             }
         Text{
-             color: "white"
+            color: "white"
             anchors.centerIn: volumeContainer
             font.pixelSize: 15
             font.italic: true
             font.family: "Pixelon"
             //visible: UPower.displayDevice.present
             Layout.rightMargin: 2
-            anchors.verticalCenterOffset: 1.5
+            //anchors.verticalCenterOffset: 1.5
             text: volumeMuted ? "Muted" : volume + "%"
         }
         }
