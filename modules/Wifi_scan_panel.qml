@@ -1,7 +1,7 @@
     import QtQuick
-    import Quickshell
-    import QtQuick.Layouts
-    import QtQuick.Effects
+    //import Quickshell
+    //import QtQuick.Layouts
+    //import QtQuick.Effects
 
     Item{
         id: root

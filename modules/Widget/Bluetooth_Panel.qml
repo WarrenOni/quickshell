@@ -1,6 +1,6 @@
 import QtQuick
-import Quickshell
-import QtQuick.Layouts
+//import Quickshell
+//import QtQuick.Layouts
 
 Item{
         id: root

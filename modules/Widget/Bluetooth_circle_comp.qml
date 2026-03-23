@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Layouts
+//import QtQuick.Layouts
 
 Item{
     id:main_circ_root

@@ -1,12 +1,10 @@
 import QtQuick
 import Quickshell.Io
 import Quickshell
-import Qt.labs.platform
+//import Qt.labs.platform
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell.Services.UPower
-import Quickshell.Services.SystemTray
-
 FloatingWindow{
     id: menu_list
     implicitWidth: 600

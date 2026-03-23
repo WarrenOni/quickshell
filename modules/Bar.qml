@@ -1,8 +1,8 @@
 
 import Quickshell
-import Quickshell.Services.Pipewire
+//import Quickshell.Services.Pipewire
 import Quickshell.Hyprland
-import Quickshell.Io
+//import Quickshell.Io
 import Quickshell.Services.UPower
 import Quickshell.Services.SystemTray
 import QtQuick

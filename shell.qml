@@ -1,12 +1,12 @@
 import Quickshell
 import Quickshell.Services.Pipewire
-import Quickshell.Hyprland
+//import Quickshell.Hyprland
 import Quickshell.Io
-import Quickshell.Services.UPower
+//import Quickshell.Services.UPower
 import QtQuick
 import "./modules/"
 //import "./modules/Widget/"
-import "./Extra/"
+//import "./Extra/"
 
 //import "~/.config/quickshell"
 

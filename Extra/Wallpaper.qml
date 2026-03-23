@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Layouts
+//import QtQuick.Layouts
 import Qt.labs.folderlistmodel
 import Quickshell
 
