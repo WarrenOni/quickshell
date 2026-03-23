@@ -4,6 +4,7 @@ import Quickshell.Services.Pipewire
 import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell.Services.UPower
+import Quickshell.Services.SystemTray
 import QtQuick
 import QtQuick.Layouts 
 
@@ -178,8 +179,60 @@ PanelWindow {
             anchors.verticalCenterOffset: 1.5
             text: volumeMuted ? "Muted" : volume + "%"
         }
+        }
+            
+        Rectangle{
+            anchors{
+                right: parent.right
+                rightMargin: 190
+                verticalCenter: parent.verticalCenter
+                verticalCenterOffset: -0.5
+            }
+            color: theme.on_primary
+            radius: 20
+            implicitWidth: 28.5 * tray.count
+            implicitHeight: 25
+            Row{
+                spacing:5
+                anchors.right:parent.right
+                anchors.rightMargin: 3
+                Layout.alignment: Qt.AlignRight
+                Repeater{
+                    id: tray
+                    model: SystemTray.items
+                    delegate:
+                        Rectangle{
+                            width: height
+                            height: 23
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.verticalCenterOffset:1
+                            color: theme.on_tertiary_fixed
+                            radius: 15
+                        Rectangle{
+                        anchors.centerIn: parent
+                        width:height
+                        height: 12
+                        radius:20
+                        color: "transparent"
+                        Image{
+                            anchors.fill:parent
+                            source: modelData.icon
+                            fillMode: Image.PreserveAspectFit
+                        }
+                        MouseArea{
+                            anchors.fill: parent
+                            onClicked:{
+                                modelData.activate()
+                            }
+                            onPressAndHold:{
+                                modelData.openMenu()
+                            }
+                        }
+                        }
+                    }
                 }
-
+            }
+        }
     }
 }
 

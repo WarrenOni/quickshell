@@ -5,7 +5,7 @@ import Qt.labs.platform
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell.Services.UPower
-
+import Quickshell.Services.SystemTray
 
 FloatingWindow{
     id: menu_list
@@ -32,7 +32,7 @@ FloatingWindow{
             onTextChanged: {
                 try {
                     menu_list.application = JSON.parse(text.trim())
-                    //console.log(menu_list.application)
+                    //console.log()
                 } catch(e) {
                     console.log("!!application passing error!!",e)
                 }
