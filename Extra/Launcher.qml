@@ -11,8 +11,9 @@ FloatingWindow{
     id: menu_list
     implicitWidth: 600
     implicitHeight: 300
-    color: theme.background
+    color: "transparent"
     visible:true
+
     property var application:[]
     property var filtered:[]
     
@@ -42,7 +43,8 @@ FloatingWindow{
     Rectangle{
         width: parent.width 
         height: parent.height 
-        color: "transparent"
+        color: theme.background
+        radius: 20
     ColumnLayout{
         id: layout
         anchors.fill:parent

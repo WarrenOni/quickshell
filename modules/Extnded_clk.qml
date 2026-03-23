@@ -96,7 +96,7 @@ PopupWindow {
     // position under bar
     anchor.window: bar
     anchor.rect.x: bar.width / 2 - implicitWidth / 2
-    anchor.rect.y: bar.height - 0.51
+    anchor.rect.y: bar.height - 3
 
     Rectangle {
         id: panel
