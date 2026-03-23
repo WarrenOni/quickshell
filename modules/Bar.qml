@@ -185,7 +185,7 @@ PanelWindow {
         Rectangle{
             anchors{
                 right: parent.right
-                rightMargin: 190
+                rightMargin: 195
                 verticalCenter: parent.verticalCenter
                 verticalCenterOffset: -0.5
             }
