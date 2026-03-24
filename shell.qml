@@ -58,12 +58,14 @@ ShellRoot{
     Loader{
         id: launcher
         active: root.launcher
+        visible: root.launcher
         source:"Extra/Launcher.qml" 
 
         IpcHandler {
             target: "launcher"
             function open(): void {
                 root.launcher = !root.launcher
+                //root.launcher.visible = !root.launcher.visible
                 console.log("application launcher started")
             }
             }

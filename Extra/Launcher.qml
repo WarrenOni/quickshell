@@ -4,39 +4,38 @@ import Quickshell
 //import Qt.labs.platform
 import QtQuick.Layouts
 import QtQuick.Controls
-import Quickshell.Services.UPower
 FloatingWindow{
     id: menu_list
     implicitWidth: 600
     implicitHeight: 300
     color: "transparent"
-    visible:true
+    visible: true
 
     property var application:[]
     property var filtered:[]
-    
-    //function for calling the app
-    function launchApp(exec){
-        Quickshell.execDetached(["sh","-c",exec])
-        menu_list.visible=false
-        console.log("request sent for launch",UPower.displayDevice.state)
-    }
+
     //Process for reading the file and stdout
     Process{
         id: proc
-        running: true
+        running: menu_list.visible
         command:["sh","-c","~/.config/quickshell/Extra/laucher.sh"]
         stdout: StdioCollector{
             onTextChanged: {
-                try {
                     menu_list.application = JSON.parse(text.trim())
-                    //console.log()
-                } catch(e) {
-                    console.log("!!application passing error!!",e)
-                }
+                    //console.log("dry run")
             }
         }
     }   
+
+
+    //function for calling the app
+    function launchApp(exec){
+        menu_list.visible=false
+        Quickshell.execDetached(["sh","-c",exec])
+        //menu_list.visible=!menu_list.visible
+        //console.log("request sent for launch")
+    }
+
 
     Rectangle{
         width: parent.width 
@@ -46,7 +45,7 @@ FloatingWindow{
     ColumnLayout{
         id: layout
         anchors.fill:parent
-        spacing:5
+        spacing:10
         anchors.margins: 10
         TextField{
             id: search
@@ -99,10 +98,8 @@ FloatingWindow{
                 MouseArea{
                     hoverEnabled: true
                     anchors.fill: parent
-                    onHoveredChanged: {
-                        del.hovered = !del.hovered
-                        
-                    }
+                    onEntered: del.hovered = true
+                    onExited: del.hovered = false
                     onClicked: menu_list.launchApp(modelData.exec)
                 }
                 Text{

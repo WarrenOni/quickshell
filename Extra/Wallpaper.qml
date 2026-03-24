@@ -33,7 +33,7 @@ FloatingWindow {
             model: FolderListModel {
                 id: wallpapermodel
                 folder: "file:///home/akai/Pictures/Wallpapers"
-                nameFilters: ["*.png", "*.jpg", "*.webp", "*.jpeg"]
+                nameFilters: ["*.png", "*.jpg", "*.webp", "*.jpeg","*.gif"]
                 sortField: FolderListModel.Name
                 sortReversed: false
             }

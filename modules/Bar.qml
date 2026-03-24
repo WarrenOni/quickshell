@@ -75,16 +75,17 @@ PanelWindow {
             // Battery
             Rectangle{
                 id: containerRect
-                Layout.alignment:Qt.AlignRight
+                //Layout.alignment:Qt.AlignRight
                 Layout.rightMargin: 10
                 radius: 20
-                border.color: UPower.displayDevice.state === 1 ? "#00ff00" : (UPower.displayDevice.percentage < 0.25 ? "#f00" : theme.on_primary)
+                border.color: UPower.displayDevice.state === 1 ? theme.tertiary : (UPower.displayDevice.percentage < 0.25 ? "#f00" : theme.on_primary)
                 color: "transparent"
                 border.width: 1
                 implicitHeight: 25
                 implicitWidth: 80
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.verticalCenterOffset: -0.5
+                Layout.alignment: Qt.AlignVCenter
+                Layout.bottomMargin:3
+                
             
             Rectangle{
                 id: innerFill
@@ -181,7 +182,8 @@ PanelWindow {
             text: volumeMuted ? "Muted" : volume + "%"
         }
         }
-            
+
+        //systemtray
         Rectangle{
             anchors{
                 right: parent.right
@@ -193,6 +195,12 @@ PanelWindow {
             radius: 20
             implicitWidth: 28.5 * tray.count
             implicitHeight: 25
+            Behavior on implicitWidth{
+                NumberAnimation{
+                    duration: 900
+                    easing.type: Easing.InBounce
+                }
+            }
             Row{
                 spacing:5
                 anchors.right:parent.right
