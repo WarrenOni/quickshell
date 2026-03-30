@@ -10,7 +10,7 @@ FloatingWindow{
     implicitHeight: 300
     color: "transparent"
     visible: true
-
+    
     property var application:[]
     property var filtered:[]
 
@@ -61,6 +61,8 @@ FloatingWindow{
             }            
             font.pixelSize: 20
             color:"white"
+            font.italic: true
+            font.bold: true
             font.family: "ESPACION"
             placeholderText: "Lauch.."
             onTextChanged:{

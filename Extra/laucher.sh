@@ -8,7 +8,7 @@ fi
 
 shopt -s nullglob #nulls out loc from output if either of the search loc fails
 
-for file in /usr/share/applications/*.desktop ~/.local/share/applications/*.desktop;do
+for file in /usr/share/applications/*.desktop;do
     name=$(grep -m1 "^Name=" "$file" | cut -d= -f2)
     exec=$(grep -m1 "^Exec=" "$file" | cut -d= -f2 | sed 's/%.*//')
 

@@ -206,6 +206,8 @@ PanelWindow {
                 anchors.right:parent.right
                 anchors.rightMargin: 3
                 Layout.alignment: Qt.AlignRight
+
+
                 Repeater{
                     id: tray
                     model: SystemTray.items
@@ -229,12 +231,18 @@ PanelWindow {
                             fillMode: Image.PreserveAspectFit
                         }
                         MouseArea{
-                            anchors.fill: parent
-                            onClicked:{
-                                modelData.activate()
+                            function killit(service){
+                                Quickshell.execDetached(["killall",service])
+                                console.log("killed",service)
                             }
-                            onPressAndHold:{
-                                modelData.openMenu()
+                            anchors.fill: parent
+                            acceptedButtons: Qt.LeftButton | Qt.RightButton
+                            onClicked:function(mouse) {
+                                if (mouse.button === Qt.RightButton) {
+                                    killit(modelData.title)
+                                } else {
+                                    modelData.activate()
+                                }
                             }
                         }
                         }
