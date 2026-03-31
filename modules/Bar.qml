@@ -9,7 +9,6 @@ import QtQuick
 import QtQuick.Layouts 
 
 
-
 PanelWindow {
     
         //-------vol
@@ -30,10 +29,17 @@ PanelWindow {
 
         //MENU
                     
-        Extnded_clk{
-            id: menu2
-            bar: bar
-            //anchors.bottom: parent.bottom
+        Loader{
+            id:menu2
+            property bool open: false
+            active: true
+            visible: open
+            sourceComponent: Extnded_clk{
+                open: menu2.open
+                bar_window: bar
+                bar_height: bar.height
+                bar_width: bar.width
+            }
         }
 
         Rectangle{

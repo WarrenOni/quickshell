@@ -51,7 +51,7 @@ ShellRoot{
             target: "wallselect"
             function open(): void {
                 root.wallselect = !root.wallselect
-                console.log("fixed")
+                console.log("wallpaper_selector_launched")
             }
             }
         }

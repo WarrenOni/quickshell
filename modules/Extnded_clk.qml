@@ -9,7 +9,9 @@ PopupWindow {
     id: menu
     property var wifiData: ({})
     property var bluetoothData: ({})
-    property var bar
+    property int bar_height
+    property int bar_width
+    property var bar_window
     property bool open : false
     property bool scan_vis : false
     property bool blth_scan_vis: false
@@ -85,8 +87,6 @@ PopupWindow {
         get_bt_connenction_name.running = true
         }
     }
-
-
     visible: open || panel.height > 0
     color: "transparent"
 
@@ -94,9 +94,9 @@ PopupWindow {
     implicitHeight: 500
 
     // position under bar
-    anchor.window: bar
-    anchor.rect.x: bar.width / 2 - implicitWidth / 2
-    anchor.rect.y: bar.height - 3
+    anchor.rect.x: bar_width / 2 - implicitWidth / 2
+    anchor.rect.y: bar_height - 3
+    anchor.window: bar_window
 
     Rectangle {
         id: panel
