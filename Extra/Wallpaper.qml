@@ -6,7 +6,7 @@ import Quickshell
 FloatingWindow {
     id: wall
     implicitWidth: 1750
-    height: 600
+    implicitHeight: 600
     color: "transparent"
     
     // Store the currently selected path

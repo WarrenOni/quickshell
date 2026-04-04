@@ -9,20 +9,20 @@ FloatingWindow{
     implicitWidth: 600
     implicitHeight: 300
     color: "transparent"
-    visible: true
     
     property var application:[]
     property var filtered:[]
+    signal toggle()
 
     //Process for reading the file and stdout
     Process{
         id: proc
-        running: menu_list.visible
+        running: true
         command:["sh","-c","~/.config/quickshell/Extra/laucher.sh"]
         stdout: StdioCollector{
             onTextChanged: {
                     menu_list.application = JSON.parse(text.trim())
-                    //console.log("dry run")
+                    console.log("dry run")
             }
         }
     }   
@@ -30,10 +30,9 @@ FloatingWindow{
 
     //function for calling the app
     function launchApp(exec){
-        menu_list.visible=false
         Quickshell.execDetached(["sh","-c",exec])
-        //menu_list.visible=!menu_list.visible
-        //console.log("request sent for launch")
+        console.log("request sent for launch")
+        toggle()
     }
 
 

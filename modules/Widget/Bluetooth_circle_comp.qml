@@ -62,7 +62,7 @@ Item{
 
             Text {
                 id: wifi_text1
-                text: bluetoothData.connected ? bluetoothData.connected.name : "Not Connected"
+                text: bluetoothData.power === "on" ? ( bluetoothData.connected ? bluetoothData.connected.name : "Not Connected" ): ""
                 font.pixelSize: 16
                 font.family: whispering
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -77,7 +77,7 @@ Item{
             Text {
                 
                 text: bluetoothData.connected ? "" : "Disconnected"
-                font.pixelSize: 12
+                font.pixelSize: wifi_text1.text != "" ? 12 : 16
                 font.family: wifi_text1.font.family
                 anchors.horizontalCenter: parent.horizontalCenter                
             }
@@ -86,6 +86,7 @@ Item{
     Rectangle{
         width: 190
         height: 90
+        visible: bluetoothData.connected ? true: false
         radius: 40
         opacity: 0.8
         color: theme.on_secondary

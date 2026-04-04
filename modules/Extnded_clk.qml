@@ -80,7 +80,7 @@ PopupWindow {
     }
     
     onOpenChanged:{
-        if(open) { 
+        if(menu.open) { 
         get_connection_name.running = false
         get_connection_name.running = true
         get_bt_connenction_name.running = false

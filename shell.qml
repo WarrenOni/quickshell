@@ -58,8 +58,13 @@ ShellRoot{
     Loader{
         id: launcher
         active: root.launcher
-        visible: root.launcher
         source:"Extra/Launcher.qml" 
+        
+        onLoaded: {
+            item.toggle.connect(function(){
+                root.launcher=!root.launcher
+            })
+        }
 
         IpcHandler {
             target: "launcher"

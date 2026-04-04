@@ -44,6 +44,15 @@ Item{
                 verticalCenter: parent.verticalCenter
 
             }
+            Text{
+                visible: true
+                text: root.bluetoothData.power === "on" ? (root.bluetoothData.devices === [] ? "NO Devices Found" : "") : "Device is in sleep.."
+                color: theme.secondary
+                font.pixelSize: 17
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.horizontalCenterOffset: -30
+
+            }
 
             Repeater{
                 model: root.bluetoothData.devices ? root.bluetoothData.devices: []
@@ -86,7 +95,9 @@ Item{
         anchors{
             centerIn: parent
             horizontalCenter: parent.horizontalCenter
-            horizontalCenterOffset: 220
+            horizontalCenterOffset: 210
+            verticalCenter: parent.verticalCenter
+            verticalCenterOffset: 90
             
         }
         MouseArea{
