@@ -54,16 +54,16 @@ FloatingWindow{
                 implicitWidth: menu_list.width - layout.anchors.margins*2
                 radius: 10
                 border.width: 10
-                
+
                 border.color: "transparent"
                 color: theme.on_primary_fixed
             }            
             font.pixelSize: 20
-            color:"white"
+            color:theme.on_surface
             font.italic: true
             font.bold: true
             font.family: "ESPACION"
-            placeholderText: "Lauch.."
+            placeholderText: "Lauch//"
             onTextChanged:{
                 menu_list.filtered = menu_list.application.filter(a=>a.name.toLowerCase().includes(search.text.toLowerCase()))
             }

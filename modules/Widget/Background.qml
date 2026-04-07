@@ -1,12 +1,9 @@
 import QtQuick 
 Item{
     id:root
-    property bool open: false
-
     width: parent.width 
     height: parent.height 
     opacity: 0.1
-    visible: open
 
     // --- Minimal Morphing Shape ---
 Rectangle {
@@ -23,13 +20,13 @@ Rectangle {
 
         // 1. SHAPE MORPH (Oval to Rounded Rect)
         SequentialAnimation on rotation {
-            running: root.open
+            running: true
             loops: Animation.Infinite
             NumberAnimation { from: -8; to: 50; duration: 2000; easing.type: Easing.InOutSine }
             NumberAnimation { from: 50; to: -8; duration: 1200; easing.type: Easing.InOutSine }
         }
         SequentialAnimation on radius {
-            running: root.open
+            running: true
             loops: Animation.Infinite
             NumberAnimation { from: 100; to: 200; duration: 3000; easing.type: Easing.InOutSine } // Oval-ish
             NumberAnimation { to: 100;  duration: 3000; easing.type: Easing.InOutSine } // Rect-ish
@@ -37,14 +34,14 @@ Rectangle {
 
         // 2. SLIGHT DRIFT (Movement)
         SequentialAnimation on x {  
-            running: root.open
+            running: true
             loops: Animation.Infinite
             NumberAnimation { to: -50; duration: 4500; easing.type: Easing.InOutQuad }
             NumberAnimation { to: -90; duration: 4500; easing.type: Easing.InOutQuad }
         }
 
         SequentialAnimation on y {
-            running: root.open
+            running: true
             loops: Animation.Infinite
             NumberAnimation { to: -90; duration: 3500; easing.type: Easing.InOutQuad }
             NumberAnimation { to: -50; duration: 3500; easing.type: Easing.InOutQuad }
@@ -52,7 +49,7 @@ Rectangle {
 
         // 3. SUBTLE PULSE
         SequentialAnimation on scale {
-            running: root.open
+            running: true
             loops: Animation.Infinite
             NumberAnimation { to: 1.1; duration: 2500; easing.type: Easing.InOutSine }
             NumberAnimation { to: 0.9; duration: 2500; easing.type: Easing.InOutSine }
@@ -74,13 +71,13 @@ Rectangle {
         // 1. SHAPE MORPH (Oval to Rounded Rect)
         
         SequentialAnimation on rotation {
-            running: root.open
+            running: true
             loops: Animation.Infinite
             NumberAnimation { from: -8; to: 50; duration: 2000; easing.type: Easing.InOutSine }
             NumberAnimation { from: 50; to: -8; duration: 1200; easing.type: Easing.InOutSine }
         }
         SequentialAnimation on radius {
-            running: root.open
+            running: true
             loops: Animation.Infinite
             NumberAnimation { from: 100; to: 200; duration: 3000; easing.type: Easing.InOutSine } // Oval-ish
             NumberAnimation { to: 100;  duration: 3000; easing.type: Easing.InOutSine } // Rect-ish
@@ -89,14 +86,14 @@ Rectangle {
         // 2. SLIGHT DRIFT (Movement)
 
         SequentialAnimation on x {
-            running: root.open
+            running: true
             loops: Animation.Infinite
             NumberAnimation { to: 300; duration: 4500; easing.type: Easing.InOutQuad }
             NumberAnimation { to: 400; duration: 4500; easing.type: Easing.InOutQuad }
         }
 
         SequentialAnimation on y {
-            running: root.open
+            running: true
             loops: Animation.Infinite
             NumberAnimation { to: 350; duration: 3500; easing.type: Easing.InOutQuad }
             NumberAnimation { to: 300; duration: 3500; easing.type: Easing.InOutQuad }
@@ -104,7 +101,7 @@ Rectangle {
 
         // 3. SUBTLE PULSE
         SequentialAnimation on scale {
-            running: root.open
+            running: true
             loops: Animation.Infinite
             NumberAnimation { to: 1.1; duration: 2500; easing.type: Easing.InOutSine }
             NumberAnimation { to: 0.9; duration: 2500; easing.type: Easing.InOutSine }

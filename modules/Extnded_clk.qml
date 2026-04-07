@@ -16,7 +16,8 @@ PopupWindow {
     property bool scan_vis : false
     property bool blth_scan_vis: false
     property bool blth_panel: false
-    property bool wifi_panel: true
+    property bool wifi_panel: false
+    property bool clock_panel: true
 
     Process{
         id:connectProc
@@ -138,8 +139,33 @@ PopupWindow {
         }
         Background{
             id: bg
-            open: menu.open
             clip: true
+        }
+
+        PillBut{
+            id: clock_pill
+            label: "Clock"
+            icon: ""
+            pillscale: 1.1
+            voff: 200
+            hoff: -80
+            fcus: true
+            
+            MouseArea{
+                anchors.fill: parent
+                onClicked:{
+                    blth_pill.fcus = false
+                    wifi_pill.fcus = false
+                    clock_pill.fcus = true
+                    menu.clock_panel = true
+                    menu.wifi_panel = false
+                    menu.blth_panel = false
+                    menu.blth_scan_vis = false
+                }
+            }
+         }
+        Clock_Extnded_clk{
+            clock_panel: menu.clock_panel
         }
 
 
@@ -149,16 +175,18 @@ PopupWindow {
             icon: ""
             pillscale: 1.1
             voff: 200
-            hoff: -45
-            fcus: true
+            hoff: 0
+            fcus: false
             MouseArea{
                 anchors.fill: parent
                 onClicked:{
                     blth_pill.fcus = false
                     wifi_pill.fcus = true
+                    clock_pill.fcus = false
                     menu.wifi_panel = true
                     menu.blth_panel = false
                     menu.blth_scan_vis = false
+                    menu.clock_panel = false
                 }
             }
          }
@@ -170,15 +198,17 @@ PopupWindow {
             pillwidth: 1.5
             voff: 200
             fcus: false
-            hoff: 45
+            hoff: 95
             MouseArea{
                 anchors.fill: parent
                 onClicked:{
                     blth_pill.fcus = true
                     wifi_pill.fcus = false
+                    clock_pill.fcus = false
                     menu.blth_panel = true
                     menu.wifi_panel = false
                     menu.blth_scan_vis = true
+                    menu.clock_panel = false
                 }
             }
         }
@@ -194,6 +224,8 @@ PopupWindow {
             bluetoothData: menu.bluetoothData
             connectProc: connectProc
         }
+
+
 
 
     }

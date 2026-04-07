@@ -65,6 +65,7 @@ Item{
                 text: bluetoothData.power === "on" ? ( bluetoothData.connected ? bluetoothData.connected.name : "Not Connected" ): ""
                 font.pixelSize: 16
                 font.family: whispering
+                font.bold: true
                 anchors.horizontalCenter: parent.horizontalCenter
             }
             Text {

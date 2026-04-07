@@ -57,6 +57,7 @@ Item{
                 id: wifi_text1
                 text: wifiData.connected ? wifiData.connected.ssid : "Not Connected"
                 font.pixelSize: 16
+                font.bold: true
                 font.family: whispering
                 anchors.horizontalCenter: parent.horizontalCenter
             }
