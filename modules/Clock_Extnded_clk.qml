@@ -152,7 +152,7 @@ Item{
         radius: 100
         rotation: 0
         SequentialAnimation on rotation{
-            running: true
+            running: root.open
             loops: Animation.Infinite
             NumberAnimation{from: 0; to: 180; duration: 8000}
         }

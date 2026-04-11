@@ -6,7 +6,7 @@ import Quickshell.Io
 import QtQuick
 import "./modules/"
 //import "./modules/Widget/"
-//import "./Extra/"
+import "./Extra"
 
 //import "~/.config/quickshell"
 
@@ -30,10 +30,10 @@ ShellRoot{
     PwObjectTracker{ 
         objects: [Pipewire.defaultAudioSink]
          }
-
-    Loader {
+    
+    LazyLoader {
         active: true
-        sourceComponent: Bar {
+        component: Bar {
             // forward audio properties from the shell root
             whispering: root.whispering
             volume: root.volume
@@ -42,36 +42,36 @@ ShellRoot{
         }
     }
 
-    Loader{
+    LazyLoader{
         id: wallpaper_selector
         active: root.wallselect
-        source: root.wallselect ? "Extra/Wallpaper.qml" : null 
-        IpcHandler {
+        component:Wallpaper{
+            onToggle: root.wallselect=false
+        }
+        //source: "Extra/Wallpaper.qml"
+        }
+    IpcHandler {
             target: "wallselect"
             function open(): void {
                 root.wallselect = !root.wallselect
                 console.log("wallpaper_selector_launched")
-            }
-            }
         }
-    Loader{
+    }
+    LazyLoader{
         id: launcher
         active: root.launcher
-        source: root.launcher ? "Extra/Launcher.qml" : null
-        
-        onLoaded: {
-            item.toggle.connect(function(){
-                root.launcher=!root.launcher
-            })
+        loading: root.launcher
+        component: Launcher{
+            onToggle: root.launcher=false
         }
-
-        IpcHandler {
+    }
+    
+    IpcHandler {
             target: "launcher"
             function open(): void {
                 root.launcher = !root.launcher
                 //root.launcher.visible = !root.launcher.visible
                 console.log("application launcher started")
             }
-            }
-        }
+    }
 }

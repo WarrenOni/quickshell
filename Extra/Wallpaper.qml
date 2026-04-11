@@ -10,13 +10,14 @@ FloatingWindow {
     color: "transparent"
     
     // Store the currently selected path
-    property string currentWallPath: ""
-
+    //property string currentWallPath: ""
+    signal toggle()
     function select_wall(path) {
-        currentWallPath = path
-        wall.visible = false
+        //currentWallPath = path
+        wall.visible=false
         Quickshell.execDetached(["sh","-c","matugen image '" + path + "' --source-color-index 0"])
         console.log("Wallpaper And theme applied: " + path)
+        toggle()
     }
     
     Rectangle {
@@ -36,8 +37,8 @@ FloatingWindow {
                 id: wallpapermodel
                 folder: "file:///home/akai/Pictures/Wallpapers"
                 nameFilters: ["*.png", "*.jpg", "*.webp", "*.jpeg","*.gif"]
-                sortField: FolderListModel.Name
-                sortReversed: false
+                sortField: FolderListModel.Size
+                sortReversed: true
             }
 
             delegate: Rectangle {
@@ -66,7 +67,7 @@ FloatingWindow {
                     anchors.margins: wall_Item.border.width
                     source: "file://" + filePath
                     fillMode: Image.PreserveAspectCrop
-                    sourceSize.height: 350
+                    sourceSize.height: 450
                     sourceSize.width: 400
                     mipmap: true
                     cache: false
@@ -76,7 +77,7 @@ FloatingWindow {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    onClicked: select_wall(filePath)
+                    onClicked: wall.select_wall(filePath)
 
                     onEntered: {
                         wall_Item.border.width = 2

@@ -2,7 +2,7 @@
 import Quickshell
 //import Quickshell.Services.Pipewire
 import Quickshell.Hyprland
-//import Quickshell.Io
+import Quickshell.Io
 import Quickshell.Services.UPower
 import Quickshell.Services.SystemTray
 import QtQuick
@@ -32,13 +32,17 @@ PanelWindow {
         Loader{
             id:menu2
             property bool open: false
-            active: true
+            active: false
             visible: open
             sourceComponent: Extnded_clk{
                 open: menu2.open
                 bar_window: bar
                 bar_height: bar.height
                 bar_width: bar.width
+            }
+            Connections{
+                target: menu2.item
+                function onToggle(){console.log("got value");menu2.active=false}
             }
         }
 
@@ -128,7 +132,7 @@ PanelWindow {
             anchors.verticalCenterOffset: -0.5
             MouseArea{
                 anchors.fill: parent
-                onClicked: {menu2.open = !menu2.open}
+                onClicked: {menu2.active=true;menu2.open=!menu2.open;}
             }
 
         SystemClock{

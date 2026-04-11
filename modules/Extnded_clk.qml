@@ -18,7 +18,7 @@ PopupWindow {
     property bool blth_panel: false
     property bool wifi_panel: false
     property bool clock_panel: true
-    
+    signal toggle()
     Process{
         id:connectProc
         onStarted : console.log("connect started")
@@ -82,10 +82,10 @@ PopupWindow {
     
     onOpenChanged:{
         if(menu.open) { 
-        get_connection_name.running = false
-        get_connection_name.running = true
-        get_bt_connenction_name.running = false
-        get_bt_connenction_name.running = true
+        //get_connection_name.running = false
+        get_connection_name.restart //= true
+        //get_bt_connenction_name.running = false
+        get_bt_connenction_name.restart //= true
         }
     }
     visible: open || panel.y > -menu.height
@@ -108,13 +108,28 @@ PopupWindow {
         radius: 20
         border.color: theme.on_primary
         border.width: 0.5
-        y: menu.open ? 0 : -menu.height
-        Behavior on y {
-            NumberAnimation {
+        y: !menu.open ? -menu.height : 0
+        /*NumberAnimation {
+                id: panel_anim
+                duration: 600
+                target: panel
+                property: "y"
+                from: menu.open ? -menu.height : 0 
+                to: menu.open ? 0: -panel.height
+                easing.type: Easing.OutQuart
+                running: menu.open || !menu.open
+                onFinished: if(!menu.open)menu.toggle()
+        }*/
+        Behavior on y{
+            NumberAnimation{
                 duration: 600
                 easing.type: Easing.OutQuart
-            }}
-        
+                onRunningChanged:{
+                    if (!menu.visible) {
+                    console.log("got sig_kill for dash_menu"); menu.toggle()
+                    }}
+            }
+        }
 
         Item{
             anchors.centerIn: parent
@@ -139,6 +154,7 @@ PopupWindow {
             visible: menu.wifi_panel
         }
         }
+        
         Background{
             id: bg
             clip: true
@@ -223,7 +239,10 @@ PopupWindow {
             width: parent.width
         Ripple{
             visible: menu.blth_panel
-            running: menu.open && menu.bluetoothData.connected
+            running:{ menu.open ? 
+            (menu.bluetoothData.power === "on" ? 
+            ( menu.bluetoothData.connected ? true : false)
+            :false) : false}
             anchors.centerIn: parent
         }
         Bluetooth_circle_comp{
