@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Shapes
 //import QtQuick.Layouts
 
 Item{
@@ -14,8 +15,15 @@ Item{
         width: 190
         height: 190
         radius: 100
-        color: theme.secondary
+        opacity: 1
+        gradient: RadialGradient{
+            centerX: 90; centerY: 90; centerRadius: 100;
+            focalX: centerX; focalY: centerY;
+            GradientStop{position:0.2;color:theme.secondary}
+            GradientStop{position:0.9;color:theme.primary}
+        }
         anchors.centerIn: parent
+
 
         MouseArea{
             anchors.fill: parent
@@ -25,6 +33,7 @@ Item{
                 ]
                 main_circ_root.connectProc.running = true
                 pop.running = true
+
             }
         }
         SequentialAnimation on scale{
@@ -32,8 +41,8 @@ Item{
             NumberAnimation{
                 from: 1
                 to: 0.95
-                duration: 100
-                easing.type: Easing.InCubic
+                duration: 150
+                easing.type: Easing.OutCubic
             }
             NumberAnimation{
                 to: 1

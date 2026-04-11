@@ -128,13 +128,12 @@ PanelWindow {
             anchors.verticalCenterOffset: -0.5
             MouseArea{
                 anchors.fill: parent
-                onClicked: menu2.open = !menu2.open
+                onClicked: {menu2.open = !menu2.open}
             }
 
         SystemClock{
             id: clock
             precision: SystemClock.Minutes
-
         }
 
         Text {
@@ -145,7 +144,8 @@ PanelWindow {
             font.bold: true
             font.family: "Orbitron"
             text: Qt.formatDateTime(clock.date, "hh:mm")
-        }}
+        }
+        }
 
 
         // Volume

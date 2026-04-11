@@ -13,7 +13,6 @@ FloatingWindow{
     property var application:[]
     property var filtered:[]
     signal toggle()
-
     //Process for reading the file and stdout
     Process{
         id: proc
@@ -54,7 +53,7 @@ FloatingWindow{
                 implicitWidth: menu_list.width - layout.anchors.margins*2
                 radius: 10
                 border.width: 10
-
+                height: 35
                 border.color: "transparent"
                 color: theme.on_primary_fixed
             }            
@@ -63,7 +62,7 @@ FloatingWindow{
             font.italic: true
             font.bold: true
             font.family: "ESPACION"
-            placeholderText: "Lauch//"
+            //placeholderText: "Lauch//"
             onTextChanged:{
                 menu_list.filtered = menu_list.application.filter(a=>a.name.toLowerCase().includes(search.text.toLowerCase()))
             }

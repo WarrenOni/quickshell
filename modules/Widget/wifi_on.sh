@@ -1,7 +1,7 @@
 #!/bin/bash
-check=$(nmcli networking)
+check=$(nmcli radio wifi)
 if [ "$check" == "enabled" ];then 
-    nmcli networking off
+    nmcli radio wifi off
 else
-    nmcli networking on
+    nmcli radio wifi on
 fi

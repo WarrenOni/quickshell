@@ -4,7 +4,7 @@ Item{
     id: root
     property int size: 100
     property bool running: false
-
+    visible: running
     
     anchors.centerIn:parent
 
@@ -20,7 +20,7 @@ Item{
 
     Rectangle{
         id: raddii
-        width: 190
+        width: root.running ? 190 : 0
         height: width
         radius: width/2
         color: theme.on_tertiary

@@ -28,8 +28,10 @@ FloatingWindow {
             id: wall_list
             anchors.fill: parent
             orientation: ListView.Horizontal
-            spacing: 60
+            spacing: 10
             clip: true
+            leftMargin: 100
+            rightMargin: 100
             model: FolderListModel {
                 id: wallpapermodel
                 folder: "file:///home/akai/Pictures/Wallpapers"
@@ -40,8 +42,8 @@ FloatingWindow {
 
             delegate: Rectangle {
                 id: wall_Item
-                width: 200
-                height: 350
+                width: hoverscale==1? 200: 600
+                height: 450
                 color: "transparent"
                 radius: 0
                 clip: true
@@ -52,13 +54,10 @@ FloatingWindow {
                     xFactor: -0.304
                     yFactor: 0
                 }
-
-                scale: hoverscale
-
-                Behavior on hoverscale {
-                    NumberAnimation {
+                Behavior on width{
+                    NumberAnimation{
                         duration: 400
-                        easing.type: Easing.InCurve
+                        easing.type: Easing.Bezier
                     }
                 }
 
@@ -67,7 +66,8 @@ FloatingWindow {
                     anchors.margins: wall_Item.border.width
                     source: "file://" + filePath
                     fillMode: Image.PreserveAspectCrop
-                    sourceSize.height: 250
+                    sourceSize.height: 350
+                    sourceSize.width: 400
                     mipmap: true
                     cache: false
                     asynchronous: true

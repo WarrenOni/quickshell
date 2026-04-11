@@ -45,8 +45,7 @@ ShellRoot{
     Loader{
         id: wallpaper_selector
         active: root.wallselect
-        source:"Extra/Wallpaper.qml" 
-
+        source: root.wallselect ? "Extra/Wallpaper.qml" : null 
         IpcHandler {
             target: "wallselect"
             function open(): void {
@@ -58,7 +57,7 @@ ShellRoot{
     Loader{
         id: launcher
         active: root.launcher
-        source:"Extra/Launcher.qml" 
+        source: root.launcher ? "Extra/Launcher.qml" : null
         
         onLoaded: {
             item.toggle.connect(function(){

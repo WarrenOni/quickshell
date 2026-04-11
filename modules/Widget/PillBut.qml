@@ -3,40 +3,32 @@ import QtQuick
 Rectangle{
     id: pill
     property string label:""
-    property string icon: ""
     property color pillcolor: theme.secondary
     property real pillscale: 1.0
     property real pillwidth: 1
     property int voff: 0
+    property int pillrad: height/2
+    property string font_family: "ESPACION"
+    property int pixelsize:  14 * pill.pillscale
     property int hoff: 0
     property bool fcus: false
     width: 69 * pillwidth
     height: 40 * pillscale
-    radius: height / 2
+    radius: pillrad
     color: fcus ? pillcolor : theme.on_primary
     anchors{
-        horizontalCenter: parent.horizontalCenter
-        verticalCenter: parent.verticalCenter
+        //horizontalCenter: parent.horizontalCenter
+        //verticalCenter: parent.verticalCenter
         verticalCenterOffset: voff 
         horizontalCenterOffset: hoff
        // centerIn: parent
     }
-    Row{
-        anchors.centerIn: parent
-        spacing: 3
-        Text{
-            text: pill.icon
-            font.pixelSize: 16 * pill.pillscale
-        }
-        Text{
+    Text{   
+            anchors.centerIn: parent
             text: pill.label
-            font.pixelSize: 14 * pill.pillscale
+            font.pixelSize: pill.pixelsize
             color: "black"
-            font.family: "ESPACION"
+            font.family: pill.font_family
         }
-    }
-    MouseArea{
-        anchors.fill: parent
-        onClicked: console.log("clicked")
-    }
+
 }

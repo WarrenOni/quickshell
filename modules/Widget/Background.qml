@@ -3,6 +3,7 @@ Item{
     id:root
     width: parent.width 
     height: parent.height 
+    clip: true
     opacity: 0.1
 
     // --- Minimal Morphing Shape ---

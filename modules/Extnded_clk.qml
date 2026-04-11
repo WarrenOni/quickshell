@@ -18,7 +18,7 @@ PopupWindow {
     property bool blth_panel: false
     property bool wifi_panel: false
     property bool clock_panel: true
-
+    
     Process{
         id:connectProc
         onStarted : console.log("connect started")
@@ -60,7 +60,7 @@ PopupWindow {
     }
     Timer {
         id: wifiRefresh
-        interval: 3000
+        interval: 2000
         running: menu.open && menu.wifi_panel
         repeat: true
         onTriggered: { 
@@ -71,7 +71,7 @@ PopupWindow {
     }
     Timer {
         id: bluetoothRefresh
-        interval: 3000
+        interval: 2000
         running: menu.open && menu.blth_panel
         repeat: true
         onTriggered: { 
@@ -88,7 +88,7 @@ PopupWindow {
         get_bt_connenction_name.running = true
         }
     }
-    visible: open || panel.height > 0
+    visible: open || panel.y > -menu.height
     color: "transparent"
 
     implicitWidth: 720
@@ -102,27 +102,28 @@ PopupWindow {
     Rectangle {
         id: panel
         width: parent.width
-        height: menu.open ? parent.height : 0
+        height: menu.height
         clip: true
         color:  theme.background
         radius: 20
-
-        Behavior on height {
+        border.color: theme.on_primary
+        border.width: 0.5
+        y: menu.open ? 0 : -menu.height
+        Behavior on y {
             NumberAnimation {
-                duration: 200
-                easing.type: Easing.InOutCirc
+                duration: 600
+                easing.type: Easing.OutQuart
             }}
+        
+
+        Item{
+            anchors.centerIn: parent
 
         Ripple {
             visible: menu.wifi_panel
             anchors.centerIn: parent
             running: menu.open && menu.wifiData.connected
 
-        }
-        Ripple{
-            visible: menu.blth_panel
-            running: menu.open && menu.bluetoothData.connected
-            anchors.centerIn: parent
         }
         Wifi_circle_comp {
             wifi_panel: menu.wifi_panel
@@ -137,6 +138,7 @@ PopupWindow {
             connectProc: connectProc
             visible: menu.wifi_panel
         }
+        }
         Background{
             id: bg
             clip: true
@@ -144,13 +146,13 @@ PopupWindow {
 
         PillBut{
             id: clock_pill
-            label: "Clock"
-            icon: ""
+            label: "Dash"
             pillscale: 1.1
             voff: 200
             hoff: -80
             fcus: true
-            
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
             MouseArea{
                 anchors.fill: parent
                 onClicked:{
@@ -164,19 +166,22 @@ PopupWindow {
                 }
             }
          }
+
         Clock_Extnded_clk{
             clock_panel: menu.clock_panel
+            open: menu.open
         }
 
 
         PillBut{
             id: wifi_pill
             label: "Wi-Fi"
-            icon: ""
             pillscale: 1.1
             voff: 200
             hoff: 0
             fcus: false
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
             MouseArea{
                 anchors.fill: parent
                 onClicked:{
@@ -193,12 +198,13 @@ PopupWindow {
         PillBut{
             id: blth_pill
             label: "Bluetooth"
-            icon: ""
             pillscale: 1.1
             pillwidth: 1.5
             voff: 200
             fcus: false
             hoff: 95
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
             MouseArea{
                 anchors.fill: parent
                 onClicked:{
@@ -212,6 +218,14 @@ PopupWindow {
                 }
             }
         }
+        Item{
+            height: parent.height
+            width: parent.width
+        Ripple{
+            visible: menu.blth_panel
+            running: menu.open && menu.bluetoothData.connected
+            anchors.centerIn: parent
+        }
         Bluetooth_circle_comp{
             bluetooth_panel: menu.blth_panel
             anchors.centerIn: parent
@@ -223,6 +237,7 @@ PopupWindow {
             scan_vis: menu.blth_scan_vis
             bluetoothData: menu.bluetoothData
             connectProc: connectProc
+        }
         }
 
 

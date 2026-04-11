@@ -1,5 +1,6 @@
 import QtQuick
 //import QtQuick.Layouts
+import QtQuick.Shapes
 
 Item{
     id:main_circ_root
@@ -8,15 +9,24 @@ Item{
     property bool wifi_panel: true
     visible: main_circ_root.wifi_panel
     width: 190
+    Component.onCompleted:{
+        console.log("")
+    }
     height: 190
     Rectangle {
         id: circ_cent
         width: 190
-        height: 190
+        opacity: 1
+        height: width
         radius: 100
-        color: theme.secondary
+        gradient: RadialGradient{
+            centerX: 90; centerY: 90; centerRadius: 100;
+            focalX: centerX; focalY: centerY;
+            GradientStop{position:0.2;color:theme.secondary}
+            GradientStop{position:0.9;color:theme.primary}
+        }
         anchors.centerIn: parent
-
+        
         MouseArea{
             anchors.fill: parent
             onClicked: {
@@ -33,8 +43,8 @@ Item{
             NumberAnimation{
                 from: 1
                 to: 0.95
-                duration: 100
-                easing.type: Easing.InCubic
+                duration: 150
+                easing.type: Easing.OutCubic
             }
             NumberAnimation{
                 to: 1
@@ -48,7 +58,7 @@ Item{
 
             Text {
                 font.family: "Symbols Nerd Font"
-                text: wifiData.connected ? wifiData.connected.icon : "󰤮"
+                text: wifiData.power==="on" ?  (wifiData.connected ? wifiData.connected.icon :  "\udb82\udd2f") : "\udb82\udd2e"
                 font.pixelSize: 60
                 anchors.horizontalCenter: parent.horizontalCenter
             }
@@ -56,9 +66,9 @@ Item{
             Text {
                 id: wifi_text1
                 text: wifiData.connected ? wifiData.connected.ssid : "Not Connected"
-                font.pixelSize: 16
+                font.pixelSize: wifiData.connected ? (wifiData.connected.ssid.length > 20 ? ((2-wifiData.connected.ssid.length/22)*16) : 16  ) : 15 
                 font.bold: true
-                font.family: whispering
+                font.family: "PIXELON"
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
@@ -66,7 +76,7 @@ Item{
                 
                 text: wifiData.connected ? "Connected" : "Disconnected"
                 font.pixelSize: 12
-                font.family: wifi_text1.font.family
+                font.family: whispering
                 anchors.horizontalCenter: parent.horizontalCenter                
             }
         }  
