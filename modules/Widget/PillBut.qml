@@ -5,14 +5,20 @@ Rectangle{
     property string label:""
     property color pillcolor: theme.secondary
     property real pillscale: 1.0
-    property real pillwidth: 1
+    property int pillwidth: 1
     property int voff: 0
     property int pillrad: height/2
     property string font_family: "ESPACION"
     property int pixelsize:  14 * pill.pillscale
     property int hoff: 0
     property bool fcus: false
-    width: 69 * pillwidth
+    width: {
+        switch(label){
+            case "Bluetooth" : return 100;
+            case "Wi-fi": case "Dash": return 70;
+            default: return 27;
+        }
+    }
     height: 40 * pillscale
     radius: pillrad
     color: fcus ? pillcolor : theme.on_primary

@@ -13,19 +13,17 @@ Item{
     property MprisPlayer player: players[0]
     property bool open: false
     property bool seeker_active: false
-
-    width: parent.width
-    height: parent.height
+    implicitWidth: parent.width
+    implicitHeight: parent.height
     clip: true
     visible: root.clock_panel
-    anchors.centerIn: parent
     Component.onCompleted:{
         //console.log(players)
         console.log(players.length)
         //date_rect.width = date_rect.cal_width()
     }
     Timer{
-            interval: 100
+            interval: 50
             running: root.open
             repeat: true
             onTriggered:{
@@ -33,8 +31,8 @@ Item{
             }
     }
     Item{
-        width:parent.width
-        height:parent.height
+        width:root.width
+        height:root.height
         NumberAnimation on x{
             id: top_anim
             running: root.open

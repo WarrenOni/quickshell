@@ -33,7 +33,8 @@ PanelWindow {
             id:menu2
             property bool open: false
             active: false
-            visible: open
+            //visible: open
+            function dash_starter(){menu2.active=true;menu2.open=!menu2.open;}
             sourceComponent: Extnded_clk{
                 open: menu2.open
                 bar_window: bar
@@ -43,6 +44,14 @@ PanelWindow {
             Connections{
                 target: menu2.item
                 function onToggle(){console.log("got value");menu2.active=false}
+            }
+            IpcHandler{
+                target: "menu2"
+                function open(): void {
+                if (menu2.open===false) menu2.dash_starter()
+                else{menu2.open=false}
+                console.log("application launcher started")
+            }
             }
         }
 
@@ -132,7 +141,7 @@ PanelWindow {
             anchors.verticalCenterOffset: -0.5
             MouseArea{
                 anchors.fill: parent
-                onClicked: {menu2.active=true;menu2.open=!menu2.open;}
+                onClicked: {menu2.dash_starter()}
             }
 
         SystemClock{

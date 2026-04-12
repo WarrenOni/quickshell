@@ -14,11 +14,25 @@ PopupWindow {
     property var bar_window
     property bool open : false
     property bool scan_vis : false
-    property bool blth_scan_vis: false
-    property bool blth_panel: false
-    property bool wifi_panel: false
-    property bool clock_panel: true
+    property var pills: ["Dash","Wi-fi","Bluetooth"]
+    property bool blth_scan_vis: blth_panel
+    property bool blth_panel: current_active===2
+    property bool wifi_panel:  current_active===1
+    property bool clock_panel: current_active===0 
+    property int last_active: 0
+    property int current_active: 0
     signal toggle()
+
+    function switch_menu(index){
+        last_active=current_active;
+        current_active=index;
+        //if(current_active>last_active)right_anim();
+       // if(current_active<last_active)left_anim();
+        console.log("activated Current: ",current_active,"last: ",last_active)
+    }
+    function right_anim(){}
+    function left_anim(){}
+
     Process{
         id:connectProc
         onStarted : console.log("connect started")
@@ -82,10 +96,12 @@ PopupWindow {
     
     onOpenChanged:{
         if(menu.open) { 
-        //get_connection_name.running = false
-        get_connection_name.restart //= true
-        //get_bt_connenction_name.running = false
-        get_bt_connenction_name.restart //= true
+            get_connection_name.running = true
+            get_bt_connenction_name.running = true
+        }
+        if (!menu.open) {
+            get_connection_name.running = false
+            get_bt_connenction_name.running = false
         }
     }
     visible: open || panel.y > -menu.height
@@ -137,7 +153,7 @@ PopupWindow {
         Ripple {
             visible: menu.wifi_panel
             anchors.centerIn: parent
-            running: menu.open && menu.wifiData.connected
+            running: menu.open && menu.wifiData.connected 
 
         }
         Wifi_circle_comp {
@@ -159,82 +175,35 @@ PopupWindow {
             id: bg
             clip: true
         }
-
-        PillBut{
-            id: clock_pill
-            label: "Dash"
-            pillscale: 1.1
-            voff: 200
-            hoff: -80
-            fcus: true
-            anchors.horizontalCenter: parent.horizontalCenter
+        Row{
             anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenterOffset: 210
+            anchors.horizontalCenterOffset: 15
+            spacing: 15
+        Repeater{
+            model: menu.pills
+            delegate:PillBut{
+            id: pill_del
+            label: modelData
+            pillscale: 1.1
+            fcus: index===menu.current_active
             MouseArea{
                 anchors.fill: parent
-                onClicked:{
-                    blth_pill.fcus = false
-                    wifi_pill.fcus = false
-                    clock_pill.fcus = true
-                    menu.clock_panel = true
-                    menu.wifi_panel = false
-                    menu.blth_panel = false
-                    menu.blth_scan_vis = false
-                }
+                onClicked:menu.switch_menu(index)
             }
-         }
+            }
+            }
+        }
 
         Clock_Extnded_clk{
             clock_panel: menu.clock_panel
-            open: menu.open
+            open: menu.open     
+        
         }
 
-
-        PillBut{
-            id: wifi_pill
-            label: "Wi-Fi"
-            pillscale: 1.1
-            voff: 200
-            hoff: 0
-            fcus: false
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            MouseArea{
-                anchors.fill: parent
-                onClicked:{
-                    blth_pill.fcus = false
-                    wifi_pill.fcus = true
-                    clock_pill.fcus = false
-                    menu.wifi_panel = true
-                    menu.blth_panel = false
-                    menu.blth_scan_vis = false
-                    menu.clock_panel = false
-                }
-            }
-         }
-        PillBut{
-            id: blth_pill
-            label: "Bluetooth"
-            pillscale: 1.1
-            pillwidth: 1.5
-            voff: 200
-            fcus: false
-            hoff: 95
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            MouseArea{
-                anchors.fill: parent
-                onClicked:{
-                    blth_pill.fcus = true
-                    wifi_pill.fcus = false
-                    clock_pill.fcus = false
-                    menu.blth_panel = true
-                    menu.wifi_panel = false
-                    menu.blth_scan_vis = true
-                    menu.clock_panel = false
-                }
-            }
-        }
         Item{
+            id: blth_item
             height: parent.height
             width: parent.width
         Ripple{
