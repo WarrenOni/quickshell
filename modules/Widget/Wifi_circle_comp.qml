@@ -6,8 +6,6 @@ Item{
     id:main_circ_root
     property var wifiData: ({})
     property var connectProc: ({})
-    property bool wifi_panel: true
-    visible: main_circ_root.wifi_panel
     width: 190
     Component.onCompleted:{
         console.log("")
@@ -54,7 +52,7 @@ Item{
         }
         Column {
             anchors.centerIn: parent
-            spacing: 3
+            spacing: 4
 
             Text {
                 font.family: "Symbols Nerd Font"
@@ -65,7 +63,7 @@ Item{
 
             Text {
                 id: wifi_text1
-                text: wifiData.connected ? wifiData.connected.ssid : "Not Connected"
+                text: wifiData.connected ? wifiData.connected.ssid : ""
                 font.pixelSize: wifiData.connected ? (wifiData.connected.ssid.length > 20 ? ((2-wifiData.connected.ssid.length/22)*16) : 16  ) : 15 
                 font.bold: true
                 font.family: "PIXELON"
@@ -75,7 +73,7 @@ Item{
             Text {
                 
                 text: wifiData.connected ? "Connected" : "Disconnected"
-                font.pixelSize: 12
+                font.pixelSize: 14
                 font.family: whispering
                 anchors.horizontalCenter: parent.horizontalCenter                
             }

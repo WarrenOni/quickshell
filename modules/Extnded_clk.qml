@@ -3,12 +3,14 @@ import Quickshell
 import QtQuick
 import Quickshell.Io
 //import QtQuick.Shapes
+import "../"
 import "./Widget"
+import QtQuick.Controls
 
 PopupWindow {
     id: menu
-    property var wifiData: ({})
-    property var bluetoothData: ({})
+    //property var wifiData: P_data.wifiData
+    //property var bluetoothData: P_data.bluetoothData
     property int bar_height
     property int bar_width
     property var bar_window
@@ -16,22 +18,10 @@ PopupWindow {
     property bool scan_vis : false
     property var pills: ["Dash","Wi-fi","Bluetooth"]
     property bool blth_scan_vis: blth_panel
-    property bool blth_panel: current_active===2
-    property bool wifi_panel:  current_active===1
-    property bool clock_panel: current_active===0 
-    property int last_active: 0
-    property int current_active: 0
+    property bool blth_panel: view.currentIndex===2
+    property bool wifi_panel: view.currentIndex===1
+    property bool clock_panel: view.currentIndex===0
     signal toggle()
-
-    function switch_menu(index){
-        last_active=current_active;
-        current_active=index;
-        //if(current_active>last_active)right_anim();
-       // if(current_active<last_active)left_anim();
-        console.log("activated Current: ",current_active,"last: ",last_active)
-    }
-    function right_anim(){}
-    function left_anim(){}
 
     Process{
         id:connectProc
@@ -47,7 +37,7 @@ PopupWindow {
         stdout: StdioCollector{
             onTextChanged: {
                 try {
-                    wifiData = JSON.parse(text.trim())
+                    P_data.wifiData = JSON.parse(text.trim())
                 } catch(e) {
                     console.log("wifi error")
                 }
@@ -64,7 +54,7 @@ PopupWindow {
         stdout: StdioCollector{
             onTextChanged: {
                 try {
-                    bluetoothData = JSON.parse(text.trim())
+                    P_data.bluetoothData = JSON.parse(text.trim())
                 } catch(e) {
                     console.log("bluetooth passed")
                 }
@@ -74,18 +64,18 @@ PopupWindow {
     }
     Timer {
         id: wifiRefresh
-        interval: 2000
+        interval: 1500
         running: menu.open && menu.wifi_panel
         repeat: true
         onTriggered: { 
             get_connection_name.running = false
             get_connection_name.running = true
-
+            console.log("triggered_wifi_timer")
             }
     }
     Timer {
         id: bluetoothRefresh
-        interval: 2000
+        interval: 1500
         running: menu.open && menu.blth_panel
         repeat: true
         onTriggered: { 
@@ -94,16 +84,6 @@ PopupWindow {
             }
     }
     
-    onOpenChanged:{
-        if(menu.open) { 
-            get_connection_name.running = true
-            get_bt_connenction_name.running = true
-        }
-        if (!menu.open) {
-            get_connection_name.running = false
-            get_bt_connenction_name.running = false
-        }
-    }
     visible: open || panel.y > -menu.height
     color: "transparent"
 
@@ -125,17 +105,6 @@ PopupWindow {
         border.color: theme.on_primary
         border.width: 0.5
         y: !menu.open ? -menu.height : 0
-        /*NumberAnimation {
-                id: panel_anim
-                duration: 600
-                target: panel
-                property: "y"
-                from: menu.open ? -menu.height : 0 
-                to: menu.open ? 0: -panel.height
-                easing.type: Easing.OutQuart
-                running: menu.open || !menu.open
-                onFinished: if(!menu.open)menu.toggle()
-        }*/
         Behavior on y{
             NumberAnimation{
                 duration: 600
@@ -146,35 +115,64 @@ PopupWindow {
                     }}
             }
         }
+    Background{
+            id: bg
+            clip: true
+        }
+    SwipeView{
+        id: view
+        anchors.fill: parent
+        
+
+        Clock_Extnded_clk{
+            open: menu.open     
+        }
 
         Item{
-            anchors.centerIn: parent
 
         Ripple {
             visible: menu.wifi_panel
             anchors.centerIn: parent
-            running: menu.open && menu.wifiData.connected 
-
+            running: menu.open && P_data.wifiData.connected 
         }
         Wifi_circle_comp {
-            wifi_panel: menu.wifi_panel
             anchors.centerIn: parent
-            wifiData: menu.wifiData
+            wifiData: P_data.wifiData
             connectProc: connectProc
         }
         
         Wifi_scan_panel {
             scan_vis : menu.scan_vis
-            wifiData: menu.wifiData
+            wifiData: P_data.wifiData
             connectProc: connectProc
-            visible: menu.wifi_panel
         }
         }
         
-        Background{
-            id: bg
-            clip: true
+        Item{
+            id: blth_item
+        Ripple{
+            visible: menu.blth_panel
+            running:{ menu.open ? 
+            (P_data.bluetoothData.power === "on" ? 
+            (P_data.bluetoothData.connected ? true : false)
+            :false) : false}
+            anchors.centerIn: parent
         }
+        Bluetooth_circle_comp{
+            anchors.centerIn: parent
+            bluetoothData: P_data.bluetoothData
+            connectProc: connectProc
+        }
+        Bluetooth_Panel{
+            id: blth
+            scan_vis: menu.blth_scan_vis
+            bluetoothData: P_data.bluetoothData
+            connectProc: connectProc
+        }
+        }
+
+    }
+
         Row{
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
@@ -182,53 +180,20 @@ PopupWindow {
             anchors.horizontalCenterOffset: 15
             spacing: 15
         Repeater{
+            id: model1
             model: menu.pills
             delegate:PillBut{
             id: pill_del
             label: modelData
             pillscale: 1.1
-            fcus: index===menu.current_active
+            fcus: view.currentIndex===index
             MouseArea{
                 anchors.fill: parent
-                onClicked:menu.switch_menu(index)
+                onClicked:{view.currentIndex=index}
             }
             }
             }
         }
-
-        Clock_Extnded_clk{
-            clock_panel: menu.clock_panel
-            open: menu.open     
-        
-        }
-
-        Item{
-            id: blth_item
-            height: parent.height
-            width: parent.width
-        Ripple{
-            visible: menu.blth_panel
-            running:{ menu.open ? 
-            (menu.bluetoothData.power === "on" ? 
-            ( menu.bluetoothData.connected ? true : false)
-            :false) : false}
-            anchors.centerIn: parent
-        }
-        Bluetooth_circle_comp{
-            bluetooth_panel: menu.blth_panel
-            anchors.centerIn: parent
-            bluetoothData: menu.bluetoothData
-            connectProc: connectProc
-        }
-        Bluetooth_Panel{
-            id: blth
-            scan_vis: menu.blth_scan_vis
-            bluetoothData: menu.bluetoothData
-            connectProc: connectProc
-        }
-        }
-
-
 
 
     }

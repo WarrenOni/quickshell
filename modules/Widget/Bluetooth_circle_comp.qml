@@ -6,10 +6,9 @@ Item{
     id:main_circ_root
     property var bluetoothData: ({})
     property var connectProc: ({})
-    property bool bluetooth_panel: true
-    visible: main_circ_root.bluetooth_panel
     width: 190
     height: 190
+    clip: true
     Rectangle {
         id: circ_cent
         width: 190
@@ -72,8 +71,8 @@ Item{
             Text {
                 id: wifi_text1
                 text: bluetoothData.power === "on" ? ( bluetoothData.connected ? bluetoothData.connected.name : "Not Connected" ): ""
-                font.pixelSize: 16
-                font.family: whispering
+                font.pixelSize: bluetoothData.connected ? (bluetoothData.connected.name.length > 20 ? ((2-bluetoothData.connected.name.length/22)*16) : 16  ) : 15 
+                font.family: "PIXELON"
                 font.bold: true
                 anchors.horizontalCenter: parent.horizontalCenter
             }
@@ -88,7 +87,7 @@ Item{
                 
                 text: bluetoothData.connected ? "" : "Disconnected"
                 font.pixelSize: wifi_text1.text != "" ? 12 : 16
-                font.family: wifi_text1.font.family
+                font.family: whispering
                 anchors.horizontalCenter: parent.horizontalCenter                
             }
         }  

@@ -19,19 +19,19 @@ FloatingWindow {
         console.log("Wallpaper And theme applied: " + path)
         toggle()
     }
-    
     Rectangle {
         anchors.fill: parent
         color: "transparent"
         border.width: 0
-        
         ListView {
             id: wall_list
             anchors.fill: parent
+            //width: parent.width
+            //height: parent.height
             orientation: ListView.Horizontal
             spacing: 10
             clip: true
-            leftMargin: 100
+            leftMargin: 150
             rightMargin: 100
             model: FolderListModel {
                 id: wallpapermodel
@@ -40,17 +40,24 @@ FloatingWindow {
                 sortField: FolderListModel.Size
                 sortReversed: true
             }
+            /*
+            MouseArea{
+                anchors.fill: parent
+                onWheel: (wheel) =>{
+                    if((wheel.angleDelta.y||wheel.angleDelta.x)<0){wall_list.contentX+=30}
+                    if((wheel.angleDelta.y||wheel.angleDelta.x)>0) {wall_list.contentX-=30}
+                }
+            }*/
 
             delegate: Rectangle {
                 id: wall_Item
-                width: hoverscale==1? 200: 600
+                width: hoverscale===1? 200: 600
                 height: 450
                 color: "transparent"
                 radius: 0
                 clip: true
                 anchors.verticalCenter: parent.verticalCenter
                 property real hoverscale: 1
-
                 transform: Shear {
                     xFactor: -0.304
                     yFactor: 0
@@ -70,7 +77,7 @@ FloatingWindow {
                     sourceSize.height: 450
                     sourceSize.width: 400
                     mipmap: true
-                    cache: false
+                    cache: true
                     asynchronous: true
                 }
 

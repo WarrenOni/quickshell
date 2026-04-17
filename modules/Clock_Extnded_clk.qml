@@ -1,22 +1,21 @@
 import QtQuick
-import Quickshell.Services.Mpris
 import "./Widget"
+import "../"
 Item{
     id: root
-    property bool clock_panel
     property var date1: new Date()
     property var date: new Date()
     property var milli_s: date.getMilliseconds()
     property var day: root.date1.toLocaleDateString(Qt.locale(),"dddd")
     property var clock_font: "Electroharmonix"
-    property var players: Mpris.players.values
-    property MprisPlayer player: players[0]
+    property var players: P_data.players 
+    property var player: P_data.player
     property bool open: false
     property bool seeker_active: false
+
     implicitWidth: parent.width
     implicitHeight: parent.height
     clip: true
-    visible: root.clock_panel
     Component.onCompleted:{
         //console.log(players)
         console.log(players.length)
@@ -33,6 +32,7 @@ Item{
     Item{
         width:root.width
         height:root.height
+        clip: true
         NumberAnimation on x{
             id: top_anim
             running: root.open
@@ -106,12 +106,12 @@ Item{
     Text{
         text: root.day
         anchors.verticalCenter: date_rect.verticalCenter
-        anchors.verticalCenterOffset: -2.8
+        anchors.verticalCenterOffset: -2.4
         anchors.left: date_rect.right
         anchors.leftMargin: {
             switch(date_rect.width){
                 case 450: case 550: return -15.5;
-                case 350: case 460: return -20.5;
+                case 350: case 460: return -21;
                 case 340: case 500: return -19.8;
                 case 290: return -6;
                 default: return -15.5;
@@ -283,16 +283,20 @@ Item{
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.horizontalCenterOffset: 180
-
+        visible: root.player ? true:false
         MouseArea{
             anchors.fill: parent
+            preventStealing: false
+            drag.axis:Drag.YAxis
             property int n
+
             onWheel: (wheel) => {
                 let maxIndex = root.players.length-1;
                 if (wheel.angleDelta.y<0) {n=Math.min(n+1,maxIndex)}
                 else if (wheel.angleDelta.y>0) {n=Math.max(n-1,0)}
-                root.player=root.players[n]
+                if(root.player) root.player=root.players[n]
             }
+
         }
 
         ParallelAnimation{
@@ -321,16 +325,10 @@ Item{
         height: 120
         radius: 20
         color: theme.primary
-        visible: root.player ? true:false
         opacity: 0.5
         border.color: theme.on_primary_container
         border.width: 2
 
-        MouseArea{
-        anchors.fill: parent
-        hoverEnabled: true
-        onHoveredChanged: root.seeker_active = !root.seeker_active
-        }
         Column{
             visible: root.players.length > 1
             anchors.left: player_rect.right
@@ -373,7 +371,7 @@ Item{
             Image{
                 id: trackart
                 anchors.centerIn: parent
-                source: root.player.trackArtUrl
+                source: root.players ? root.player.trackArtUrl : null
                 sourceSize.width: width*1.5
                 sourceSize.height: height*1.5
                 height: 90
@@ -388,6 +386,7 @@ Item{
             }
             }
             Column{
+                spacing: mpris_.cover_visible ? 0 : (artist.text ? 2 : 6 )
             Item{
                 id: title_limiter
                 width: mpris_.cover_visible ? 170 : 276
@@ -395,7 +394,7 @@ Item{
                 clip: true
             Text{
               id: title
-              text: root.player.trackTitle
+              text: root.players ? root.player.trackTitle : ""
               font.bold: true
               font.pixelSize: 17
               font.family: "Noto Sans"
@@ -423,7 +422,7 @@ Item{
                 width: 160
                 visible: artist.text!=="" ? true: false
                 elide: Text.ElideRight
-                text: root.player.trackArtist
+                text: root.players ? root.player.trackArtist : ""
                 font.pixelSize: 12
                 font.family: "Noto Sans"
             }
@@ -443,14 +442,16 @@ Item{
                 r_width: mpris_.cover_visible ? 170: 276
                 r_color: theme.secondary
                 r1_color: theme.on_secondary
-                r1_width: (root.player.position)/(root.player.length)*r_width
+                r1_width: root.players ? (root.player.position)/(root.player.length)*r_width : 0
                 seeker: 12
                 r_radius: 10
                 seeker_active: root.seeker_active
                 MouseArea{
                     property int offset: 5
                     anchors.fill: parent
-                    onClicked: player.seek(offset)
+                    hoverEnabled: true
+                    onHoveredChanged: root.seeker_active = !root.seeker_active
+                    onClicked: root.player.seek(offset)
                 }
             }
             Row{
@@ -465,7 +466,7 @@ Item{
                 pixelsize: 18
                 font_family: "MONOSPACE"
                 radius: parent.rad
-                opacity: root.player.canGoPrevious ? 1.0: 0.2
+                opacity: root.players ? (root.player.canGoPrevious ? 1.0: 0.2) : 0
                 MouseArea{
                     anchors.fill: parent
                     onClicked: root.player.previous()
@@ -474,7 +475,7 @@ Item{
             PillBut{
                 pillwidth: parent.togglewidth
                 pillscale: parent.toggleheight
-                label: root.player.isPlaying?"\uf04c":"\uf04b"
+                label: root.players ? (root.player.isPlaying?"\uf04c":"\uf04b") : ""
                 pixelsize: 16
                 radius: parent.rad
                 MouseArea{
@@ -486,7 +487,7 @@ Item{
                 pillwidth: parent.togglewidth
                 pillscale: parent.toggleheight
                 label: "\udb81\udcad"
-                opacity: root.player.canGoNext ? 1.0 : 0.2
+                opacity: root.players ? (root.player.canGoNext ? 1.0 : 0.2) : 0
                 pixelsize: 18
                 font_family: "MONOSPACE"
                 radius: parent.rad
@@ -499,7 +500,7 @@ Item{
                 pillwidth: parent.togglewidth
                 pillscale: parent.toggleheight
                 label: "\uf074"
-                opacity: (root.player.loopSupported || root.player.shuffleSupported) ? 1.0 : 0.2
+                opacity: root.players ? ((root.player.loopSupported || root.player.shuffleSupported) ? 1.0 : 0.2): 0
                 pixelsize: 18
                 font_family: "MONOSPACE"
                 radius: parent.rad
@@ -513,5 +514,6 @@ Item{
             }
         }
     }
+
     ///////////////////////
 }

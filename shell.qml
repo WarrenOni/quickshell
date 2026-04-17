@@ -16,7 +16,9 @@ import "./Extra"
 
 ShellRoot{ 
     id: root
-    Colors {id:theme}
+    Colors {id:theme
+    //property string background: "#ffffff"
+    }
 
     property bool wallselect: false
     property bool launcher: false
@@ -46,7 +48,7 @@ ShellRoot{
         id: wallpaper_selector
         active: root.wallselect
         component:Wallpaper{
-            onToggle: root.wallselect=false
+            onToggle:{root.wallselect=false}
         }
         //source: "Extra/Wallpaper.qml"
         }

@@ -31,11 +31,15 @@ Rectangle{
 Rectangle{
     height:width
     color: r2.color
-    visible: root.seeker_active //((r2.width < 10)|| (r2.width > r1.width - 10)) ? false: true
+    visible: opacity != 0 
+    opacity: root.seeker_active 
     width: root.seeker 
     radius: root.seeker/2
     anchors.horizontalCenter:r2.right
     anchors.verticalCenter: parent.verticalCenter
     anchors.verticalCenterOffset: -root.seeker/2
+    Behavior on opacity{
+        NumberAnimation{duration:150}
+    }
 }
 }
