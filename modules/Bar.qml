@@ -37,6 +37,9 @@ PanelWindow {
             left: true
             right: true
         }
+    /////////////////
+        Notif_Pop{id:notification_pop}
+
         //MENU
                     
         Loader{
@@ -178,7 +181,7 @@ PanelWindow {
             // Volume
             Item{
                 anchors.fill: parent
-                state: bar.audio_on ? "expanded" :"hidden"
+                state: audio_on ? "expanded" :"hidden"
                  
                 states:[
                     State{
@@ -406,6 +409,8 @@ PanelWindow {
                             color: "white"
                             anchors.centerIn: parent
                         }
+                        Text{visible:bar.volumeMuted||bar.volume===0;text:"|";color:"white";rotation:45;font.pixelSize:20;anchors.centerIn:parent;font.bold:true;font.family:"ESPACION"}
+                        MouseArea{anchors.fill:parent;onClicked:Quickshell.execDetached(["wpctl","set-mute","@DEFAULT_AUDIO_SINK@","toggle"])}
                     }
                     Rectangle{
                         id: vol_hoverer_comp

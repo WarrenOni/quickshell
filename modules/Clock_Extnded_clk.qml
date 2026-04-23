@@ -19,6 +19,7 @@ Item{
     Component.onCompleted:{
         //console.log(players)
         console.log(players.length)
+        
         //date_rect.width = date_rect.cal_width()
     }
     Timer{
@@ -106,7 +107,7 @@ Item{
     Text{
         text: root.day
         anchors.verticalCenter: date_rect.verticalCenter
-        anchors.verticalCenterOffset: -2.4
+        anchors.verticalCenterOffset: -2.8
         anchors.left: date_rect.right
         anchors.leftMargin: {
             switch(date_rect.width){
@@ -516,4 +517,22 @@ Item{
     }
 
     ///////////////////////
+    Rectangle{
+        id: notif_shell
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        width: 300
+        height: 170
+        radius: 20
+        color: theme.primary
+        opacity: 0.1
+        anchors.horizontalCenterOffset: 180
+        anchors.verticalCenterOffset: 90
+        }
+        Notifications{
+            width: notif_shell.width
+            height: notif_shell.height-10
+            anchors.horizontalCenter: notif_shell.horizontalCenter
+            anchors.verticalCenter: notif_shell.verticalCenter
+        }
 }
