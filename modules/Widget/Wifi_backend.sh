@@ -16,7 +16,7 @@ get_icon() {
     else echo "󰤯";
     fi
 }
-
+IP=$(hostname -i)
 CURRENT_RAW=$(nmcli -t -f active,ssid,signal,security device wifi | grep "^yes")
 
 if [[ -n "$CURRENT_RAW" ]]; then
@@ -28,8 +28,9 @@ if [[ -n "$CURRENT_RAW" ]]; then
         --arg ssid "$ssid" \
         --arg icon "$icon" \
         --arg signal "$signal" \
+        --arg ip "$IP" \
         --arg security "$security" \
-        '{ssid: $ssid, icon: $icon, signal: $signal, security: $security}')
+        '{ssid: $ssid, icon: $icon, signal: $signal, security: $security, ip: $ip}')
 else
     CONNECTED_JSON="null"
 fi

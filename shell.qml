@@ -76,4 +76,10 @@ ShellRoot{
                 console.log("application launcher started")
             }
     }
+    LazyLoader{
+        id: tor_win
+        active: P_data.tor_win
+        loading: P_data.tor_win
+        component: Torrer{}
+    }
 }

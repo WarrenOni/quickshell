@@ -1,7 +1,7 @@
 import QtQuick
 //import QtQuick.Layouts
 import QtQuick.Shapes
-
+import "../../."
 Item{
     id:main_circ_root
     property var wifiData: ({})
@@ -103,6 +103,42 @@ Item{
             }
             Text{
                 text: "Signal Strength"
+                font.pixelSize:17
+                font.family: "ESPACION"
+                font.italic: true
+            }
+        }
+
+    }
+    Rectangle{
+        width: 190
+        height: 90
+        radius: 40
+        opacity: 0.9
+        color: theme.on_secondary
+        border.width: 0.5
+        border.color: theme.scrim
+        anchors{
+            top: main_circ_root.top
+            horizontalCenter: parent.horizontalCenter
+            horizontalCenterOffset: 60
+            topMargin: -130
+        }
+        MouseArea{
+            anchors.fill: parent
+            onDoubleClicked: P_data.tor_win=!P_data.tor_win
+        }
+        Column{
+            anchors.centerIn: parent
+            Text{
+                color: "green"
+                text: wifiData.connected ? wifiData.connected.ip : "----"
+                font.pixelSize: 20
+                font.family: "Pixelon"
+                font.italic: true
+            }
+            Text{
+                text: "Current IP Add"
                 font.pixelSize:17
                 font.family: "ESPACION"
                 font.italic: true

@@ -38,8 +38,12 @@ PanelWindow {
             right: true
         }
     /////////////////
-        Notif_Pop{id:notification_pop}
-
+        Notif_Pop{
+            id:notification_pop
+            bar_window: bar
+            bar_height: bar.height
+            bar_width: bar.width
+        }
         //MENU
                     
         Loader{

@@ -1,4 +1,6 @@
 import QtQuick
+import QtQuick.Shapes
+import QtQuick.Effects
 import "./Widget"
 import "../"
 Item{
@@ -148,6 +150,8 @@ Item{
         height: 250
         color: theme.on_secondary_fixed_variant
         width: height
+        border.width: 1
+        border.color: theme.on_primary_fixed
         radius: 100
         rotation: 0
         SequentialAnimation on rotation{
@@ -517,22 +521,97 @@ Item{
     }
 
     ///////////////////////
+    //opacity_layerer
+    Rectangle{
+        id:notif_overlay
+        clip: true
+        visible: false //notif_shell.visible && P_data.historyModel.count>5
+        anchors.fill: notif_shell; radius: notif_shell.radius;z:2;
+        //fill:center_gradient
+        layer.enabled: true
+        NumberAnimation{
+            id: notif_overlay_opacity_anim
+            target: notif_overlay
+            from:0.1
+            to:1
+            property:"opacity"
+            duration:500
+            easing.type: Easing.InQuad
+            running: root.open
+        }
+        gradient: RadialGradient{
+            GradientStop { position: 0; color: "white" }
+            GradientStop { position: 0.05; color: "black" }
+            GradientStop { position: 0.95; color: "black" }
+            GradientStop { position: 1; color: "white" }
+        }
+        }
+    
+    MultiEffect{
+        source: notif_del
+        maskEnabled: true
+        maskSource: notif_overlay
+        anchors.fill: notif_shell
+    }
+    ////
     Rectangle{
         id: notif_shell
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.bottom: parent.verticalCenter
         width: 300
-        height: 170
+        height: mpris_root.visible ? 180: 320
         radius: 20
+        border.color: theme.on_primary_container
+        border.width: 1
         color: theme.primary
-        opacity: 0.1
+        transformOrigin: Item.Bottom
+        visible: P_data.historyModel.count!=0
         anchors.horizontalCenterOffset: 180
-        anchors.verticalCenterOffset: 90
+       // anchors.bottomMargin: -165
+        Behavior on height{
+            NumberAnimation{duration: 600; easing.type: Easing.OutExpo}
         }
+        ParallelAnimation{
+            id: notif_shell_numb_anim
+            running: root.open
+        NumberAnimation {
+            target: notif_shell
+            property:"anchors.bottomMargin"
+            from: -250
+            to: -170
+            duration: 2000
+            easing.type: Easing.OutExpo
+        }
+        NumberAnimation{
+            id: notif_shell_numb_anim1
+            target: notif_shell
+            from:0
+            to:0.1
+            property:"opacity"
+            duration:900
+            easing.type: Easing.InQuad
+        }
+        }
+        }
+
         Notifications{
-            width: notif_shell.width
+            id: notif_del
+            visible: true
+            opacity:0
             height: notif_shell.height-10
+            width: notif_shell.width
             anchors.horizontalCenter: notif_shell.horizontalCenter
             anchors.verticalCenter: notif_shell.verticalCenter
+           /* NumberAnimation{
+            id: notifdel_anim1
+            target: notif_del
+            from:0.1
+            to:1
+            property:"opacity"
+            duration:500
+            easing.type: Easing.InQuad
+            running: root.open
+        }*/
         }
+
 }

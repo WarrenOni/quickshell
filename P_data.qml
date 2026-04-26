@@ -16,6 +16,7 @@ Singleton{
     readonly property var power: UPower
     readonly property var systray: SystemTray
     property var noti;
+    property bool tor_win: false
     property ListModel historyModel: ListModel {}
     signal new_notif(var data)
     onWifiDataChanged: console.log("wifi_data_changed",wifiData)
@@ -30,10 +31,11 @@ Singleton{
         bodyMarkupSupported: true
         bodySupported: true
         imageSupported: true
-        keepOnReload: false
+        keepOnReload: true
         persistenceSupported: true
 
         onNotification:(u)=> {
+            u.tracked = true
             root.historyModel.insert(0,{
                 summary: u.summary,
                 id: u.id,
