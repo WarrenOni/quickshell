@@ -14,8 +14,8 @@ Item {
     //onNotifChanged:console.log(notif.id)
     ListView {
         id: notif_list
-        anchors.topMargin:1
-        anchors.bottomMargin:1
+        anchors.topMargin:2
+        anchors.bottomMargin:2
         anchors.fill: parent
         clip: true
         model: P_data.historyModel
