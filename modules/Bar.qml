@@ -153,7 +153,7 @@ PanelWindow {
          // 🔹 Clock
             Rectangle{
                 id: clock_rect
-                width: 120
+                width: clock_text.width+50
                 height: 25
                 radius: 15
                 color: theme.on_primary
@@ -165,19 +165,15 @@ PanelWindow {
                 }
                 
 
-            SystemClock{
-                id: clock
-                precision: SystemClock.Minutes
-            }
-
             Text {
+                id: clock_text
                 color: "white"
                 anchors.centerIn:parent
                 font.pixelSize: 18
                 font.italic: true
                 font.bold: true
                 font.family: "Orbitron"
-                text: Qt.formatDateTime(clock.date, "hh:mm")
+                text: P_data.current_time
             }
             }
 

@@ -107,6 +107,23 @@ Item{
         font.capitalization: Font.AllUppercase
     }
     Text{
+        id: greet
+        text: P_data.current_time.slice(0,2) < 12 ? "Good Morning":"Good Afternoon"
+        anchors.verticalCenter: date_rect.verticalCenter
+        anchors.verticalCenterOffset: 0
+        anchors.right: date_rect.right
+        anchors.rightMargin: 120
+        visible: !top_anim.running
+        color: theme.background
+        font.pixelSize: 30
+        font.family: whispering
+        font.italic: true
+        NumberAnimation on opacity{
+            from:0;to:1;duration:500;running:greet.visible
+        }
+    }
+
+    Text{
         text: root.day
         anchors.verticalCenter: date_rect.verticalCenter
         anchors.verticalCenterOffset: -2.8
@@ -561,13 +578,12 @@ Item{
         width: 300
         height: mpris_root.visible ? 180: 320
         radius: 20
-        border.color: theme.on_primary_container
-        border.width: 1
         color: theme.primary
         transformOrigin: Item.Bottom
-        visible: P_data.historyModel.count!=0
+        visible: true//P_data.historyModel.count!=0
         anchors.horizontalCenterOffset: 180
        // anchors.bottomMargin: -165
+       Text{text:"No Notifications";anchors.centerIn:parent;visible:P_data.historyModel.count===0;color:"white";font.pixelSize:20;font.family:whispering}
         Behavior on height{
             NumberAnimation{duration: 600; easing.type: Easing.OutExpo}
         }

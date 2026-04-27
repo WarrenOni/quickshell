@@ -16,15 +16,22 @@ Singleton{
     readonly property var power: UPower
     readonly property var systray: SystemTray
     property var noti;
+    property var current_time: Qt.formatDateTime(clock.date, "hh:mm")
     property bool tor_win: false
+    property bool first_run: true
     property ListModel historyModel: ListModel {}
     signal new_notif(var data)
     onWifiDataChanged: console.log("wifi_data_changed",wifiData)
     onBluetoothDataChanged: console.log("bluetooth_data_changed")
     
+    SystemClock{
+            id: clock
+            precision: SystemClock.Minutes
+    }
+
     NotificationServer {
         id: notif
-        // actionIconsSupported: true
+      //  actionIconsSupported: true
         actionsSupported: true
         bodyHyperlinksSupported: true
         bodyImagesSupported: true
@@ -33,7 +40,6 @@ Singleton{
         imageSupported: true
         keepOnReload: true
         persistenceSupported: true
-
         onNotification:(u)=> {
             u.tracked = true
             root.historyModel.insert(0,{
