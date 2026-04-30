@@ -7,12 +7,17 @@ import QtQuick.Controls
 FloatingWindow{
     id: menu_list
     implicitWidth: 600
-    implicitHeight: 300
+    implicitHeight: 340 //menu_list_layout.implicitHeight//300
     color: "transparent"
-    
+
     property var application:[]
     property var filtered:[]
+    property int dyn_ht: 55+ menu_list.filtered.length*40
+
     signal toggle()
+    
+    //onFilteredChanged:{console.log(filtered.length)}
+
     //Process for reading the file and stdout
     Process{
         id: proc
@@ -24,9 +29,8 @@ FloatingWindow{
                     console.log("dry run")
             }
         }
-    }   
-
-
+    }  
+    
     //function for calling the app
     function launchApp(exec){
         Quickshell.execDetached(["sh","-c",exec])
@@ -36,13 +40,18 @@ FloatingWindow{
 
 
     Rectangle{
+        id:menu_list_layout
         width: parent.width 
-        height: parent.height 
+        height: 55+ Math.min(280,menu_list.filtered.length*40)
         color: theme.background
         radius: 20
+        Behavior on height{
+            NumberAnimation{duration:200;easing.type:Easing.Bezier}
+        }
+
     ColumnLayout{
         id: layout
-        anchors.fill:parent
+        anchors.fill:menu_list_layout
         spacing:10
         anchors.margins: 10
         TextField{
@@ -62,7 +71,7 @@ FloatingWindow{
             font.italic: true
             font.bold: true
             font.family: "ESPACION"
-            //placeholderText: "Lauch//"
+            placeholderText: "Search.."
             onTextChanged:{
                 menu_list.filtered = menu_list.application.filter(a=>a.name.toLowerCase().includes(search.text.toLowerCase()))
             }
@@ -85,7 +94,7 @@ FloatingWindow{
             height: parent.height
             clip: true
             focus: true
-            model: search.text ? menu_list.filtered : menu_list.application
+            model: menu_list.filtered // search.text ? menu_list.filtered : menu_list.application
             delegate: Rectangle{
                 id: del
                 radius: 10

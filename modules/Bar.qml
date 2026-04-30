@@ -3,9 +3,10 @@ import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
 import QtQuick
+import QtQuick.Shapes
 import QtQuick.Layouts 
 import "../"
-
+import "./Reusable/"
 
 PanelWindow {
     
@@ -14,6 +15,13 @@ PanelWindow {
         property int volume: 0
         property bool volumeMuted: false
         property var defaultAudioSink
+        //bar property
+        property int topmar: 0
+        property int btmmar: 0
+        property int rtmar: 0
+        property int toparc: 0
+        property int btmarc: 0
+        ///////////
         property var uPower: P_data.power
         property var systemTray: P_data.systray
        // property var audio_state
@@ -28,9 +36,12 @@ PanelWindow {
             Quickshell.execDetached(["wpctl","set-volume","-l","1","@DEFAULT_AUDIO_SINK@","2%-"])
         }
         //----------
+       // Corner{anchors.left: mainbar.left;anchors.top:mainbar.bottom}
+      //  Corner{anchors.right: mainbar.right;anchors.top:mainbar.bottom;deg:90}
 
+        ///////////
         id: bar
-        implicitHeight: 36 + mainbar.anchors.topMargin*2 //+ menu.height
+        implicitHeight: 35
         color: "transparent"
         anchors{
             top: true
@@ -71,18 +82,19 @@ PanelWindow {
             }
             }
         }
-
         Rectangle{
             id: mainbar
-            anchors.rightMargin:4
-            anchors.topMargin:4
-            anchors.bottomMargin: mainbar.anchors.topMargin
+            anchors.rightMargin: bar.rtmar
+            anchors.topMargin: bar.topmar
+            anchors.bottomMargin: bar.btmmar
             anchors.leftMargin: mainbar.anchors.rightMargin
             color: theme.background
             anchors.fill: parent
-            //bottomLeftRadius: 30
-            //bottomRightRadius: 30
-            radius: 12
+            topRightRadius: bar.toparc
+            topLeftRadius: topRightRadius
+            bottomRightRadius: bar.btmarc
+            bottomLeftRadius: bottomRightRadius
+
         RowLayout {
             anchors.fill: parent     
             anchors.leftMargin: 10       
@@ -193,7 +205,7 @@ PanelWindow {
                     State{
                         name:"expanded"
                         PropertyChanges{target:volumeContainer;opacity:0}
-                        PropertyChanges{target:drop;opacity:1;width:vol_hoverer_icon.width;x:(bar.width+clock_rect.width)/2}
+                        PropertyChanges{target:drop;opacity:1;width:vol_hoverer_icon.width;x:(bar.width+clock_rect.width+10)/2}
                         PropertyChanges{target:vol_hoverer;opacity:1}
                     }
                 ]
@@ -236,7 +248,7 @@ PanelWindow {
                                 NumberAnimation {
                                     target: drop
                                     property: "x"
-                                    to: (bar.width+clock_rect.width)/2
+                                    to: (bar.width+clock_rect.width+10)/2
                                     duration: 1000
                                     easing.type: Easing.InOutQuart
                                 }

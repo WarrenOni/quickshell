@@ -50,12 +50,13 @@ PopupWindow{
             }
             Column{
                 Text{
-                    text: root.notif ? root.notif.summary : ""; color: "white"; font.bold: true;font.pixelSize:15
+                    text: root.notif ? root.notif.summary : ""; color: "white"; font.bold: true;font.pixelSize:15; width: body.width; elide: Text.ElideRight
                 }
                 Text{
+                    id: body
                     text: root.notif ? root.notif.body:"";
                     color:"white"
-                    width: root.notif.image ? root.width-80 : root.width-25
+                    width: root.notif.image ? root.width-90 : root.width-25
                     maximumLineCount:3
                     wrapMode: Text.Wrap
                     elide: Text.ElideRight

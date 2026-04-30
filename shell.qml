@@ -5,7 +5,6 @@ import Quickshell.Io
 //import Quickshell.Services.UPower
 import QtQuick
 import "./modules/"
-//import "./modules/Widget/"
 import "./Extra"
 
 //import "~/.config/quickshell"
@@ -43,7 +42,10 @@ ShellRoot{
             defaultAudioSink: root.defaultAudioSink
         }
     }
-
+    LazyLoader{
+        active:true
+        component: Window_Edge{}
+    }
     LazyLoader{
         id: wallpaper_selector
         active: root.wallselect
