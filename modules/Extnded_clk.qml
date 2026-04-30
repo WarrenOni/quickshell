@@ -92,7 +92,7 @@ PopupWindow {
 
     // position under bar
     anchor.rect.x: bar_width / 2 - implicitWidth / 2
-    anchor.rect.y: bar_height - 3
+    anchor.rect.y: bar_height
     anchor.window: bar_window
 
     Rectangle {
@@ -101,9 +101,10 @@ PopupWindow {
         height: menu.height
         clip: true
         color:  theme.background
-        radius: 20
-        border.color: theme.on_primary
-        border.width: 0.5
+        bottomLeftRadius:20
+        bottomRightRadius: bottomLeftRadius
+        //border.color: theme.on_primary
+        //border.width: 0.5
         y: !menu.open ? -menu.height : 0
         Behavior on y{
             NumberAnimation{
@@ -115,10 +116,10 @@ PopupWindow {
                     }}
             }
         }
-    Background{
-            id: bg
-            clip: true
-        }
+    //Background{
+    //        id: bg
+     //       clip: true
+      //  }
     SwipeView{
         id: view
         anchors.fill: parent

@@ -10,7 +10,6 @@ Item {
     id: root
     property int rad: 20
     property int rectHt: 70
-    property int rectWdth: 293
     //onNotifChanged:console.log(notif.id)
     ListView {
         id: notif_list
@@ -29,14 +28,9 @@ Item {
                 //anchors.horizontalCenter: parent.horizontalCenter
                 color: hovered ? theme.primary : theme.on_secondary_fixed_variant
                 height: clicked && model.body.length>40 ? body_text.contentHeight+summary_text.contentHeight+30  : root.rectHt
-                width: hovered ? root.rectWdth : 290
+                width: 290
                 radius: root.rad
                 x:5
-                Behavior on width{
-                    NumberAnimation{
-                        duration: 100
-                    }
-                }
                 Behavior on x{NumberAnimation{duration:100;running:dragArea.active}}
             
                 Behavior on height{NumberAnimation{duration:200}}

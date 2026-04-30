@@ -9,7 +9,6 @@ import "../"
 import "./Reusable/"
 
 PanelWindow {
-    
         //-------vol
         property string whispering: ""
         property int volume: 0
@@ -97,7 +96,7 @@ PanelWindow {
 
         RowLayout {
             anchors.fill: parent     
-            anchors.leftMargin: 10       
+            anchors.leftMargin: 15       
             spacing: 5
             // 🔹 Workspaces
             Repeater {
@@ -127,7 +126,7 @@ PanelWindow {
                 //anchors.right: parent.right
                 //anchors.rightMargin: 10
                 //anchors.verticalCenter: parent.verticalCenter
-                Layout.rightMargin:10
+                Layout.rightMargin:15
                 Layout.bottomMargin:3
                 radius: 20
                 border.color: uPower.displayDevice.state === 1 ? theme.tertiary : (uPower.displayDevice.percentage < 0.25 ? "#f00" : theme.on_primary)
@@ -198,7 +197,7 @@ PanelWindow {
                 states:[
                     State{
                         name:"hidden"
-                        PropertyChanges{target:drop;opacity:0;x:bar.width-188;width:80}
+                        PropertyChanges{target:drop;opacity:0;x:bar.width-185;width:80}
                         PropertyChanges{target:vol_hoverer;opacity:0}
                         PropertyChanges{target:volumeContainer;opacity:1}
                     },
@@ -311,7 +310,7 @@ PanelWindow {
                                 NumberAnimation {
                                     target: drop
                                     property: "x"
-                                    to:bar.width-188
+                                    to:bar.width-185
                                     duration: 1000
                                     easing.type: Easing.InOutQuart
                                 }
@@ -343,7 +342,7 @@ PanelWindow {
                     id: volumeContainer
                     anchors{
                         right: parent.right
-                        rightMargin: 100
+                        rightMargin: 105
                         verticalCenter: parent.verticalCenter
                         verticalCenterOffset: -0.5
                     }

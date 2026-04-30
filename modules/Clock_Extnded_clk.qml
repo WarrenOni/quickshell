@@ -115,7 +115,14 @@ Item{
         anchors.rightMargin: 120
         visible: !top_anim.running
         color: theme.background
-        font.pixelSize: 30
+        font.pixelSize:{
+            switch(root.day){
+                case "Wednesday": return 15;
+                case "Thursday": return 25;
+                case "Saturday": return 24;
+                default: return 30;
+            }
+        }
         font.family: whispering
         font.italic: true
         NumberAnimation on opacity{
