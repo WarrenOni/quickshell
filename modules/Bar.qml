@@ -40,7 +40,7 @@ PanelWindow {
 
         ///////////
         id: bar
-        implicitHeight: 35
+        implicitHeight: 40
         color: "transparent"
         anchors{
             top: true
@@ -59,18 +59,21 @@ PanelWindow {
         Loader{
             id:menu2
             property bool open: false
-            active: false
+            //asynchronous: true
+            active: true
             visible: open
             function dash_starter(){menu2.active=true;menu2.open=!menu2.open;}
             sourceComponent: Extnded_clk{
                 open: menu2.visible
                 bar_window: bar
-                bar_height: bar.height
+                bar_height: bar.implicitHeight
                 bar_width: bar.width
             }
             Connections{
                 target: menu2.item
-                function onToggle(){console.log("got_close_value");menu2.active=false}
+                function onToggle(){console.log("got_close_value");
+                //menu2.active=false
+                }
             }
             IpcHandler{
                 target: "menu2"
@@ -81,6 +84,7 @@ PanelWindow {
             }
             }
         }
+
         Rectangle{
             id: mainbar
             anchors.rightMargin: bar.rtmar
@@ -93,13 +97,42 @@ PanelWindow {
             topLeftRadius: topRightRadius
             bottomRightRadius: bar.btmarc
             bottomLeftRadius: bottomRightRadius
-
+        
+        /*Shape{
+            ShapePath{
+                fillColor: theme.background
+                strokeWidth:0
+                PathLine{x:1600;y:0}
+                PathLine{x:1600;y:50}
+                PathArc{
+                    relativeX: -20
+                    relativeY: -15
+                    radiusX: 20
+                    radiusY: 15
+                    direction: PathArc.Counterclockwise
+                }
+                PathLine{x:20;y:35}
+                PathArc{
+                    relativeX: -20
+                    relativeY: 15
+                    radiusX:20
+                    radiusY:-15
+                    direction:PathArc.Counterclockwise
+                }
+                PathLine{x:0;y:0}
+            }
+        }*/
+        }
+        Item{
+            anchors.fill:parent       
         RowLayout {
             anchors.fill: parent     
             anchors.leftMargin: 15       
             spacing: 5
+            
             // 🔹 Workspaces
             Repeater {
+                id: workspaces
                 model: Hyprland.workspaces
 
                     Rectangle {
@@ -129,7 +162,7 @@ PanelWindow {
                 Layout.rightMargin:15
                 Layout.bottomMargin:3
                 radius: 20
-                border.color: uPower.displayDevice.state === 1 ? theme.tertiary : (uPower.displayDevice.percentage < 0.25 ? "#f00" : theme.on_primary)
+                border.color: uPower.displayDevice.state === 1 ? theme.tertiary : (uPower.displayDevice.percentage < 0.25 ? "#f00" : theme.primary)
                 color: "transparent"
                 border.width: 1
                 implicitHeight: 25
@@ -149,12 +182,12 @@ PanelWindow {
                 }
                 Text {
                     id: innerText
-                    color: "white"
+                    color: "black"
                     anchors.centerIn: parent
                     font.pixelSize: 15
                     font.italic: true
                     font.family: "Pixelon"
-                    font.bold: containerRect.border.color != theme.on_primary ? true : false
+                    font.bold: containerRect.border.color != theme.primary ? true : false
                     text: Math.round(uPower.displayDevice.percentage * 100) + "%"
                 }
 
@@ -164,10 +197,10 @@ PanelWindow {
          // 🔹 Clock
             Rectangle{
                 id: clock_rect
-                width: clock_text.width+50
+                width: clock_text.width+40
                 height: 25
                 radius: 15
-                color: theme.on_primary
+                color: theme.primary
                 anchors.centerIn: parent
             // anchors.verticalCenterOffset: -0.5
                 MouseArea{
@@ -178,11 +211,12 @@ PanelWindow {
 
             Text {
                 id: clock_text
-                color: "white"
+                color: "black"
                 anchors.centerIn:parent
-                font.pixelSize: 18
+                font.pixelSize: 20
                 font.italic: true
                 font.bold: true
+                font.letterSpacing: 3
                 font.family: "Orbitron"
                 text: P_data.current_time
             }
@@ -327,7 +361,7 @@ PanelWindow {
                 Rectangle{
                     id: drop
                     visible: true
-                    color: theme.on_primary
+                    color: theme.primary
                     width: volumeContainer.width 
                     height: volumeContainer.height 
                     radius: volumeContainer.visible ? volumeContainer.radius: vol_hoverer_icon.radius
@@ -350,7 +384,7 @@ PanelWindow {
                     radius: 20
                     opacity: 1
                     border.width: 1
-                    border.color: theme.on_primary
+                    border.color: theme.primary
                     implicitWidth: 80
                     implicitHeight: 25
                     Behavior on opacity{
@@ -365,13 +399,13 @@ PanelWindow {
                         verticalCenter: parent.verticalCenter
                         verticalCenterOffset: -0.5
                     }
-                    color: theme.on_primary
+                    color: theme.primary
                     radius: 20
                     implicitWidth: volume * 0.8
                     implicitHeight: 25
                     }
                 Text{
-                    color: "white"
+                    color: volume<65? "white" : "black"
                     anchors.centerIn: volumeContainer
                     font.pixelSize: 15
                     font.italic: true
@@ -412,15 +446,15 @@ PanelWindow {
                         id: vol_hoverer_icon
                         width: 30
                         height: 24
-                        color: theme.on_primary
+                        color: theme.primary
                         radius: 15
                         anchors.verticalCenter: parent.verticalCenter
                         Text{
                             text: "\uf028"
-                            color: "white"
+                            color: "black"
                             anchors.centerIn: parent
                         }
-                        Text{visible:bar.volumeMuted||bar.volume===0;text:"|";color:"white";rotation:45;font.pixelSize:20;anchors.centerIn:parent;font.bold:true;font.family:"ESPACION"}
+                        Text{visible:bar.volumeMuted||bar.volume===0;text:"|";color:"black";rotation:45;font.pixelSize:20;anchors.centerIn:parent;font.bold:true;font.family:"ESPACION"}
                         MouseArea{anchors.fill:parent;onClicked:Quickshell.execDetached(["wpctl","set-mute","@DEFAULT_AUDIO_SINK@","toggle"])}
                     }
                     Rectangle{
@@ -439,7 +473,7 @@ PanelWindow {
                         anchors.verticalCenterOffset: 0.5
                         Rectangle{
                         anchors.left: parent.left
-                        color: theme.on_primary
+                        color: theme.primary
                         width: (bar.volume/100)*vol_hoverer_comp.width
                         height: vol_hoverer_comp.height
                         radius: parent.radius
@@ -454,11 +488,11 @@ PanelWindow {
             id:systray
             anchors{
                 right: parent.right
-                rightMargin: volumeContainer.opacity ? 195 : 100
+                rightMargin: volumeContainer.opacity ? 195 : 110
                 verticalCenter: parent.verticalCenter
              //   verticalCenterOffset: -0.5
             }
-            color: theme.on_primary
+            color: theme.primary
             radius: 20
             implicitWidth: 28.5 * tray.count
             implicitHeight: 25

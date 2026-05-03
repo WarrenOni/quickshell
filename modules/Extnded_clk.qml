@@ -5,6 +5,7 @@ import Quickshell.Io
 //import QtQuick.Shapes
 import "../"
 import "./Widget"
+import "./Reusable"
 import QtQuick.Controls
 
 PopupWindow {
@@ -16,13 +17,15 @@ PopupWindow {
     property var bar_window
     property bool open : false
     property bool scan_vis : false
+    property real progress: open ? 1:0
     property var pills: ["Dash","Wi-fi","Bluetooth"]
     property bool blth_scan_vis: blth_panel
     property bool blth_panel: view.currentIndex===2
     property bool wifi_panel: view.currentIndex===1
     property bool clock_panel: view.currentIndex===0
     signal toggle()
-
+   // onProgressChanged:console.debug(layout.height)
+    Behavior on progress{NumberAnimation{duration:700;easing.type:Easing.OutBack;easing.overshoot: 0.5}}
     Process{
         id:connectProc
         onStarted : console.log("connect started")
@@ -87,39 +90,50 @@ PopupWindow {
     visible: open || panel.y > -menu.height
     color: "transparent"
 
-    implicitWidth: 720
-    implicitHeight: 500
+    implicitWidth: 750
+    implicitHeight: 530
 
     // position under bar
     anchor.rect.x: bar_width / 2 - implicitWidth / 2
     anchor.rect.y: bar_height
     anchor.window: bar_window
+    Corner{anchors.left: layout.right;}
+    Corner{anchors.right: layout.left;deg:90}
+    Rectangle{
+            id: layout
+            color: theme.background
+            bottomLeftRadius:20
+            bottomRightRadius: bottomLeftRadius
+            width: parent.width-30
+            height: 20+((parent.height-20)*menu.progress)
+            anchors.horizontalCenter: parent.horizontalCenter
+            //border.color: theme.on_primary
+            //border.width: 0.5
+    }
 
-    Rectangle {
+    Item {
         id: panel
-        width: parent.width
-        height: menu.height
+        width: layout.width
+        height: parent.height
         clip: true
-        color:  theme.background
-        bottomLeftRadius:20
-        bottomRightRadius: bottomLeftRadius
-        //border.color: theme.on_primary
-        //border.width: 0.5
+        anchors.horizontalCenter: parent.horizontalCenter
         y: !menu.open ? -menu.height : 0
+        
         Behavior on y{
             NumberAnimation{
-                duration: 600
-                easing.type: Easing.OutQuart
+                duration: 700
+                easing.type: Easing.OutBack
+                easing.overshoot: 0.5
                 onRunningChanged:{
                     if (!menu.visible) {
                     console.log("got sig_kill for dash_menu"); menu.toggle()
                     }}
+                }
             }
-        }
-    //Background{
-    //        id: bg
-     //       clip: true
-      //  }
+    Background{
+            id: bg
+           clip: true
+    }
     SwipeView{
         id: view
         anchors.fill: parent

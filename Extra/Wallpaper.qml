@@ -6,7 +6,7 @@ import Quickshell
 FloatingWindow {
     id: wall
     implicitWidth: 1750
-    implicitHeight: 600
+    implicitHeight: 800
     color: "transparent"
     
     // Store the currently selected path
@@ -29,7 +29,7 @@ FloatingWindow {
             //width: parent.width
             //height: parent.height
             orientation: ListView.Horizontal
-            spacing: 10
+            spacing: 4
             clip: true
             leftMargin: 150
             rightMargin: 100
@@ -51,8 +51,8 @@ FloatingWindow {
 
             delegate: Rectangle {
                 id: wall_Item
-                width: hoverscale===1? 200: 600
-                height: 450
+                width: hoverscale===1? 150: 600
+                height: 550
                 color: "transparent"
                 radius: 0
                 clip: true

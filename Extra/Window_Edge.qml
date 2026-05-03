@@ -4,13 +4,14 @@ import "../modules/Reusable/."
 PanelWindow{
     exclusiveZone:0
     id:window_edge
-    height:10
+    height:14
+    //color: "blue"
     anchors{
         top: true
         left: true
         right: true
     }
-    Corner{anchors.left:parent.left;anchors.top:parent.top}
+    Corner{anchors.left:parent.left;anchors.top:parent.top;}
     Corner{anchors.left:parent.right;anchors.top:parent.top;deg:90}
 
     color: "transparent"

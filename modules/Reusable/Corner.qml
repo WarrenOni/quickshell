@@ -1,10 +1,10 @@
 import QtQuick
 import QtQuick.Shapes
 import QtQuick.Effects
-Rectangle{
+Item{
     id: root
     property int radiusx: 20
-    property int radiusy:20
+    property int radiusy:15
     property int deg: 0
     property color paint:theme.background
     rotation: deg

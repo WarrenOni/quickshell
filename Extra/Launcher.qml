@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell.Io
 import Quickshell
+import Quickshell.Widgets
 //import Qt.labs.platform
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -12,7 +13,7 @@ FloatingWindow{
 
     property var application:[]
     property var filtered:[]
-    property int dyn_ht: 55+ menu_list.filtered.length*40
+    //property int dyn_ht: 55+ menu_list.filtered.length*40
 
     signal toggle()
     
@@ -42,7 +43,7 @@ FloatingWindow{
     Rectangle{
         id:menu_list_layout
         width: parent.width 
-        height: 55+ Math.min(280,menu_list.filtered.length*40)
+        height: 55 + Math.min(280,menu_list.filtered.length*45)
         color: theme.background
         radius: 20
         Behavior on height{
@@ -94,7 +95,7 @@ FloatingWindow{
             height: parent.height
             clip: true
             focus: true
-            model: menu_list.filtered // search.text ? menu_list.filtered : menu_list.application
+            model: search.text ? menu_list.filtered : menu_list.application
             delegate: Rectangle{
                 id: del
                 radius: 10
@@ -111,15 +112,25 @@ FloatingWindow{
                     onExited: del.hovered = false
                     onClicked: menu_list.launchApp(modelData.exec)
                 }
-                Text{
-                    font.family: "ESPACION"
-                    font.pixelSize: 18
+                Row{
                     anchors.verticalCenter:parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: 5 
+                    spacing: 5
+                /*IconImage{
+                    visible: true
+                    asynchronous: true
+                    mipmap: true
+                    source: "file:///usr/share/icons/hicolor/48x48/apps/"+modelData.icon+".png"
+                    implicitSize:20
+                    anchors.verticalCenter: parent.verticalCenter
+                }*/
+                Text{
+                    font.family: "ESPACION"
+                    font.pixelSize: 18
                     text: modelData.name
                     color: "White"
-                }
+                }}
             }
         }
     }
