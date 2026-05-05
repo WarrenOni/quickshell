@@ -30,22 +30,15 @@ ShellRoot{
         ?  defaultAudioSink.audio.muted :  false
     PwObjectTracker{ 
         objects: [Pipewire.defaultAudioSink]
-         }
-    
-    LazyLoader {
-        active: true
-        component: Bar {
-            // forward audio properties from the shell root
+        }
+    Regions{}
+    Bar {
+         // forward audio properties from the shell root
             whispering: root.whispering
             volume: root.volume
             volumeMuted: root.volumeMuted
             defaultAudioSink: root.defaultAudioSink
         }
-    }
-    LazyLoader{
-        active:true
-        component: Window_Edge{}
-    }
     LazyLoader{
         id: wallpaper_selector
         active: root.wallselect

@@ -5,6 +5,7 @@ import Quickshell.Io
 import QtQuick
 import QtQuick.Shapes
 import QtQuick.Layouts 
+import QtQuick.Effects
 import "../"
 import "./Reusable/"
 
@@ -40,13 +41,6 @@ PanelWindow {
 
         ///////////
         id: bar
-        implicitHeight: 40
-        color: "transparent"
-        anchors{
-            top: true
-            left: true
-            right: true
-        }
     /////////////////
         Notif_Pop{
             id:notification_pop
@@ -60,7 +54,7 @@ PanelWindow {
             id:menu2
             property bool open: false
             //asynchronous: true
-            active: true
+            active: false
             visible: open
             function dash_starter(){menu2.active=true;menu2.open=!menu2.open;}
             sourceComponent: Extnded_clk{
@@ -85,52 +79,115 @@ PanelWindow {
             }
         }
 
-        Rectangle{
-            id: mainbar
-            anchors.rightMargin: bar.rtmar
-            anchors.topMargin: bar.topmar
-            anchors.bottomMargin: bar.btmmar
-            anchors.leftMargin: mainbar.anchors.rightMargin
-            color: theme.background
-            anchors.fill: parent
-            topRightRadius: bar.toparc
-            topLeftRadius: topRightRadius
-            bottomRightRadius: bar.btmarc
-            bottomLeftRadius: bottomRightRadius
+
         
-        /*Shape{
-            ShapePath{
-                fillColor: theme.background
-                strokeWidth:0
-                PathLine{x:1600;y:0}
-                PathLine{x:1600;y:50}
-                PathArc{
-                    relativeX: -20
-                    relativeY: -15
-                    radiusX: 20
-                    radiusY: 15
-                    direction: PathArc.Counterclockwise
-                }
-                PathLine{x:20;y:35}
-                PathArc{
-                    relativeX: -20
-                    relativeY: 15
-                    radiusX:20
-                    radiusY:-15
-                    direction:PathArc.Counterclockwise
-                }
-                PathLine{x:0;y:0}
+        property real targetheight: menu2.open ? 70:35
+        Behavior on targetheight { NumberAnimation { duration: 400; easing.type: Easing.OutExpo } }
+        anchors{top:true;left:true;right:true;bottom:true} 
+        visible: true
+        exclusionMode: ExclusionMode.Ignore
+        color: "transparent"
+        mask: Region{
+           // x:0;y:35;width:1600;height:900
+            //item: substract_shape
+            //intersection: Intersection.Subtract
+            item: maskShapeSource
+            intersection: Intersection.Xor
             }
-        }*/
+        Rectangle{
+            id: bg
+            color: theme.background
+            layer.enabled: true
+            visible: false
+            width: 1600
+            height: 45
         }
-        Item{
-            anchors.fill:parent       
+        MultiEffect{
+            width: 1600
+            height: 855
+            anchors.bottom: parent.bottom
+            source: bg
+            maskInverted: true
+            maskEnabled: true
+            maskSource: maskShapeSource
+        }
+
+//////////////////
+
+    Item{
+            width:1600
+            height: 855
+            anchors.centerIn: parent
+            anchors.bottom: parent.bottom
+                    id: maskShapeSource
+                    layer.enabled: true
+                    visible: false
+                    opacity: 0
+                    Shape{
+                        id: substract_shape
+                        MouseArea{anchors.fill: parent}
+                        ShapePath{
+                            id:shpth
+                            fillColor:"red"
+                            
+                            property bool open: menu2.open
+                            property real shheight: open ? 110:0
+                            Behavior on shheight{NumberAnimation{duration:500}}
+                            startX:800;startY:open?110:0
+                            PathLine{x:1050;y:shpth.open?110:0}
+                            PathLine{x:1050;y:0}
+                            PathLine{x:1575;y:0}
+                            PathArc{
+                                relativeX: 20
+                                relativeY: 15
+                                radiusX: 20
+                                radiusY: 15
+                            }
+                            PathLine{x:1595;y:840}
+                            PathArc{
+                                relativeX: -20
+                                relativeY: 15
+                                radiusX:20
+                                radiusY:15
+                                //direction:PathArc.Counterclockwise
+                            }
+                            PathLine{x:25;y:855}
+                            PathArc{
+                                relativeX: -20
+                                relativeY: -15
+                                radiusX:20
+                                radiusY:-15
+                            }
+                            PathLine{x:5;y:10}
+                            PathArc{
+                                relativeX: 20
+                                relativeY: -15
+                                radiusX:20
+                                radiusY:-15
+                            }
+                            PathLine{x:550;y:0}
+                            PathLine{x:550;y:shpth.open?110:0}
+                            PathLine{x:800;y:shpth.open?110:0}
+                        }
+                    }
+            }
+                    
+        
+////////////////
+
+        
+    Item{
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.left: parent.left
+            height:40
         RowLayout {
-            anchors.fill: parent     
+            anchors.fill: parent   
+            anchors.verticalCenter: parent.verticalCenter  
             anchors.leftMargin: 15       
             spacing: 5
             
-            // 🔹 Workspaces
+            // Workspaces
             Repeater {
                 id: workspaces
                 model: Hyprland.workspaces
@@ -420,7 +477,7 @@ PanelWindow {
 
                 Item{
                     id: vol_hoverer
-                    implicitHeight: bar.height
+                    implicitHeight: vol_hoverer_icon.height
                     implicitWidth: 30
                     visible: opacity
                     anchors.centerIn: parent
