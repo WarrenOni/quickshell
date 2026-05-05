@@ -2,13 +2,11 @@
 import Quickshell
 import QtQuick
 import Quickshell.Io
-//import QtQuick.Shapes
 import "../"
 import "./Widget"
-import "./Reusable"
 import QtQuick.Controls
 
-PopupWindow {
+Item {
     id: menu
     //property var wifiData: P_data.wifiData
     //property var bluetoothData: P_data.bluetoothData
@@ -88,28 +86,28 @@ PopupWindow {
     }
     
     visible: open || panel.y > -menu.height
-    color: "transparent"
+    //color: "transparent"
 
     implicitWidth: 750
     implicitHeight: 530
 
     // position under bar
-    anchor.rect.x: bar_width / 2 - implicitWidth / 2
-    anchor.rect.y: bar_height
-    anchor.window: bar_window
-    Corner{anchors.left: layout.right;}
-    Corner{anchors.right: layout.left;deg:90}
-    Rectangle{
-            id: layout
-            color: theme.background
-            bottomLeftRadius:20
-            bottomRightRadius: bottomLeftRadius
-            width: parent.width-30
-            height: 20+((parent.height-20)*menu.progress)
+   // anchor.rect.x: bar_width / 2 - implicitWidth / 2
+    //anchor.rect.y: bar_height
+    //anchor.window: bar_window
+    //Corner{anchors.left: layout.right;}
+    //Corner{anchors.right: layout.left;deg:90}
+    //Rectangle{
+    //        id: layout
+    //        color: theme.background
+    //        bottomLeftRadius:20
+    //        bottomRightRadius: bottomLeftRadius
+    //        width: parent.width-30
+    //        height: 20+((parent.height-20)*menu.progress)
             anchors.horizontalCenter: parent.horizontalCenter
             //border.color: theme.on_primary
             //border.width: 0.5
-    }
+    //}
 
     Item {
         id: panel
@@ -139,7 +137,7 @@ PopupWindow {
         anchors.fill: parent
         
 
-        Clock_Extnded_clk{
+        Dash{
             open: menu.open     
         }
 
