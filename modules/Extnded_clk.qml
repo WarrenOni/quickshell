@@ -2,11 +2,13 @@
 import Quickshell
 import QtQuick
 import Quickshell.Io
+//import QtQuick.Shapes
 import "../"
 import "./Widget"
+import "./Reusable"
 import QtQuick.Controls
 
-Item {
+PopupWindow {
     id: menu
     //property var wifiData: P_data.wifiData
     //property var bluetoothData: P_data.bluetoothData
@@ -23,7 +25,7 @@ Item {
     property bool clock_panel: view.currentIndex===0
     signal toggle()
    // onProgressChanged:console.debug(layout.height)
-    Behavior on progress{NumberAnimation{duration:400;easing.type:Easing.OutBack;easing.overshoot: 0.5}}
+    Behavior on progress{NumberAnimation{duration:700;easing.type:Easing.OutBack;easing.overshoot: 0.5}}
     Process{
         id:connectProc
         onStarted : console.log("connect started")
@@ -86,28 +88,28 @@ Item {
     }
     
     visible: open || panel.y > -menu.height
-    //color: "transparent"
+    color: "transparent"
 
     implicitWidth: 750
     implicitHeight: 530
 
     // position under bar
-   // anchor.rect.x: bar_width / 2 - implicitWidth / 2
-    //anchor.rect.y: bar_height
-    //anchor.window: bar_window
-    //Corner{anchors.left: layout.right;}
-    //Corner{anchors.right: layout.left;deg:90}
-    //Rectangle{
-    //        id: layout
-    //        color: theme.background
-    //        bottomLeftRadius:20
-    //        bottomRightRadius: bottomLeftRadius
-    //        width: parent.width-30
-    //        height: 20+((parent.height-20)*menu.progress)
+    anchor.rect.x: bar_width / 2 - implicitWidth / 2
+    anchor.rect.y: bar_height
+    anchor.window: bar_window
+    Corner{anchors.left: layout.right;}
+    Corner{anchors.right: layout.left;deg:90}
+    Rectangle{
+            id: layout
+            color: theme.background
+            bottomLeftRadius:20
+            bottomRightRadius: bottomLeftRadius
+            width: parent.width-30
+            height: 20+((parent.height-20)*menu.progress)
             anchors.horizontalCenter: parent.horizontalCenter
             //border.color: theme.on_primary
             //border.width: 0.5
-    //}
+    }
 
     Item {
         id: panel
@@ -119,7 +121,7 @@ Item {
         
         Behavior on y{
             NumberAnimation{
-                duration: 400
+                duration: 700
                 easing.type: Easing.OutBack
                 easing.overshoot: 0.5
                 onRunningChanged:{
@@ -128,10 +130,10 @@ Item {
                     }}
                 }
             }
-    //Background{
-     //       id: bg
-      //     clip: true
-    //}
+    Background{
+            id: bg
+           clip: true
+    }
     SwipeView{
         id: view
         anchors.fill: parent

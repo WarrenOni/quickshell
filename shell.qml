@@ -6,8 +6,7 @@ import Quickshell.Io
 import QtQuick
 import "./modules/"
 import "./Extra"
-
-//import "~/.config/quickshell"
+//import qs.modules.Reusable
 
 /* Req:
     fonts: pixelon, orbitron, Whispering Signature\-Personal use
@@ -31,7 +30,7 @@ ShellRoot{
     PwObjectTracker{ 
         objects: [Pipewire.defaultAudioSink]
         }
-    Regions{}
+
     Bar {
          // forward audio properties from the shell root
             whispering: root.whispering
