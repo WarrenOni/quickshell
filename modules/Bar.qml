@@ -62,7 +62,7 @@ PanelWindow {
             //asynchronous: true
             active: true
             visible: open
-            function dash_starter(){menu2.active=true;menu2.open=!menu2.open;}
+            function dash_starter(){menu2.open=!menu2.open;}
             sourceComponent: Extnded_clk{
                 open: menu2.visible
                 bar_window: bar

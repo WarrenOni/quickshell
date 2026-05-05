@@ -25,7 +25,7 @@ PopupWindow {
     property bool clock_panel: view.currentIndex===0
     signal toggle()
    // onProgressChanged:console.debug(layout.height)
-    Behavior on progress{NumberAnimation{duration:700;easing.type:Easing.OutBack;easing.overshoot: 0.5}}
+    Behavior on progress{NumberAnimation{duration:400;easing.type:Easing.OutBack;easing.overshoot: 0.5}}
     Process{
         id:connectProc
         onStarted : console.log("connect started")
@@ -121,7 +121,7 @@ PopupWindow {
         
         Behavior on y{
             NumberAnimation{
-                duration: 700
+                duration: 400
                 easing.type: Easing.OutBack
                 easing.overshoot: 0.5
                 onRunningChanged:{
@@ -130,10 +130,10 @@ PopupWindow {
                     }}
                 }
             }
-    Background{
-            id: bg
-           clip: true
-    }
+    //Background{
+     //       id: bg
+      //     clip: true
+    //}
     SwipeView{
         id: view
         anchors.fill: parent

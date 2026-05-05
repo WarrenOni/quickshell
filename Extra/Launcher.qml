@@ -11,31 +11,16 @@ FloatingWindow{
     implicitHeight: 340 //menu_list_layout.implicitHeight//300
     color: "transparent"
 
-    property var application:[]
-    property var filtered:[]
+    property var application: DesktopEntries.applications.values
+    property var filtered: application
     //property int dyn_ht: 55+ menu_list.filtered.length*40
 
     signal toggle()
-    
-    //onFilteredChanged:{console.log(filtered.length)}
-
-    //Process for reading the file and stdout
-    Process{
-        id: proc
-        running: true
-        command:["sh","-c","~/.config/quickshell/Extra/laucher.sh"]
-        stdout: StdioCollector{
-            onTextChanged: {
-                    menu_list.application = JSON.parse(text.trim())
-                    console.log("dry run")
-            }
-        }
-    }  
-    
+    onFilteredChanged:{console.log(filtered.icon)}
     //function for calling the app
     function launchApp(exec){
         Quickshell.execDetached(["sh","-c",exec])
-        console.log("request sent for launch")
+        console.log("request sent for launch",exec)
         toggle()
     }
 
@@ -79,7 +64,7 @@ FloatingWindow{
             Keys.onReturnPressed:{
                 let dat = search.text? menu_list.filtered: menu_list.application;
                 if(dat.length > 0){
-                    menu_list.launchApp(dat[0].exec)
+                    menu_list.launchApp(dat[0].command)
                 }
             }
         }
@@ -90,7 +75,7 @@ FloatingWindow{
         radius: 20
         ListView{
             id: items
-            spacing: 4
+            spacing: 8
             width: parent.width
             height: parent.height
             clip: true
@@ -110,21 +95,21 @@ FloatingWindow{
                     anchors.fill: parent
                     onEntered: del.hovered = true
                     onExited: del.hovered = false
-                    onClicked: menu_list.launchApp(modelData.exec)
+                    onClicked: menu_list.launchApp(modelData.command)
                 }
                 Row{
                     anchors.verticalCenter:parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: 5 
-                    spacing: 5
-                /*IconImage{
+                    spacing: 8
+                IconImage{
                     visible: true
                     asynchronous: true
                     mipmap: true
-                    source: "file:///usr/share/icons/hicolor/48x48/apps/"+modelData.icon+".png"
-                    implicitSize:20
+                    source: Quickshell.iconPath(modelData.icon)
+                    implicitSize: 30
                     anchors.verticalCenter: parent.verticalCenter
-                }*/
+                }
                 Text{
                     font.family: "ESPACION"
                     font.pixelSize: 18

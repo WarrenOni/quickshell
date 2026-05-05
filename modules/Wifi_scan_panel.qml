@@ -1,5 +1,5 @@
     import QtQuick
-    //import Quickshell
+    //import Quickshell.Networking
     //import QtQuick.Layouts
     //import QtQuick.Effects
 
