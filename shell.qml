@@ -31,13 +31,15 @@ ShellRoot{
         objects: [Pipewire.defaultAudioSink]
         }
 
+    
     Bar {
-         // forward audio properties from the shell root
             whispering: root.whispering
             volume: root.volume
             volumeMuted: root.volumeMuted
             defaultAudioSink: root.defaultAudioSink
         }
+    WrapperLayout{}
+    
     LazyLoader{
         id: wallpaper_selector
         active: root.wallselect
@@ -46,6 +48,7 @@ ShellRoot{
         }
         //source: "Extra/Wallpaper.qml"
         }
+    
     IpcHandler {
             target: "wallselect"
             function open(): void {

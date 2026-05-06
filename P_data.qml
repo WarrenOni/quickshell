@@ -18,6 +18,7 @@ Singleton{
     property var noti;
     property var current_time: Qt.formatDateTime(clock.date, "hh:mm")
     property bool tor_win: false
+    property bool dash_open: false
     property bool first_run: true
     property ListModel historyModel: ListModel {}
     signal new_notif(var data)

@@ -35,14 +35,14 @@ PanelWindow {
             Quickshell.execDetached(["wpctl","set-volume","-l","1","@DEFAULT_AUDIO_SINK@","2%-"])
         }
         //----------
-        Corner{anchors.left: mainbar.left;anchors.top:mainbar.bottom}
-        Corner{anchors.right: mainbar.right;anchors.top:mainbar.bottom;deg:90}
-
+       // Corner{anchors.left: mainbar.left;anchors.top:mainbar.bottom}
+       // Corner{anchors.right: mainbar.right;anchors.top:mainbar.bottom;deg:90}
         ///////////
         id: bar
         implicitHeight: 35
-        exclusiveZone: 35
+        exclusiveZone: 30
         color: "transparent"
+        //exclusionMode:ExclusionMode.Normal
         anchors{
             top: true
             left: true
@@ -61,9 +61,11 @@ PanelWindow {
             id:menu2
             property bool open: false
             //asynchronous: true
-            active: true
+            active: false
             visible: open
-            function dash_starter(){menu2.active=true;menu2.open=!menu2.open;}
+            function dash_starter(){
+                menu2.active=true;
+                menu2.open=!menu2.open;}
             sourceComponent: Extnded_clk{
                 open: menu2.visible
                 bar_window: bar
@@ -73,7 +75,7 @@ PanelWindow {
             Connections{
                 target: menu2.item
                 function onToggle(){console.log("got_close_value");
-                //menu2.active=false
+                menu2.active=false
                 }
             }
             IpcHandler{
@@ -84,45 +86,6 @@ PanelWindow {
                 console.log("application launcher started")
             }
             }
-        }
-
-        Rectangle{
-            id: mainbar
-            anchors.rightMargin: bar.rtmar
-            anchors.topMargin: bar.topmar
-            anchors.bottomMargin: bar.btmmar
-            anchors.leftMargin: mainbar.anchors.rightMargin
-            color: theme.background
-            anchors.fill: parent
-            topRightRadius: bar.toparc
-            topLeftRadius: topRightRadius
-            bottomRightRadius: bar.btmarc
-            bottomLeftRadius: bottomRightRadius
-        
-        /*Shape{
-            ShapePath{
-                fillColor: theme.background
-                strokeWidth:0
-                PathLine{x:1600;y:0}
-                PathLine{x:1600;y:50}
-                PathArc{
-                    relativeX: -20
-                    relativeY: -15
-                    radiusX: 20
-                    radiusY: 15
-                    direction: PathArc.Counterclockwise
-                }
-                PathLine{x:20;y:35}
-                PathArc{
-                    relativeX: -20
-                    relativeY: 15
-                    radiusX:20
-                    radiusY:-15
-                    direction:PathArc.Counterclockwise
-                }
-                PathLine{x:0;y:0}
-            }
-        }*/
         }
         Item{
             anchors.fill:parent       
@@ -421,7 +384,7 @@ PanelWindow {
 
                 Item{
                     id: vol_hoverer
-                    implicitHeight: bar.height
+                    implicitHeight: vol_hoverer_icon.height
                     implicitWidth: 30
                     visible: opacity
                     anchors.centerIn: parent

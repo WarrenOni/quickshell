@@ -17,7 +17,6 @@ PopupWindow {
     property var bar_window
     property bool open : false
     property bool scan_vis : false
-    property real progress: open ? 1:0
     property var pills: ["Dash","Wi-fi","Bluetooth"]
     property bool blth_scan_vis: blth_panel
     property bool blth_panel: view.currentIndex===2
@@ -25,7 +24,9 @@ PopupWindow {
     property bool clock_panel: view.currentIndex===0
     signal toggle()
    // onProgressChanged:console.debug(layout.height)
-    Behavior on progress{NumberAnimation{duration:700;easing.type:Easing.OutBack;easing.overshoot: 0.5}}
+   onOpenChanged:{
+    if(open)P_data.dash_open=true;else{P_data.dash_open=false}
+   }
     Process{
         id:connectProc
         onStarted : console.log("connect started")
@@ -97,23 +98,10 @@ PopupWindow {
     anchor.rect.x: bar_width / 2 - implicitWidth / 2
     anchor.rect.y: bar_height
     anchor.window: bar_window
-    Corner{anchors.left: layout.right;}
-    Corner{anchors.right: layout.left;deg:90}
-    Rectangle{
-            id: layout
-            color: theme.background
-            bottomLeftRadius:20
-            bottomRightRadius: bottomLeftRadius
-            width: parent.width-30
-            height: 20+((parent.height-20)*menu.progress)
-            anchors.horizontalCenter: parent.horizontalCenter
-            //border.color: theme.on_primary
-            //border.width: 0.5
-    }
 
     Item {
         id: panel
-        width: layout.width
+        width: parent.width
         height: parent.height
         clip: true
         anchors.horizontalCenter: parent.horizontalCenter
@@ -121,19 +109,18 @@ PopupWindow {
         
         Behavior on y{
             NumberAnimation{
-                duration: 700
-                easing.type: Easing.OutBack
-                easing.overshoot: 0.5
+                duration: 500
+                easing.type: Easing.OutQuint
                 onRunningChanged:{
                     if (!menu.visible) {
                     console.log("got sig_kill for dash_menu"); menu.toggle()
                     }}
                 }
             }
-    Background{
-            id: bg
-           clip: true
-    }
+    //Background{
+     //       id: bg
+      //     clip: true
+    //}
     SwipeView{
         id: view
         anchors.fill: parent
