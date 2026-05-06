@@ -3,7 +3,6 @@ import QtQuick.Effects
 import QtQuick.Controls
 import QtQuick.Shapes
 import "../."
-import "./Reusable"
 Window{
     id: torrer
     width: 600
@@ -17,8 +16,5 @@ Window{
         border.color: theme.primary
         border.width: 2
         radius: 20
-        Corner{
-            anchors.centerIn: parent
-        }
     }
 }

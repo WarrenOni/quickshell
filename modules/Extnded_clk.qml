@@ -5,7 +5,6 @@ import Quickshell.Io
 //import QtQuick.Shapes
 import "../"
 import "./Widget"
-import "./Reusable"
 import QtQuick.Controls
 
 PopupWindow {

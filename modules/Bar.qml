@@ -6,7 +6,6 @@ import QtQuick
 import QtQuick.Shapes
 import QtQuick.Layouts 
 import "../"
-import "./Reusable/"
 
 PanelWindow {
         //-------vol
