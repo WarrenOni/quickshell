@@ -10,11 +10,13 @@ Singleton{
     id:root
     property var wifiData: ({})
     property var bluetoothData: ({})
+    property var batinfo: ({})
     readonly property var players: Mpris.players.values
     readonly property MprisPlayer player: players[0]
     readonly property bool audio_on: players.length > 0
     readonly property var power: UPower
     readonly property var systray: SystemTray
+    property bool bat_open: false
     property var noti;
     property var current_time: Qt.formatDateTime(clock.date, "hh:mm")
     property bool tor_win: false

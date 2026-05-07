@@ -31,7 +31,7 @@ Item {
                 width: 290
                 radius: root.rad
                 x:5
-                Behavior on x{NumberAnimation{duration:100;running:dragArea.active}}
+                Behavior on x{NumberAnimation{duration:200;running:dragArea.active}}
             
                 Behavior on height{NumberAnimation{duration:200}}
                 RowLayout{
@@ -65,8 +65,9 @@ Item {
                         color: "black"
                     }
                     Column{
+                        spacing:2
                         Row{
-                        Text{text:model.app;font.pixelSize:11}
+                        Text{text:model.app;font.pixelSize:10;font.family:whispering}
                         }
                         Text{
                             id: summary_text
@@ -75,6 +76,7 @@ Item {
                             elide: Text.ElideRight
                             font.pixelSize: 14
                             font.bold: true
+                            font.family: "Espacion"
                         }
                         Text{
                             id: body_text
@@ -82,7 +84,9 @@ Item {
                             maximumLineCount: !del_rect.clicked?1:20
                             wrapMode: Text.Wrap
                             elide: Text.ElideRight
+                            font.pixelSize:12
                             text: model.body
+                            font.family: "Espacion"
                         }
                     }
                 }

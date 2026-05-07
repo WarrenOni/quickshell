@@ -403,6 +403,7 @@ Item{
                 source: root.players ? root.player.trackArtUrl : null
                 sourceSize.width: width*1.5
                 sourceSize.height: height*1.5
+                //mipmap: true
                 height: 90
                 width: 90
                 cache: true
@@ -426,7 +427,7 @@ Item{
               text: root.players ? root.player.trackTitle : ""
               font.bold: true
               font.pixelSize: 17
-              font.family: "Noto Sans"
+              font.family: "Orbitron"
               property int anim_time1: 3000
               SequentialAnimation on x{
                 id: title_anim
@@ -453,7 +454,7 @@ Item{
                 elide: Text.ElideRight
                 text: root.players ? root.player.trackArtist : ""
                 font.pixelSize: 12
-                font.family: "Noto Sans"
+                font.family: "Espacion"
             }
             //dummy
             Item{height: artist.visible? 8: 13;width: 1}

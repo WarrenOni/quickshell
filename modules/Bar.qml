@@ -39,7 +39,7 @@ PanelWindow {
         ///////////
         id: bar
         implicitHeight: 35
-        exclusiveZone: 30
+        exclusiveZone: 32
         color: "transparent"
         //exclusionMode:ExclusionMode.Normal
         anchors{
@@ -86,6 +86,16 @@ PanelWindow {
             }
             }
         }
+        LazyLoader{
+            id:bat_menu
+            active: false
+            component:Battery{
+                id:bat_item
+                bar_window: bar
+                visible: bat_menu.active
+            } 
+        }
+        Connections{target:bat_menu.item;function onToggle(){bat_menu.active=false;console.log("gotit")}}
         Item{
             anchors.fill:parent       
         RowLayout {
@@ -114,7 +124,7 @@ PanelWindow {
             }
 
             Item { Layout.fillWidth: true }
-            
+           
             // Battery
             Rectangle{
                 id: containerRect
@@ -131,6 +141,13 @@ PanelWindow {
                 implicitHeight: 25
                 implicitWidth: 80
                 visible: uPower.displayDevice
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: {
+                        bat_menu.active=true
+                        P_data.bat_open=!P_data.bat_open
+                        }
+                }
                 
                 Rectangle{
                     id: innerFill
@@ -139,13 +156,13 @@ PanelWindow {
                     radius: 20
                     color: containerRect.border.color
                     implicitHeight: 25
-                    implicitWidth: uPower.displayDevice.percentage * 100
+                    implicitWidth: uPower.displayDevice.percentage * containerRect.implicitWidth
                 //  anchors.verticalCenterOffset: 0
         
                 }
                 Text {
                     id: innerText
-                    color: "black"
+                    color:  uPower.displayDevice.percentage<0.65 ? "white" : "black"
                     anchors.centerIn: parent
                     font.pixelSize: 15
                     font.italic: true
@@ -187,154 +204,6 @@ PanelWindow {
 
 
             // Volume
-            Item{
-                anchors.fill: parent
-                state: audio_on ? "expanded" :"hidden"
-                 
-                states:[
-                    State{
-                        name:"hidden"
-                        PropertyChanges{target:drop;opacity:0;x:bar.width-185;width:80}
-                        PropertyChanges{target:vol_hoverer;opacity:0}
-                        PropertyChanges{target:volumeContainer;opacity:1}
-                    },
-                    State{
-                        name:"expanded"
-                        PropertyChanges{target:volumeContainer;opacity:0}
-                        PropertyChanges{target:drop;opacity:1;width:vol_hoverer_icon.width;x:(bar.width+clock_rect.width+10)/2}
-                        PropertyChanges{target:vol_hoverer;opacity:1}
-                    }
-                ]
-                transitions:[
-                    Transition{
-                        id: h_e
-                        from:"hidden";to:"expanded"
-                        SequentialAnimation{
-                            ParallelAnimation {
-                                SequentialAnimation{
-                                    NumberAnimation {
-                                        target: drop
-                                        property: "width"
-                                        to: 200
-                                        duration: 500
-                                        easing.type:Easing.InExpo
-                                    }
-                                    NumberAnimation {
-                                        target: drop
-                                        property: "width"
-                                        to: vol_hoverer_icon.width
-                                        duration: 500
-                                        easing.type: Easing.OutQuad
-                                    }
-                                }
-                                SequentialAnimation{
-                                    NumberAnimation {
-                                        target: drop
-                                        property: "height"
-                                        to: 10
-                                        duration: 500
-                                    }
-                                    NumberAnimation {
-                                        target: drop
-                                        property: "height"
-                                        to: vol_hoverer_icon.height
-                                        duration: 500
-                                    }
-                                }
-                                NumberAnimation {
-                                    target: drop
-                                    property: "x"
-                                    to: (bar.width+clock_rect.width+10)/2
-                                    duration: 1000
-                                    easing.type: Easing.InOutQuart
-                                }
-                                NumberAnimation {
-                                    target: drop
-                                    property: "opacity"
-                                    to: 1
-                                    duration: 100
-                                }
-                                NumberAnimation{
-                                    target: vol_hoverer
-                                    property: "opacity" 
-                                    to:0
-                                    duration: 100
-                                }
-                            }
-                        }
-                    },
-                    Transition{
-                        id:e_h
-                        from:"expanded"; to:"hidden"
-                        SequentialAnimation{
-                            ParallelAnimation{
-                                SequentialAnimation{
-                                    NumberAnimation {
-                                        target: drop
-                                        properties: "width"
-                                        to:  200
-                                        duration: 500
-                                    }
-                                    NumberAnimation {
-                                        target: drop
-                                        properties: "width"
-                                        to: volumeContainer.width
-                                        duration: 500
-                                        easing.type: Easing.OutExpo
-                                    }
-                                }
-                                SequentialAnimation{
-                                    NumberAnimation {
-                                        target: drop
-                                        properties: "height"
-                                        to:  10
-                                        duration: 500
-                                    }
-                                    NumberAnimation {
-                                        target: drop
-                                        properties: "height"
-                                        to: volumeContainer.height
-                                        duration: 500
-                                    }
-                                }
-                                NumberAnimation {
-                                    target: drop
-                                    property: "opacity"
-                                    to:1
-                                    duration: 100
-                                    easing.type: Easing.InOutQuad
-                                }
-                                NumberAnimation {
-                                    target: drop
-                                    property: "x"
-                                    to:bar.width-185
-                                    duration: 1000
-                                    easing.type: Easing.InOutQuart
-                                }
-                                NumberAnimation{
-                                    target: volumeContainer
-                                    property: "opacity" 
-                                    to:0
-                                    duration: 100
-                                }
-                            }
-                        }
-                    }
-                ]
-                Rectangle{
-                    id: drop
-                    visible: true
-                    color: theme.primary
-                    width: volumeContainer.width 
-                    height: volumeContainer.height 
-                    radius: volumeContainer.visible ? volumeContainer.radius: vol_hoverer_icon.radius
-                    x: bar.width-188
-                    anchors.verticalCenter: parent.verticalCenter
-                    Behavior on opacity{
-                        NumberAnimation{duration:200}
-                    }
-                }
-            }
                 Rectangle{
                     id: volumeContainer
                     anchors{
@@ -345,15 +214,13 @@ PanelWindow {
                     }
                     color: "transparent"
                     radius: 20
-                    opacity: 1
+                    visible: opacity
+                    opacity: !bar.audio_on ? 1 : 0
                     border.width: 1
                     border.color: theme.primary
                     implicitWidth: 80
                     implicitHeight: 25
-                    Behavior on opacity{
-                        NumberAnimation{duration:300}
-                    }
-                
+                    Behavior on opacity{NumberAnimation{duration:500}}
                 Rectangle{
                     id: volumeContainer_in_bar
                     anchors{
@@ -388,7 +255,7 @@ PanelWindow {
                     visible: opacity
                     anchors.centerIn: parent
                     anchors.horizontalCenterOffset: clock_rect.width/2+20
-                    opacity: 1
+                    opacity: volumeContainer.visible ? 0 : 1
                     property bool hovered: false
                     MouseArea{
                         anchors.fill: parent
@@ -403,7 +270,7 @@ PanelWindow {
                         }
                     }
                     Behavior on opacity{
-                        NumberAnimation{duration:200}
+                        NumberAnimation{duration:500}
                     }   
                     Rectangle{
                         id: vol_hoverer_icon
@@ -486,18 +353,7 @@ PanelWindow {
                             anchors.verticalCenterOffset:1
                             color: theme.on_tertiary_fixed
                             radius: 15
-                        Rectangle{
-                        anchors.centerIn: parent
-                        width:height
-                        height: 12
-                        radius:20
-                        color: "transparent"
-                        Image{
-                            anchors.fill:parent
-                            source: modelData.icon
-                            fillMode: Image.PreserveAspectFit
-                        }
-                        MouseArea{
+                            MouseArea{
                             function killit(service){
                                 Quickshell.execDetached(["killall",service])
                                 console.log("killed",service)
@@ -510,9 +366,20 @@ PanelWindow {
                                 } else {
                                     modelData.activate()
                                 }
-                            }
+                                 }
+                                }
+                        Rectangle{
+                        anchors.centerIn: parent
+                        width:height
+                        height: 14
+                        radius:20
+                        color: "transparent"
+                        Image{
+                            anchors.fill:parent
+                            source: modelData.icon
+                            fillMode: Image.PreserveAspectFit
                         }
-                        }
+                    }
                     }
                 }
             }

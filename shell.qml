@@ -31,15 +31,14 @@ ShellRoot{
         objects: [Pipewire.defaultAudioSink]
         }
 
-    
-    Bar {
-            whispering: root.whispering
-            volume: root.volume
-            volumeMuted: root.volumeMuted
-            defaultAudioSink: root.defaultAudioSink
-        }
-    WrapperLayout{}
-    
+    Loader{
+        sourceComponent:Bar{
+                whispering: root.whispering
+                volume: root.volume
+                volumeMuted: root.volumeMuted
+                defaultAudioSink: root.defaultAudioSink
+        }}
+    LazyLoader{active:true;WrapperLayout{}}
     LazyLoader{
         id: wallpaper_selector
         active: root.wallselect

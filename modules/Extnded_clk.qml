@@ -108,17 +108,18 @@ PopupWindow {
         
         Behavior on y{
             NumberAnimation{
-                duration: 500
-                easing.type: Easing.OutQuint
+                duration: 400
+                easing.type: Easing.OutQuad
                 onRunningChanged:{
                     if (!menu.visible) {
                     console.log("got sig_kill for dash_menu"); menu.toggle()
                     }}
                 }
             }
-    //Background{
-     //       id: bg
-      //     clip: true
+            //Behavior on height{NumberAnimation{duration:200}}
+   // Background{
+    //        id: bg
+     //      clip: true
     //}
     SwipeView{
         id: view
