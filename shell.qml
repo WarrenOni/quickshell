@@ -21,24 +21,8 @@ ShellRoot{
     property bool wallselect: false
     property bool launcher: false
      //pipewire_audio
-    property string whispering: "Whispering Signature\-Personal use"
-    property var defaultAudioSink: Pipewire.defaultAudioSink
-    property int volume: defaultAudioSink && defaultAudioSink.audio 
-        ? Math.round(defaultAudioSink.audio.volume * 100) : 0
-    property bool volumeMuted: defaultAudioSink && defaultAudioSink.audio 
-        ?  defaultAudioSink.audio.muted :  false
-    PwObjectTracker{ 
-        objects: [Pipewire.defaultAudioSink]
-        }
-
-    Loader{
-        sourceComponent:Bar{
-                whispering: root.whispering
-                volume: root.volume
-                volumeMuted: root.volumeMuted
-                defaultAudioSink: root.defaultAudioSink
-        }}
-    LazyLoader{active:true;WrapperLayout{}}
+    LazyLoader{active:true;component:Bar{}}
+    //LazyLoader{active:true;WrapperLayout{}}
     LazyLoader{
         id: wallpaper_selector
         active: root.wallselect

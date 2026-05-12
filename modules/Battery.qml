@@ -5,58 +5,81 @@ import QtQuick.Layouts
 import qs.modules.Reusable
 //import Quickshell.Services.UPower
 import "../"
+import "./Reusable/"
 
-PopupWindow{
+PanelWindow{
   id:root
-  implicitHeight: 400
-  implicitWidth: 380
+  implicitHeight: 410
+  implicitWidth: 390
  // property int bar_width
  // property int bar_height
   property var bar_window
-  property int sweepangle:P_data.power.displayDevice.percentage * 100
+  property real sweepangle:P_data.power.displayDevice.percentage * 100
   property color textcolor: "white"
   visible: true
   signal toggle()
   color:"transparent"
-  anchor.rect.x: 1220//bar_width / 2 - implicitWidth / 2
-  anchor.rect.y: 35//bar_height
-  anchor.window: bar_window
+  anchors.top:true
+  anchors.right:true
+  function restart(){proc.running=false;proc.running=true;semicirc.anim_running=false;semicirc.anim_running=true}
   Process{
     id: proc
     command: ["./.config/quickshell/Extra/batinfo.sh"]
     stdout:StdioCollector{
       onDataChanged: (data) => P_data.batinfo=JSON.parse(text.trim())
     }
+    onRunningChanged:{
+          if(P_data.batinfo.Current_Profile==="balanced") P_data.power_color="#0055ff";
+          if(P_data.batinfo.Current_Profile==="power-saver") P_data.power_color="#00ff33";
+          if(P_data.batinfo.Current_Profile==="performance") P_data.power_color="#ff0000";
+    }
+  }
+  Corners{anchors.right:mainmenu.left;rotation:90}
+  Corners{visible:true;anchors.top:mainmenu.bottom;anchors.right:mainmenu.right;rotation:90}
+  Timer{
+    id: proc_timer
+    running: P_data.bat_open
+    onTriggered:{
+      proc.running=false;proc.running=true;
+    }
+    repeat: true
+    interval: 3000
   }
   Component.onCompleted:{
     proc.running=true
+    semicirc.anim_running=true
     }
-
-  Item{
+  Rectangle{
     id:mainmenu
-    width: parent.width
-    height: parent.height
-    x: P_data.bat_open ? 0: 385
+    color: theme.background
+    bottomLeftRadius: 20
+    width: parent.width-10
+    height: parent.height-10
+    x: P_data.bat_open ? 20: 405
     Behavior on x{
       NumberAnimation{
         duration:400;easing.type:Easing.OutQuad
-        onRunningChanged:if(!P_data.bat_open&&mainmenu.x===385){toggle()}
+        onRunningChanged:if(!P_data.bat_open&&mainmenu.x===405){toggle()}
         }
     }
+  
   Column{
     anchors.fill: parent
-    spacing:5
+    spacing: 10
     Item{
-      anchors.fill: parent
+      width: parent.width
+      height: 220
       MorphShape1{
         id: semicirc
-        anchors.centerIn: parent
-        anchors.verticalCenterOffset: -10
         sweepangle: root.sweepangle*1.8
+        anim_running: P_data.bat_open
+        anchors.fill:parent
+        clr: P_data.power_color
+       // animation: true
       }
       Text{
         anchors.centerIn:parent
-        anchors.verticalCenterOffset:-50
+        anchors.verticalCenterOffset:-10
         anchors.horizontalCenterOffset: -5
         font.pixelSize: 35
         color:root.textcolor
@@ -70,18 +93,19 @@ PopupWindow{
       }
       Text{
         anchors.centerIn: parent
-        anchors.verticalCenterOffset:-5
+        anchors.verticalCenterOffset:40
         font.pixelSize: 25
         font.bold: true
+        property int sweepangle: root.sweepangle
         color:root.textcolor
         font.family: "Espacion"
-        text: root.sweepangle + "%"+"\nBAT"
+        text: sweepangle + "%"+"\nBAT"
       }
     }
     Row{
-      anchors.centerIn:parent
-      anchors.verticalCenterOffset: 70
+      leftPadding:30
       spacing: 80
+      topPadding:-20
       PillRect{
           first_text: P_data.batinfo.Cap
           second_text:"Capacity"
@@ -97,7 +121,13 @@ PopupWindow{
           radius:20
       }
     }
-    Item{
+    PowerProfileSelect{
+      anchors.horizontalCenter: parent.horizontalCenter
+      rwidth: root.width-50
+      rheight: 45
+      currentElement: P_data.batinfo ? P_data.batinfo.Current_Profile : "Balanced"
+      radius: 10
+      onRecalc: root.restart()
     }
   }
   }

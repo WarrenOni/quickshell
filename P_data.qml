@@ -5,6 +5,8 @@ import Quickshell.Services.Mpris
 import Quickshell.Services.UPower
 import Quickshell.Services.SystemTray
 import Quickshell.Services.Notifications
+import Quickshell.Services.Pipewire
+
 //For_Persistant_Storing_data
 Singleton{
     id:root
@@ -18,11 +20,19 @@ Singleton{
     readonly property var systray: SystemTray
     property bool bat_open: false
     property var noti;
+    property color power_color: "#00ff00"
     property var current_time: Qt.formatDateTime(clock.date, "hh:mm")
     property bool tor_win: false
     property bool dash_open: false
     property bool first_run: true
     property ListModel historyModel: ListModel {}
+    property string whispering: "Whispering Signature\-Personal use"
+    //vol
+    property var defaultAudioSink: Pipewire.defaultAudioSink
+    property int volume: defaultAudioSink && defaultAudioSink.audio ? Math.round(defaultAudioSink.audio.volume * 100) : 0
+    property bool volumeMuted: defaultAudioSink && defaultAudioSink.audio ?  defaultAudioSink.audio.muted :  false
+    PwObjectTracker{ objects: [Pipewire.defaultAudioSink] }
+    ///
     signal new_notif(var data)
     onWifiDataChanged: console.log("wifi_data_changed",wifiData)
     onBluetoothDataChanged: console.log("bluetooth_data_changed")
@@ -36,9 +46,9 @@ Singleton{
         id: notif
       //  actionIconsSupported: true
         actionsSupported: true
-        bodyHyperlinksSupported: true
-        bodyImagesSupported: true
-        bodyMarkupSupported: true
+       // bodyHyperlinksSupported: true
+       // bodyImagesSupported: true
+       // bodyMarkupSupported: true
         bodySupported: true
         imageSupported: true
         keepOnReload: true

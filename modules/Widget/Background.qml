@@ -8,7 +8,7 @@ Item{
     // --- Minimal Morphing Shape ---
 Rectangle {
         id: morphShape
-        width: 400; height: 400
+        width: 300; height: 300
         color: theme.on_surface
         opacity: 0.6
         rotation: 45
@@ -16,7 +16,7 @@ Rectangle {
         clip: true
         
         // Starting position
-        x: 0; y: 0
+        x: -10; y: 100
 
         // 1. SHAPE MORPH (Oval to Rounded Rect)
         SequentialAnimation on rotation {
@@ -36,15 +36,15 @@ Rectangle {
         SequentialAnimation on x {  
             running: true
             loops: Animation.Infinite
-            NumberAnimation { to: -50; duration: 4500; easing.type: Easing.InOutQuad }
-            NumberAnimation { to: -90; duration: 4500; easing.type: Easing.InOutQuad }
+            NumberAnimation { to: 120; duration: 4500; easing.type: Easing.InOutQuad }
+            NumberAnimation { to: -20; duration: 4500; easing.type: Easing.InOutQuad }
         }
 
         SequentialAnimation on y {
             running: true
             loops: Animation.Infinite
-            NumberAnimation { to: -90; duration: 3500; easing.type: Easing.InOutQuad }
-            NumberAnimation { to: -50; duration: 3500; easing.type: Easing.InOutQuad }
+            NumberAnimation { to: 40; duration: 3500; easing.type: Easing.InOutQuad }
+            NumberAnimation { to: morphShape.y; duration: 3500; easing.type: Easing.InOutQuad }
         }
 
         // 3. SUBTLE PULSE
@@ -57,7 +57,7 @@ Rectangle {
     }
 Rectangle {
         id: morphShape1
-        width: 400; height: 400
+        width: 300; height: 300
         color: theme.source_color
         opacity: 0.6
         rotation: 45
@@ -66,7 +66,7 @@ Rectangle {
         
         // Starting position
 
-        x: 400; y: 300
+        x: 400; y: 100
 
         // 1. SHAPE MORPH (Oval to Rounded Rect)
         
@@ -96,7 +96,7 @@ Rectangle {
             running: true
             loops: Animation.Infinite
             NumberAnimation { to: 350; duration: 3500; easing.type: Easing.InOutQuad }
-            NumberAnimation { to: 300; duration: 3500; easing.type: Easing.InOutQuad }
+            NumberAnimation { to: morphShape1.y; duration: 3500; easing.type: Easing.InOutQuad }
         }
 
         // 3. SUBTLE PULSE

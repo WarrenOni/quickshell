@@ -4,25 +4,22 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import "../."
 
-PopupWindow{
+PanelWindow{
     id: root
     property var notif
-    property int bar_height
-    property int bar_width
-    property var bar_window
     implicitWidth: 350
     color: "transparent"
     implicitHeight: 100
-    anchor.rect.x: bar_width
-    anchor.rect.y: bar_height
-    anchor.window: bar_window
+    anchors.bottom: true
+    anchors.right: true
+    exclusiveZone:0
     Connections{
         target: P_data
         function onNew_notif(data){
             root.notif=data
             root.visible=true
             console.log("ewwwww")
-            }
+        }
     }
     property bool hovered: false
     onHoveredChanged:console.debug("hovered_on_notification")

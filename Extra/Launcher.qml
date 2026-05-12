@@ -18,9 +18,9 @@ FloatingWindow{
     signal toggle()
     onFilteredChanged:{console.log(filtered.icon)}
     //function for calling the app
-    function launchApp(exec){
-        Quickshell.execDetached(["sh","-c",exec])
-        console.log("request sent for launch",exec)
+    function launchApp(Modeldata){
+        Modeldata.execute()
+        console.log("request sent for lauch of ",Modeldata.command)
         toggle()
     }
 
@@ -64,7 +64,7 @@ FloatingWindow{
             Keys.onReturnPressed:{
                 let dat = search.text? menu_list.filtered: menu_list.application;
                 if(dat.length > 0){
-                    menu_list.launchApp(dat[0].command)
+                    menu_list.launchApp(dat[0])
                 }
             }
         }
@@ -95,7 +95,7 @@ FloatingWindow{
                     anchors.fill: parent
                     onEntered: del.hovered = true
                     onExited: del.hovered = false
-                    onClicked: menu_list.launchApp(modelData.command)
+                    onClicked: menu_list.launchApp(modelData)
                 }
                 Row{
                     anchors.verticalCenter:parent.verticalCenter
