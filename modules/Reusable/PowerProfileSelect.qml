@@ -39,7 +39,7 @@ Rectangle {
         id: hoverer
         z: 1
         anchors.verticalCenter: root.verticalCenter
-        width: root.currentElement.length * 8 + 20
+        width: root.currentElement.length * 9 + 20
         color: P_data.power_color
         radius: root.radius
         height: root.rheight - 6

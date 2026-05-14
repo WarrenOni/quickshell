@@ -1,14 +1,15 @@
 import QtQuick
 import QtQuick.Shapes
-//import QtQuick.Layouts
+import QtQuick.Effects
 
 Item{
     id:main_circ_root
     property var bluetoothData: ({})
     property var connectProc: ({})
-    width: 190
-    height: 190
+    width: 250
+    height: 250
     clip: true
+    RectangularShadow{anchors.centerIn: circ_cent;width:circ_cent.width;height:circ_cent.height;radius:circ_cent.radius;spread:0;color:theme.secondary}
     Rectangle {
         id: circ_cent
         width: 190

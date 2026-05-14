@@ -2,7 +2,8 @@ import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
 import QtQuick
-import QtQuick.Shapes
+//import QtQuick.Shapes
+import QtQuick.Effects
 import QtQuick.Layouts
 import "../"
 import "./Reusable/"
@@ -38,12 +39,12 @@ PanelWindow {
         console.log("vol_down");
         Quickshell.execDetached(["wpctl", "set-volume", "-l", "1", "@DEFAULT_AUDIO_SINK@", "2%-"]);
     }
-    implicitHeight: 50
+    implicitHeight: 35
     exclusiveZone: 35
     color: "transparent"
-    Rectangle{id:bar_fill;width:parent.width;height:bar.exclusiveZone;color:theme.background}
-    Corners{anchors.left: bar_fill.left;anchors.top:bar_fill.bottom}
-    Corners{anchors.right:bar_fill.right;anchors.top:bar_fill.bottom;rotation:90}
+    Rectangle{id:bar_fill;width:parent.width;height:bar.exclusiveZone;color:theme.background;visible:!P_data.wrapperlayout}
+    Loader{anchors.left: bar_fill.left;anchors.top:bar_fill.bottom;sourceComponent:Corners{}active:!P_data.wrapperlayout}
+    Loader{anchors.right:bar_fill.right;anchors.top:bar_fill.bottom;sourceComponent:Corners{rotation:90}active:!P_data.wrapperlayout}
     anchors {
         top: true
         left: true
@@ -219,7 +220,7 @@ PanelWindow {
                 }
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: Quickshell.execDetached(["wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"])
+                    onClicked: P_data.media_player_vis=!P_data.media_player_vis
                     onWheel: wheel => {if(wheel.angleDelta.y < 0)bar.volume_up();if(wheel.angleDelta.y > 0)bar.volume_down();}
                 }
             }
@@ -262,6 +263,16 @@ PanelWindow {
                 anchors.right: parent.right
                 anchors.rightMargin: 3.5
                 spacing: 4
+                HoverPills{
+                    height: info_panel.height-4
+                    width: hovered ? 125:25
+                    Behavior on width{NumberAnimation{duration:300;easing.type:Easing.OutQuad}}
+                    icon: P_data.wifiData.connected ? P_data.wifiData.connected.icon: ""
+                    text: P_data.wifiData.connected ? P_data.wifiData.connected.ssid : ""
+                    textsize: 8
+                    iconsize: 15
+                    visible: P_data.wifiData.connected ? true : false
+                }
                 HoverPills{
                     id: volume_control
                     height: info_panel.height-4
@@ -375,12 +386,20 @@ PanelWindow {
                             radius: 20
                             color: "transparent"
                             NumberAnimation on opacity{from:0;to:1;duration:300}
+                            RectangularShadow{
+                            anchors.fill: parent
+                            spread:0
+                            }
                             Image {
                                 anchors.fill: parent
                                 source: modelData.icon
+                                antialiasing:true
+                                mipmap:true
                                 fillMode: Image.PreserveAspectFit
                             }
+                           
                         }
+                        
                     }
                 }
             }

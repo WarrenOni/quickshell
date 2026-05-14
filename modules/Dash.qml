@@ -174,8 +174,7 @@ Item{
         height: 250
         color: theme.on_secondary_fixed_variant
         width: height
-        border.width: 1
-        border.color: theme.on_primary_fixed
+        border.width: 0
         radius: 100
         rotation: 0
         SequentialAnimation on rotation{
@@ -184,6 +183,7 @@ Item{
             NumberAnimation{from: 0; to: 180; duration: 8000}
         }
     }
+    
     //text for time
     Text{
         text:"12"
@@ -313,6 +313,7 @@ Item{
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.horizontalCenterOffset: 180
         visible: root.player ? true:false
+        RectangularShadow{anchors.fill:player_rect;spread:0;}
         MouseArea{
             anchors.fill: parent
             preventStealing: false
@@ -397,8 +398,10 @@ Item{
                 border.color: theme.secondary
                 color: "transparent"
                 border.width: 4
+                RectangularShadow{anchors.fill:parent;spread:0;opacity:0.7}
             Image{
                 id: trackart
+                visible:true
                 anchors.centerIn: parent
                 source: root.players ? root.player.trackArtUrl : null
                 sourceSize.width: width*1.5
@@ -412,7 +415,6 @@ Item{
                     anchors.fill: parent
                     onClicked: root.player.raise()
                 }
-
             }
             }
             Column{
@@ -580,6 +582,7 @@ Item{
     }
     ////
     Rectangle{
+        RectangularShadow{anchors.fill:notif_shell;spread:0}
         id: notif_shell
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.verticalCenter

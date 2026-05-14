@@ -21,8 +21,8 @@ ShellRoot{
     property bool wallselect: false
     property bool launcher: false
      //pipewire_audio
-    LazyLoader{active:true;component:Bar{}}
-    //LazyLoader{active:true;WrapperLayout{}}
+    Loader{active:true;sourceComponent:Bar{}}
+    LazyLoader{active:P_data.wrapperlayout;WrapperLayout{}}
     LazyLoader{
         id: wallpaper_selector
         active: root.wallselect
@@ -31,7 +31,7 @@ ShellRoot{
         }
         //source: "Extra/Wallpaper.qml"
         }
-    
+    //LazyLoader{active:P_data.audio_on;component:Music_Visualizer{}}
     IpcHandler {
             target: "wallselect"
             function open(): void {
@@ -47,7 +47,7 @@ ShellRoot{
             onToggle: root.launcher=false
         }
     }
-    
+    LazyLoader{active:P_data.media_player_vis;component:Media_Player{}}
     IpcHandler {
             target: "launcher"
             function open(): void {

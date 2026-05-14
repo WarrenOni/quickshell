@@ -30,6 +30,12 @@ PopupWindow{
             P_data.dash_open = false;
         }
     }
+    Component.onCompleted:{
+        get_connection_name.running=false
+        get_connection_name.running=true
+        get_bt_connenction_name.running=false
+        get_bt_connenction_name.running=true
+    }
     Process {
         id: connectProc
         onStarted: console.log("connect started");
@@ -76,7 +82,7 @@ PopupWindow{
     }
     Timer {
         id: wifiRefresh
-        interval: 1500
+        interval: 3000
         running: menu.open && menu.wifi_panel
         repeat: true
         onTriggered: {
@@ -100,13 +106,15 @@ PopupWindow{
     color: "transparent"
     implicitWidth: 780
     implicitHeight: 530
-    Corners{anchors.left: panel.right;visible:panel.y>-menu.height+20}
-    Corners{anchors.right:panel.left;rotation:90;visible:panel.y>-menu.height+20}
+    Loader{anchors.left: panel.right;sourceComponent:Corners{visible:panel.y>-menu.height+20}active:!P_data.wrapperlayout}
+    Loader{anchors.right:panel.left;sourceComponent:Corners{rotation:90;visible:panel.y>-menu.height+20}active:!P_data.wrapperlayout}
     
     // position under bar
     anchor.rect.x: bar_width / 2 - implicitWidth / 2
     anchor.rect.y: bar_height
     anchor.window: bar_window
+    //anchors.top: true
+    //exclusiveZone:0
     Rectangle {
         id: panel
         width: 750

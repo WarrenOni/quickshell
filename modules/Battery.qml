@@ -34,8 +34,8 @@ PanelWindow{
           if(P_data.batinfo.Current_Profile==="performance") P_data.power_color="#ff0000";
     }
   }
-  Corners{anchors.right:mainmenu.left;rotation:90}
-  Corners{visible:true;anchors.top:mainmenu.bottom;anchors.right:mainmenu.right;rotation:90}
+  Loader{anchors.right:mainmenu.left;sourceComponent:Corners{rotation:90} active:!P_data.wrapperlayout}
+  Loader{anchors.top:mainmenu.bottom;anchors.right:mainmenu.right;sourceComponent:Corners{visible:true;rotation:90}active:!P_data.wrapperlayout}
   Timer{
     id: proc_timer
     running: P_data.bat_open
@@ -51,7 +51,7 @@ PanelWindow{
     }
   Rectangle{
     id:mainmenu
-    color: theme.background
+    color: P_data.wrapperlayout ? "transparent" : theme.background
     bottomLeftRadius: 20
     width: parent.width-10
     height: parent.height-10

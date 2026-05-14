@@ -77,7 +77,7 @@ FloatingWindow {
                     sourceSize.height: 450
                     sourceSize.width: 400
                     mipmap: true
-                    cache: true
+                    cache: false
                     asynchronous: true
                 }
 

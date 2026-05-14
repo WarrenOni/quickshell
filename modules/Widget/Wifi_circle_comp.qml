@@ -1,22 +1,30 @@
 import QtQuick
-//import QtQuick.Layouts
+import Quickshell
+import QtQuick.Effects
 import QtQuick.Shapes
 import "../../."
+import Quickshell.Networking
+
 Item{
     id:main_circ_root
     property var wifiData: ({})
     property var connectProc: ({})
+    property var networks: Networking.devices.values
+    property NetworkDevice network: networks[0]
+    property Network wifi: network[0]
     width: 190
     Component.onCompleted:{
-        console.log("")
+        console.log(wifi.name ,"heee")
     }
     height: 190
+    RectangularShadow{anchors.centerIn: circ_cent;width:circ_cent.width;height:circ_cent.height;radius:circ_cent.radius;spread:0;color:theme.secondary}
     Rectangle {
         id: circ_cent
         width: 190
         opacity: 1
         height: width
         radius: 100
+        
         gradient: RadialGradient{
             centerX: 90; centerY: 90; centerRadius: 100;
             focalX: centerX; focalY: centerY;
@@ -28,9 +36,7 @@ Item{
         MouseArea{
             anchors.fill: parent
             onClicked: {
-                main_circ_root.connectProc.command = [
-                "sh", "-c", "~/.config/quickshell/modules/Widget/wifi_on.sh"
-                ]
+                Networking.wifiEnabled = !Networking.wifiEnabled
                 main_circ_root.connectProc.running = true
                 pop.running = true
                 
@@ -63,22 +69,22 @@ Item{
 
             Text {
                 id: wifi_text1
-                text: wifiData.connected ? wifiData.connected.ssid : ""
-                font.pixelSize: wifiData.connected ? (wifiData.connected.ssid.length > 20 ? ((2-wifiData.connected.ssid.length/22)*16) : 16  ) : 15 
+                //text: // ? "On" : "Off"
+                font.pixelSize: 12// wifiData.connected ? (wifiData.connected.ssid.length > 20 ? ((2-wifiData.connected.ssid.length/22)*16) : 16  ) : 15 
                 font.bold: true
                 font.family: "PIXELON"
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
             Text {
-                
-                text: wifiData.connected ? "Connected" : "Disconnected"
+                text: Networking ? "Connected" : "Disconnected"
                 font.pixelSize: 14
                 font.family: whispering
                 anchors.horizontalCenter: parent.horizontalCenter                
             }
         }  
     }
+   
     Rectangle{
         width: 190
         height: 90
