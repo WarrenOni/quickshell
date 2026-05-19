@@ -11,10 +11,11 @@ Item{
     property var connectProc: ({})
     property var networks: Networking.devices.values
     property NetworkDevice network: networks[0]
-    property Network wifi: network[0]
+    property Network wifi: networks[0]
+
     width: 190
     Component.onCompleted:{
-        console.log(wifi.name ,"heee")
+        console.log(wifi ,"heee")
     }
     height: 190
     RectangularShadow{anchors.centerIn: circ_cent;width:circ_cent.width;height:circ_cent.height;radius:circ_cent.radius;spread:0;color:theme.secondary}
@@ -77,7 +78,7 @@ Item{
             }
 
             Text {
-                text: Networking ? "Connected" : "Disconnected"
+                text:Networking ? "Connected" : "Disconnected"
                 font.pixelSize: 14
                 font.family: whispering
                 anchors.horizontalCenter: parent.horizontalCenter                

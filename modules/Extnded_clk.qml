@@ -7,14 +7,14 @@ import "./Widget"
 import "./Reusable"
 import QtQuick.Controls
 
-PopupWindow{
+PopupWindow {
     id: menu
     //property var wifiData: P_data.wifiData
     //property var bluetoothData: P_data.bluetoothData
     property int bar_height
     property int bar_width
     property var bar_window
-    property bool open: false
+    readonly property bool open: P_data.dash_open
     property bool scan_vis: false
     property var pills: ["Dash", "Wi-fi", "Bluetooth"]
     property bool blth_scan_vis: blth_panel
@@ -30,16 +30,17 @@ PopupWindow{
             P_data.dash_open = false;
         }
     }
-    Component.onCompleted:{
-        get_connection_name.running=false
-        get_connection_name.running=true
-        get_bt_connenction_name.running=false
-        get_bt_connenction_name.running=true
+    Component.onCompleted: {
+        get_connection_name.running = false;
+        get_connection_name.running = true;
+        get_bt_connenction_name.running = false;
+        get_bt_connenction_name.running = true;
+        P_data.bat_open = false;
     }
     Process {
         id: connectProc
-        onStarted: console.log("connect started");
-        onExited: console.log("connect finished");
+        onStarted: console.log("connect started")
+        onExited: console.log("connect finished")
     }
     Process {
         id: get_connection_name
@@ -104,31 +105,30 @@ PopupWindow{
 
     visible: open || panel.y > -menu.height
     color: "transparent"
-    implicitWidth: 780
-    implicitHeight: 530
-    Loader{anchors.left: panel.right;sourceComponent:Corners{visible:panel.y>-menu.height+20}active:!P_data.wrapperlayout}
-    Loader{anchors.right:panel.left;sourceComponent:Corners{rotation:90;visible:panel.y>-menu.height+20}active:!P_data.wrapperlayout}
-    
+    implicitWidth: 850
+    implicitHeight: 535
+
     // position under bar
     anchor.rect.x: bar_width / 2 - implicitWidth / 2
-    anchor.rect.y: bar_height
+    anchor.rect.y: 30//bar_height
     anchor.window: bar_window
     //anchors.top: true
-    //exclusiveZone:0
-    Rectangle {
+    //exclusionMode: ExclusionMode.Enum
+    //exclusiveZone: 0
+    Item {
         id: panel
-        width: 750
-        height: 530
+        width: parent.width
+        height: parent.height
         clip: true
-        color:theme.background
-        bottomLeftRadius: 20; bottomRightRadius:20
+        //color: P_data.wrapperlayout ? "transparent" : theme.background
+        //bottomLeftRadius: 20; bottomRightRadius:20
         anchors.horizontalCenter: parent.horizontalCenter
-        y: !menu.open ? -menu.height: 0
+        y: !menu.open ? -menu.height : 0
 
         Behavior on y {
             NumberAnimation {
-                duration: 400
-                easing.type: Easing.OutQuad
+                duration: 600
+                easing.type: Easing.OutExpo
                 onRunningChanged: {
                     if (!menu.visible) {
                         console.log("got sig_kill for dash_menu");

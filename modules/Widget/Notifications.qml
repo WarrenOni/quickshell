@@ -13,41 +13,50 @@ Item {
     //onNotifChanged:console.log(notif.id)
     ListView {
         id: notif_list
-        anchors.topMargin:2
-        anchors.bottomMargin:2
+        anchors.topMargin: 2
+        anchors.bottomMargin: 2
         anchors.fill: parent
         clip: true
         model: P_data.historyModel
         spacing: 5
-        delegate: Item{
-                width: 300
-                height: del_rect.height
-                Rectangle {
+        delegate: Item {
+            width: root.width - 10
+            height: del_rect.height
+            Rectangle {
                 id: del_rect
                 clip: true
                 //anchors.horizontalCenter: parent.horizontalCenter
                 color: hovered ? theme.primary : theme.on_secondary_fixed_variant
-                height: clicked && model.body.length>40 ? body_text.contentHeight+summary_text.contentHeight+30  : root.rectHt
-                width: 290
+                height: clicked && model.body.length > 40 ? body_text.contentHeight + summary_text.contentHeight + 30 : root.rectHt
+                width: parent.width
                 radius: root.rad
-                x:5
-                Behavior on x{NumberAnimation{duration:200;running:dragArea.active}}
-            
-                Behavior on height{NumberAnimation{duration:200}}
-                RowLayout{
+                x: 5
+                Behavior on x {
+                    NumberAnimation {
+                        duration: 200
+                        running: dragArea.active
+                    }
+                }
+
+                Behavior on height {
+                    NumberAnimation {
+                        duration: 200
+                    }
+                }
+                RowLayout {
                     anchors.leftMargin: 10
                     anchors.fill: parent
-                    spacing:10
+                    spacing: 10
                     Image {
                         id: sourceImage
                         source: model.image || ""
                         visible: false
-                        anchors.verticalCenter:  parent.verticalCenter
+                        anchors.verticalCenter: parent.verticalCenter
                         width: 50
                         height: 50
                         mipmap: true
                     }
-                    MultiEffect{
+                    MultiEffect {
                         source: sourceImage
                         anchors.fill: sourceImage
                         maskEnabled: true
@@ -64,12 +73,16 @@ Item {
                         radius: 20
                         color: "black"
                     }
-                    Column{
-                        spacing:2
-                        Row{
-                        Text{text:model.app;font.pixelSize:10;font.family:whispering}
+                    Column {
+                        spacing: 2
+                        Row {
+                            Text {
+                                text: model.app
+                                font.pixelSize: 10
+                                font.family: whispering
+                            }
                         }
-                        Text{
+                        Text {
                             id: summary_text
                             text: model.summary
                             width: 200
@@ -78,13 +91,13 @@ Item {
                             font.bold: true
                             font.family: "Espacion"
                         }
-                        Text{
+                        Text {
                             id: body_text
-                            width: model.image != "" ? del_rect.width-75: del_rect.width-20
-                            maximumLineCount: !del_rect.clicked?1:20
+                            width: model.image != "" ? del_rect.width - 75 : del_rect.width - 20
+                            maximumLineCount: !del_rect.clicked ? 1 : 20
                             wrapMode: Text.Wrap
                             elide: Text.ElideRight
-                            font.pixelSize:12
+                            font.pixelSize: 12
                             text: model.body
                             font.family: "Espacion"
                         }
@@ -93,23 +106,26 @@ Item {
                 property bool hovered: false
                 property bool clicked: false
                 readonly property int maxmov: 100
-                DragHandler{
+                DragHandler {
                     id: dragArea
                     target: parent
                     xAxis.enabled: true
                     yAxis.enabled: false
-                    onActiveChanged:{
-                        if(!active){
-                            if(del_rect.x>(del_rect.maxmov)||del_rect.x<(-del_rect.maxmov)){P_data.historyModel.remove(index)}
-                            else{del_rect.x=5}
+                    onActiveChanged: {
+                        if (!active) {
+                            if (del_rect.x > (del_rect.maxmov) || del_rect.x < (-del_rect.maxmov)) {
+                                P_data.historyModel.remove(index);
+                            } else {
+                                del_rect.x = 5;
+                            }
                         }
                     }
                 }
-                MouseArea{
+                MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    onHoveredChanged: del_rect.hovered=!del_rect.hovered
-                    onClicked: del_rect.clicked=!del_rect.clicked
+                    onHoveredChanged: del_rect.hovered = !del_rect.hovered
+                    onClicked: del_rect.clicked = !del_rect.clicked
                 }
             }
         }

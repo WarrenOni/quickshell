@@ -3,14 +3,15 @@ import QtQuick.Shapes
 import QtQuick.Effects
 import "./Widget"
 import "../"
-Item{
+
+Item {
     id: root
     property var date1: new Date()
     property var date: new Date()
     property var milli_s: date.getMilliseconds()
-    property var day: root.date1.toLocaleDateString(Qt.locale(),"dddd")
-    property var clock_font: "Electroharmonix"
-    property var players: P_data.players 
+    property var day: root.date1.toLocaleDateString(Qt.locale(), "dddd")
+    property var clock_font: "Noto Serif Black" //"Electroharmonix"
+    property var players: P_data.players
     property var player: P_data.player
     property bool open: false
     property bool seeker_active: false
@@ -18,258 +19,304 @@ Item{
     implicitWidth: parent.width
     implicitHeight: parent.height
     clip: true
-    Component.onCompleted:{
+    Component.onCompleted: {
         //console.log(players)
-        console.log(players.length)
-        
+        console.log(players.length);
+
         //date_rect.width = date_rect.cal_width()
     }
-    Timer{
-            interval: 50
-            running: root.open
-            repeat: true
-            onTriggered:{
-                root.date = new Date()
-            }
+    Timer {
+        interval: 50
+        running: root.open
+        repeat: true
+        onTriggered: {
+            root.date = new Date();
+        }
     }
-    Item{
-        width:root.width
-        height:root.height
+    Item {
+        width: root.width
+        height: root.height
         clip: true
-        NumberAnimation on x{
+        layer.enabled: false
+        layer.effect: MultiEffect {
+            shadowEnabled: true
+            shadowColor: theme.primary
+            shadowOpacity: 0.5
+        }
+        NumberAnimation on x {
             id: top_anim
             running: root.open
             from: -(root.width)
             to: 0
-            duration: 2000
+            duration: 1500
             easing.type: Easing.OutExpo
         }
-        NumberAnimation on opacity{
+        NumberAnimation on opacity {
             from: 0
             to: 1
             running: top_anim.running
-            duration: 800
+            duration: 700
         }
-    Rectangle{
-        id: date_rect
-        height: 55 
-        width: {
-            switch(root.day){
-                case "Monday" : return 450;
-                case "Friday" : return 550;
-                case "Tuesday": return 460;
-                case "Wednesday": return 290;
-                case "Thursday": return 350;
-                case "Saturday": return 340;
-                case "Sunday": return 500;
-                default: return 500;
-            }
-        }
-
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: -200
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.horizontalCenterOffset: {if(width!==290){return -210}else{-260}}
-        color: theme.primary
-        transform: Shear{
-            xFactor: {
-                switch(date_rect.width){
-                    case 340: case 500: case 290: return 0.06;
-                    default: return -0.2;
+        Rectangle {
+            id: date_rect
+            height: 55
+            width: {
+                switch (root.day) {
+                case "Monday":
+                    return 450;
+                case "Friday":
+                    return 550;
+                case "Tuesday":
+                    return 460;
+                case "Wednesday":
+                    return 290;
+                case "Thursday":
+                    return 350;
+                case "Saturday":
+                    return 340;
+                case "Sunday":
+                    return 500;
+                default:
+                    return 500;
                 }
             }
-            yFactor: 0
-        }
- 
-    }
-    Text{
-        text: root.date1.toLocaleDateString(Qt.locale(),"d")
-        anchors.verticalCenter: date_rect.verticalCenter
-        anchors.verticalCenterOffset: -12
-        anchors.right: date_rect.right
-        anchors.rightMargin: 15
-        color: theme.background
-        font.pixelSize: 30
-        font.family: "Noto Sans Black"
-        font.italic: true
-        font.capitalization: Font.AllUppercase
-    }
-    Text{
-        text: root.date1.toLocaleDateString(Qt.locale(),"MMMM")
-        anchors.verticalCenter: date_rect.verticalCenter
-        anchors.verticalCenterOffset: 12
-        anchors.right: date_rect.right
-        anchors.rightMargin: 15 
-        color: theme.background
-        font.pixelSize: 30
-        font.family: "Noto Sans Black"
-        font.italic: true
-        font.capitalization: Font.AllUppercase
-    }
-    Text{
-        id: greet
-        text: P_data.current_time.slice(0,2) < 12 ? "Good Morning":"Good Afternoon"
-        anchors.verticalCenter: date_rect.verticalCenter
-        anchors.verticalCenterOffset: 0
-        anchors.right: date_rect.right
-        anchors.rightMargin: 120
-        visible: !top_anim.running
-        color: theme.background
-        font.pixelSize:{
-            switch(root.day){
-                case "Wednesday": return 15;
-                case "Thursday": return 25;
-                case "Saturday": return 24;
-                default: return 30;
-            }
-        }
-        font.family: whispering
-        font.italic: true
-        NumberAnimation on opacity{
-            from:0;to:1;duration:500;running:greet.visible
-        }
-    }
 
-    Text{
-        text: root.day
-        anchors.verticalCenter: date_rect.verticalCenter
-        anchors.verticalCenterOffset: -2.8
-        anchors.left: date_rect.right
-        anchors.leftMargin: {
-            switch(date_rect.width){
-                case 450: case 550: return -15.5;
-                case 350: case 460: return -21;
-                case 340: case 500: return -19.8;
-                case 290: return -6;
-                default: return -15.5;
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: -210
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenterOffset: {
+                if (width !== 290) {
+                    return -210;
+                } else {
+                    -260;
+                }
+            }
+            color: theme.primary
+            transform: Shear {
+                xFactor: {
+                    switch (date_rect.width) {
+                    case 340:
+                    case 500:
+                    case 290:
+                        return 0.06;
+                    default:
+                        return -0.2;
+                    }
+                }
+                yFactor: 0
             }
         }
-        color: theme.primary
-        font.pixelSize:{ if(anchors.leftMargin===-19.8)
-        {return 75.5;}
-        else{return 77}
+        Text {
+            text: root.date1.toLocaleDateString(Qt.locale(), "d")
+            anchors.verticalCenter: date_rect.verticalCenter
+            anchors.verticalCenterOffset: -12
+            anchors.right: date_rect.right
+            anchors.rightMargin: 15
+            color: theme.background
+            font.pixelSize: 30
+            font.family: "Noto Sans Black"
+            font.italic: true
+            font.capitalization: Font.AllUppercase
         }
-        font.family: "Noto Sans Black"
-        font.italic: true
-        font.capitalization: Font.AllUppercase
-    }
+        Text {
+            text: root.date1.toLocaleDateString(Qt.locale(), "MMMM")
+            anchors.verticalCenter: date_rect.verticalCenter
+            anchors.verticalCenterOffset: 12
+            anchors.right: date_rect.right
+            anchors.rightMargin: 15
+            color: theme.background
+            font.pixelSize: 30
+            font.family: "Noto Sans Black"
+            font.italic: true
+            font.capitalization: Font.AllUppercase
+        }
+        Text {
+            id: greet
+            text: P_data.current_time.slice(0, 2) < 12 ? "Good Morning" : "Good Afternoon"
+            anchors.verticalCenter: date_rect.verticalCenter
+            anchors.verticalCenterOffset: 0
+            anchors.right: date_rect.right
+            anchors.rightMargin: 120
+            visible: !top_anim.running
+            color: theme.background
+            font.pixelSize: {
+                switch (root.day) {
+                case "Wednesday":
+                    return 20;
+                case "Thursday":
+                    return 25;
+                case "Saturday":
+                    return 24;
+                default:
+                    return 30;
+                }
+            }
+            font.family: whispering
+            font.italic: true
+            NumberAnimation on opacity {
+                from: 0
+                to: 1
+                duration: 500
+                running: greet.visible
+            }
+        }
+
+        Text {
+            text: root.day
+            anchors.verticalCenter: date_rect.verticalCenter
+            anchors.verticalCenterOffset: -2.3
+            anchors.left: date_rect.right
+            anchors.leftMargin: {
+                switch (date_rect.width) {
+                case 450:
+                case 550:
+                    return -15.5;
+                case 350:
+                case 460:
+                    return -21;
+                case 340:
+                case 500:
+                    return -19.8;
+                case 290:
+                    return -6;
+                default:
+                    return -15.5;
+                }
+            }
+            color: theme.primary
+            font.pixelSize: {
+                if (anchors.leftMargin === -19.8) {
+                    return 75.5;
+                } else {
+                    return 77;
+                }
+            }
+            font.family: "Noto Sans Black"
+            font.italic: true
+            font.capitalization: Font.AllUppercase
+        }
     }
     ///////////------clock-------
-    Item{
+    Item {
         height: clock.height
         width: clock.width
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenterOffset: 10
-        anchors.horizontalCenterOffset: -180
-        NumberAnimation on scale{
+        anchors.horizontalCenterOffset: -210
+        NumberAnimation on scale {
             running: root.open
             from: 0
             to: 1
             duration: 700
             easing.type: Easing.OutQuint
         }
-    Rectangle{
-        id: clock 
-        height: 250
-        color: theme.on_secondary_fixed_variant
-        width: height
-        border.width: 0
-        radius: 100
-        rotation: 0
-        SequentialAnimation on rotation{
-            running: root.open
-            loops: Animation.Infinite
-            NumberAnimation{from: 0; to: 180; duration: 8000}
-        }
-    }
-    
-    //text for time
-    Text{
-        text:"12"
-        anchors{
-            horizontalCenter: clock.horizontalCenter
-            verticalCenter: clock.verticalCenter
-            verticalCenterOffset: -95
-        }
-        font.pixelSize: 45
-        color: theme.error_container
-        font.family: root.clock_font
-        font.bold: true
-    }
+        Rectangle {
+            id: clock
+            height: 270
+            color: theme.on_secondary_fixed_variant
+            width: height
+            border.width: 0
+            radius: width / 2 - 20
+            rotation: 0
 
-    Text{
-        text:"6"
-        anchors{
-            horizontalCenter: clock.horizontalCenter
-            verticalCenter: clock.verticalCenter
-            verticalCenterOffset: 95
+            SequentialAnimation on rotation {
+                running: root.open
+                loops: Animation.Infinite
+                NumberAnimation {
+                    from: 0
+                    to: 180
+                    duration: 8000
+                }
+            }
         }
-        font.pixelSize: 45
-        color: theme.on_tertiary_fixed
-        font.family: root.clock_font
-        font.bold: true
-    }
-    Text{
-        text:"3"
-        anchors{
-            horizontalCenter: clock.horizontalCenter
-            verticalCenter: clock.verticalCenter
-            horizontalCenterOffset: 105
-        }
-        font.pixelSize: 38
-        color: theme.secondary
-        font.family: root.clock_font
-        font.bold: true
-    }
-    Text{
-        text:"9"
-        anchors{
-            horizontalCenter: clock.horizontalCenter
-            verticalCenter: clock.verticalCenter
-            horizontalCenterOffset: -105
-        }
-        font.pixelSize: 38
-        color: theme.secondary
-        font.family: root.clock_font
-        font.bold: true
-    }
 
-    //hider
-        Rectangle{
+        //text for time
+        Text {
+            text: "12"
+            anchors {
+                horizontalCenter: clock.horizontalCenter
+                verticalCenter: clock.verticalCenter
+                verticalCenterOffset: -95
+            }
+            font.pixelSize: 50
+            color: theme.error_container
+            font.family: root.clock_font
+            font.bold: true
+        }
+
+        Text {
+            text: "6"
+            anchors {
+                horizontalCenter: clock.horizontalCenter
+                verticalCenter: clock.verticalCenter
+                verticalCenterOffset: 95
+            }
+            font.pixelSize: 50
+            color: theme.on_tertiary_fixed
+            font.family: root.clock_font
+            font.bold: true
+        }
+        Text {
+            text: "3"
+            anchors {
+                horizontalCenter: clock.horizontalCenter
+                verticalCenter: clock.verticalCenter
+                horizontalCenterOffset: 105
+            }
+            font.pixelSize: 40
+            color: theme.secondary
+            font.family: root.clock_font
+            font.bold: true
+        }
+        Text {
+            text: "9"
+            anchors {
+                horizontalCenter: clock.horizontalCenter
+                verticalCenter: clock.verticalCenter
+                horizontalCenterOffset: -105
+            }
+            font.pixelSize: 40
+            color: theme.secondary
+            font.family: root.clock_font
+            font.bold: true
+        }
+
+        //hider
+        Rectangle {
             id: hider
             height: width
             width: 17
             radius: 8
             color: theme.primary
-            z:4
+            z: 4
             anchors.centerIn: clock
         }
-    //seconds_hand
-        Rectangle{
+        //seconds_hand
+        Rectangle {
             id: seconds
             height: 120
             width: 10
             radius: 5
-            z:3
+            z: 3
             //origin-transform
             transformOrigin: Item.Bottom
-            rotation: (root.date.getSeconds()+root.milli_s/1000)*6
+            rotation: (root.date.getSeconds() + root.milli_s / 1000) * 6
             anchors.verticalCenter: clock.verticalCenter
             anchors.horizontalCenter: clock.horizontalCenter
             anchors.verticalCenterOffset: -60
-            color: theme.primary 
+            color: theme.primary
         }
-    //minute_hand
-        Rectangle{
+        //minute_hand
+        Rectangle {
             id: minutes
             height: 90
             width: 10
             radius: 10
-            z:2
+            z: 2
             //origin-transform
             transformOrigin: Item.Bottom
-            rotation: (root.date.getMinutes()+root.date.getSeconds()/60)*6
+            rotation: (root.date.getMinutes() + root.date.getSeconds() / 60) * 6
             anchors.verticalCenter: clock.verticalCenter
             anchors.horizontalCenter: clock.horizontalCenter
             anchors.verticalCenterOffset: -45
@@ -277,25 +324,25 @@ Item{
             color: "transparent"
             border.width: 3
         }
-    //hour_hand
-        Rectangle{
+        //hour_hand
+        Rectangle {
             id: hours
             height: 65
             width: 10
             radius: 10
-            z:1
+            z: 1
             //origin-transform
-            rotation: (root.date.getHours()%12+root.date.getMinutes()/60)*30
+            rotation: (root.date.getHours() % 12 + root.date.getMinutes() / 60) * 30
             transformOrigin: Item.Bottom
             anchors.verticalCenter: clock.verticalCenter
             anchors.horizontalCenter: clock.horizontalCenter
-            anchors.verticalCenterOffset:-32.5
-            color: theme.on_primary_fixed 
+            anchors.verticalCenterOffset: -32.5
+            color: theme.on_primary_fixed
         }
     }
     ////////////////////---------------------------------------//////
     //---seprator-------
-    Rectangle{
+    Rectangle {
         anchors.centerIn: parent
         height: 250
         opacity: 0.05
@@ -305,92 +352,102 @@ Item{
         anchors.verticalCenterOffset: 15
     }
     ///////---mpris----
-    Item{
+    Item {
         id: mpris_root
-        width:player_rect.width
-        height:player_rect.height
+        width: player_rect.width
+        height: player_rect.height
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.horizontalCenterOffset: 180
-        visible: root.player ? true:false
-        RectangularShadow{anchors.fill:player_rect;spread:0;}
-        MouseArea{
+        anchors.horizontalCenterOffset: 210
+        visible: root.player ? true : false
+        RectangularShadow {
+            width: parent.width
+            height: parent.height
+            radius: player_rect.radius
+            spread: 2
+        }
+        MouseArea {
             anchors.fill: parent
             preventStealing: false
-            drag.axis:Drag.YAxis
+            drag.axis: Drag.YAxis
             property int n
 
-            onWheel: (wheel) => {
-                let maxIndex = root.players.length-1;
-                if (wheel.angleDelta.y<0) {n=Math.min(n+1,maxIndex)}
-                else if (wheel.angleDelta.y>0) {n=Math.max(n-1,0)}
-                if(root.player) root.player=root.players[n]
+            onWheel: wheel => {
+                let maxIndex = root.players.length - 1;
+                if (wheel.angleDelta.y < 0) {
+                    n = Math.min(n + 1, maxIndex);
+                } else if (wheel.angleDelta.y > 0) {
+                    n = Math.max(n - 1, 0);
+                }
+                if (root.player)
+                    root.player = root.players[n];
             }
-
         }
 
-        ParallelAnimation{
+        ParallelAnimation {
             id: player_rect_numb_anim
             running: root.open
-        NumberAnimation {
-            target: mpris_root
-            property:"anchors.verticalCenterOffset"
-            from: 50
-            to: -80
-            duration: 2000
-            easing.type: Easing.OutExpo
+            NumberAnimation {
+                target: mpris_root
+                property: "anchors.verticalCenterOffset"
+                from: 50
+                to: -80
+                duration: 2000
+                easing.type: Easing.OutExpo
+            }
+            NumberAnimation {
+                id: player_rect_numb_anim1
+                target: mpris_root
+                from: 0
+                to: 1
+                property: "opacity"
+                duration: 400
+                easing.type: Easing.InQuad
+            }
         }
-        NumberAnimation{
-            id: player_rect_numb_anim1
-            target: mpris_root
-            from:0
-            to:1
-            property:"opacity"
-            duration:400
-            easing.type: Easing.InQuad
-        }}
-    Rectangle{
-        id: player_rect
-        width: 300
-        height: 120
-        radius: 20
-        color: theme.primary
-        opacity: 0.5
-        border.color: theme.on_primary_container
-        border.width: 2
+        Rectangle {
+            id: player_rect
+            width: 350
+            height: 120
+            radius: 20
+            color: theme.primary
+            opacity: 0.5
+            border.color: theme.on_primary_container
+            border.width: 2
 
-        Column{
-            visible: root.players.length > 1
-            anchors.left: player_rect.right
-            leftPadding:6
-            anchors.verticalCenter: player_rect.verticalCenter
-            //anchors.verticalCenterOffset: -5
-            spacing: 6
-        Repeater{
-            model: root.players
-            delegate:Rectangle{
-                width: height
-                height: 10
-                radius: width/2
-                color: modelData === root.player ? theme.primary : theme.on_primary
-                MouseArea{
-                    id: mpris_repeater
-                    anchors.fill: parent
-                    onClicked: root.player = modelData
+            Column {
+                visible: root.players.length > 1
+                anchors.left: player_rect.right
+                leftPadding: 6
+                anchors.verticalCenter: player_rect.verticalCenter
+                //anchors.verticalCenterOffset: -5
+                spacing: 6
+                Repeater {
+                    model: root.players
+                    delegate: Rectangle {
+                        width: height
+                        height: 10
+                        radius: width / 2
+                        color: modelData === root.player ? theme.primary : theme.on_primary
+                        MouseArea {
+                            id: mpris_repeater
+                            anchors.fill: parent
+                            onClicked: root.player = modelData
+                        }
+                    }
                 }
             }
         }
-        }}
 
-        Row{
+        Row {
             id: mpris_
             visible: player_rect.visible
             anchors.fill: player_rect
             spacing: 10
             anchors.margins: 10
             clip: false
-            property bool cover_visible: trackart.source != "" ? true: false;
-            Rectangle{
+            property bool cover_visible: trackart.source != "" ? true : false
+            Rectangle {
                 visible: mpris_.cover_visible
                 height: 100
                 width: 100
@@ -398,238 +455,281 @@ Item{
                 border.color: theme.secondary
                 color: "transparent"
                 border.width: 4
-                RectangularShadow{anchors.fill:parent;spread:0;opacity:0.7}
-            Image{
-                id: trackart
-                visible:true
-                anchors.centerIn: parent
-                source: root.players ? root.player.trackArtUrl : null
-                sourceSize.width: width*1.5
-                sourceSize.height: height*1.5
-                //mipmap: true
-                height: 90
-                width: 90
-                cache: true
-                fillMode: Image.PreserveAspectCrop
-                MouseArea{
+                RectangularShadow {
                     anchors.fill: parent
-                    onClicked: root.player.raise()
+                    spread: 0
+                    opacity: 0.7
+                }
+                Image {
+                    id: trackart
+                    visible: true
+                    anchors.centerIn: parent
+                    source: root.players ? root.player.trackArtUrl : null
+                    sourceSize.width: width * 1.5
+                    sourceSize.height: height * 1.5
+                    //mipmap: true
+                    height: 90
+                    width: 90
+                    cache: true
+                    fillMode: Image.PreserveAspectCrop
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: root.player.raise()
+                    }
                 }
             }
-            }
-            Column{
-                spacing: mpris_.cover_visible ? 0 : (artist.text ? 2 : 6 )
-            Item{
-                id: title_limiter
-                width: mpris_.cover_visible ? 170 : 276
-                height: 25
-                clip: true
-            Text{
-              id: title
-              text: root.players ? root.player.trackTitle : ""
-              font.bold: true
-              font.pixelSize: 17
-              font.family: "Orbitron"
-              property int anim_time1: 3000
-              SequentialAnimation on x{
-                id: title_anim
-                running: title.contentWidth > title_limiter.width && root.open === true ? true : false
-                loops: Animation.Infinite
-                onRunningChanged:{
-                    title.x=0
-                    console.log("running changed")
+            Column {
+                spacing: mpris_.cover_visible ? 0 : (artist.text ? 2 : 6)
+                Item {
+                    id: title_limiter
+                    width: mpris_.cover_visible ? 220 : 326
+                    height: 25
+                    clip: true
+                    Text {
+                        id: title
+                        text: root.players ? root.player.trackTitle : ""
+                        font.bold: true
+                        font.pixelSize: 17
+                        font.family: "Orbitron"
+                        property int anim_time1: 3000
+                        SequentialAnimation on x {
+                            id: title_anim
+                            running: title.contentWidth > title_limiter.width && root.open === true ? true : false
+                            loops: Animation.Infinite
+                            onRunningChanged: {
+                                title.x = 0;
+                                console.log("running changed");
+                            }
+                            PropertyAction {
+                                target: title
+                                property: "x"
+                                value: 0
+                            }
+                            PauseAnimation {
+                                duration: title.anim_time1
+                            }
+                            NumberAnimation {
+                                from: 0
+                                to: -title.contentWidth + title_limiter.width
+                                duration: title.text.length * 100
+                            }
+                            PauseAnimation {
+                                duration: 2000
+                            }
+                        }
+                    }
                 }
-                PropertyAction{target: title; property:"x"; value:0}
-                PauseAnimation{duration:title.anim_time1 }
-                NumberAnimation{
-                from: 0
-                to: -title.contentWidth+title_limiter.width
-                duration: title.text.length * 100
+                Text {
+                    id: artist
+                    width: 160
+                    visible: artist.text !== "" ? true : false
+                    elide: Text.ElideRight
+                    text: root.players ? root.player.trackArtist : ""
+                    font.pixelSize: 12
+                    font.family: "Espacion"
                 }
-                PauseAnimation{duration: 2000 }
-              }
-            }}
-            Text{
-                id: artist
-                width: 160
-                visible: artist.text!=="" ? true: false
-                elide: Text.ElideRight
-                text: root.players ? root.player.trackArtist : ""
-                font.pixelSize: 12
-                font.family: "Espacion"
-            }
-            //dummy
-            Item{height: artist.visible? 8: 13;width: 1}
-            Seeker{
-                id: seekr
+                //dummy
+                Item {
+                    height: artist.visible ? 8 : 13
+                    width: 1
+                }
+                Seeker {
+                    id: seekr
 
-                Timer{
-                    id:seekr_timer
-                    running: root.player && root.player.isPlaying !== "" 
-                    interval: 1000
-                    repeat: true
-                    onTriggered: root.player.positionChanged() 
+                    Timer {
+                        id: seekr_timer
+                        running: root.player && root.player.isPlaying !== ""
+                        interval: 1000
+                        repeat: true
+                        onTriggered: root.player.positionChanged()
+                    }
+                    r_height: 6
+                    r_width: mpris_.cover_visible ? 220 : 326
+                    r_color: theme.secondary
+                    r1_color: theme.on_secondary
+                    r1_width: root.players ? (root.player.position) / (root.player.length) * r_width : 0
+                    seeker: 12
+                    r_radius: 10
+                    seeker_active: root.seeker_active
+                    MouseArea {
+                        property int offset: 5
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onHoveredChanged: root.seeker_active = !root.seeker_active
+                        onClicked: root.player.seek(offset)
+                    }
                 }
-                r_height: 6
-                r_width: mpris_.cover_visible ? 170: 276
-                r_color: theme.secondary
-                r1_color: theme.on_secondary
-                r1_width: root.players ? (root.player.position)/(root.player.length)*r_width : 0
-                seeker: 12
-                r_radius: 10
-                seeker_active: root.seeker_active
-                MouseArea{
-                    property int offset: 5
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onHoveredChanged: root.seeker_active = !root.seeker_active
-                    onClicked: root.player.seek(offset)
+                Row {
+                    spacing: mpris_.cover_visible ? 37 : 72
+                    readonly property real toggleheight: 0.65
+                    readonly property real togglewidth: 0.4
+                    readonly property int rad: 8
+                    PillBut {
+                        pillwidth: parent.togglewidth
+                        pillscale: parent.toggleheight
+                        label: "\udb81\udcae"
+                        pixelsize: 18
+                        font_family: "MONOSPACE"
+                        radius: parent.rad
+                        opacity: root.players ? (root.player.canGoPrevious ? 1.0 : 0.2) : 0
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: root.player.previous()
+                        }
+                    }
+                    PillBut {
+                        pillwidth: parent.togglewidth
+                        pillscale: parent.toggleheight
+                        label: root.players ? (root.player.isPlaying ? "\uf04c" : "\uf04b") : ""
+                        pixelsize: 16
+                        radius: parent.rad
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: root.player.togglePlaying()
+                        }
+                    }
+                    PillBut {
+                        pillwidth: parent.togglewidth
+                        pillscale: parent.toggleheight
+                        label: "\udb81\udcad"
+                        opacity: root.players ? (root.player.canGoNext ? 1.0 : 0.2) : 0
+                        pixelsize: 18
+                        font_family: "MONOSPACE"
+                        radius: parent.rad
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: root.player.next()
+                        }
+                    }
+                    PillBut {
+                        pillwidth: parent.togglewidth
+                        pillscale: parent.toggleheight
+                        label: "\uf074"
+                        opacity: root.players ? ((root.player.loopSupported || root.player.shuffleSupported) ? 1.0 : 0.2) : 0
+                        pixelsize: 18
+                        font_family: "MONOSPACE"
+                        radius: parent.rad
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: root.player.loopState
+                        }
+                    }
                 }
-            }
-            Row{
-                spacing: mpris_.cover_visible ? 20 : 55
-                readonly property real toggleheight: 0.6
-                readonly property real togglewidth: 0.4
-                readonly property int rad: 8
-            PillBut{
-                pillwidth: parent.togglewidth
-                pillscale: parent.toggleheight
-                label: "\udb81\udcae"
-                pixelsize: 18
-                font_family: "MONOSPACE"
-                radius: parent.rad
-                opacity: root.players ? (root.player.canGoPrevious ? 1.0: 0.2) : 0
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: root.player.previous()
-                }
-            }
-            PillBut{
-                pillwidth: parent.togglewidth
-                pillscale: parent.toggleheight
-                label: root.players ? (root.player.isPlaying?"\uf04c":"\uf04b") : ""
-                pixelsize: 16
-                radius: parent.rad
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: root.player.togglePlaying()
-                }
-            }
-            PillBut{
-                pillwidth: parent.togglewidth
-                pillscale: parent.toggleheight
-                label: "\udb81\udcad"
-                opacity: root.players ? (root.player.canGoNext ? 1.0 : 0.2) : 0
-                pixelsize: 18
-                font_family: "MONOSPACE"
-                radius: parent.rad
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: root.player.next()
-                }
-            } 
-            PillBut{
-                pillwidth: parent.togglewidth
-                pillscale: parent.toggleheight
-                label: "\uf074"
-                opacity: root.players ? ((root.player.loopSupported || root.player.shuffleSupported) ? 1.0 : 0.2): 0
-                pixelsize: 18
-                font_family: "MONOSPACE"
-                radius: parent.rad
-                
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: root.player.loopState
-                }
-            } 
-            }           
             }
         }
     }
 
     ///////////////////////
     //opacity_layerer
-    Rectangle{
-        id:notif_overlay
+    Rectangle {
+        id: notif_overlay
         clip: true
         visible: false //notif_shell.visible && P_data.historyModel.count>5
-        anchors.fill: notif_shell; radius: notif_shell.radius;z:2;
+        anchors.fill: notif_shell
+        radius: notif_shell.radius
+        z: 2
         //fill:center_gradient
         layer.enabled: true
-        NumberAnimation{
+        NumberAnimation {
             id: notif_overlay_opacity_anim
             target: notif_overlay
-            from:0.1
-            to:1
-            property:"opacity"
-            duration:500
+            from: 0.1
+            to: 1
+            property: "opacity"
+            duration: 500
             easing.type: Easing.InQuad
             running: root.open
         }
-        gradient: RadialGradient{
-            GradientStop { position: 0; color: "white" }
-            GradientStop { position: 0.05; color: "black" }
-            GradientStop { position: 0.95; color: "black" }
-            GradientStop { position: 1; color: "white" }
+        gradient: RadialGradient {
+            GradientStop {
+                position: 0
+                color: "white"
+            }
+            GradientStop {
+                position: 0.05
+                color: "black"
+            }
+            GradientStop {
+                position: 0.95
+                color: "black"
+            }
+            GradientStop {
+                position: 1
+                color: "white"
+            }
         }
-        }
-    
-    MultiEffect{
+    }
+
+    MultiEffect {
         source: notif_del
         maskEnabled: true
         maskSource: notif_overlay
         anchors.fill: notif_shell
     }
     ////
-    Rectangle{
-        RectangularShadow{anchors.fill:notif_shell;spread:0}
+    Rectangle {
         id: notif_shell
+        RectangularShadow {
+            anchors.fill: notif_shell
+            spread: 0
+        }
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.verticalCenter
-        width: 300
-        height: mpris_root.visible ? 180: 320
+        width: 350
+        height: mpris_root.visible ? 180 : 320
         radius: 20
         color: theme.primary
         transformOrigin: Item.Bottom
         visible: true//P_data.historyModel.count!=0
-        anchors.horizontalCenterOffset: 180
-       // anchors.bottomMargin: -165
-       Text{text:"No Notifications";anchors.centerIn:parent;visible:P_data.historyModel.count===0;color:"white";font.pixelSize:20;font.family:whispering}
-        Behavior on height{
-            NumberAnimation{duration: 600; easing.type: Easing.OutExpo}
+        anchors.horizontalCenterOffset: 210
+        // anchors.bottomMargin: -165
+        Text {
+            text: "No Notifications"
+            anchors.centerIn: parent
+            visible: P_data.historyModel.count === 0
+            color: "white"
+            font.pixelSize: 20
+            font.family: whispering
         }
-        ParallelAnimation{
+        Behavior on height {
+            NumberAnimation {
+                duration: 600
+                easing.type: Easing.OutExpo
+            }
+        }
+        ParallelAnimation {
             id: notif_shell_numb_anim
             running: root.open
-        NumberAnimation {
-            target: notif_shell
-            property:"anchors.bottomMargin"
-            from: -250
-            to: -170
-            duration: 2000
-            easing.type: Easing.OutExpo
+            NumberAnimation {
+                target: notif_shell
+                property: "anchors.bottomMargin"
+                from: -250
+                to: -170
+                duration: 2000
+                easing.type: Easing.OutExpo
+            }
+            NumberAnimation {
+                id: notif_shell_numb_anim1
+                target: notif_shell
+                from: 0
+                to: 0.1
+                property: "opacity"
+                duration: 900
+                easing.type: Easing.InQuad
+            }
         }
-        NumberAnimation{
-            id: notif_shell_numb_anim1
-            target: notif_shell
-            from:0
-            to:0.1
-            property:"opacity"
-            duration:900
-            easing.type: Easing.InQuad
-        }
-        }
-        }
+    }
 
-        Notifications{
-            id: notif_del
-            visible: true
-            opacity:0
-            height: notif_shell.height-10
-            width: notif_shell.width
-            anchors.horizontalCenter: notif_shell.horizontalCenter
-            anchors.verticalCenter: notif_shell.verticalCenter
-           /* NumberAnimation{
+    Notifications {
+        id: notif_del
+        visible: true
+        opacity: 0
+        height: notif_shell.height - 10
+        width: notif_shell.width
+        anchors.horizontalCenter: notif_shell.horizontalCenter
+        anchors.verticalCenter: notif_shell.verticalCenter
+        /* NumberAnimation{
             id: notifdel_anim1
             target: notif_del
             from:0.1
@@ -639,6 +739,5 @@ Item{
             easing.type: Easing.InQuad
             running: root.open
         }*/
-        }
-
+    }
 }

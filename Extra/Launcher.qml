@@ -5,11 +5,14 @@ import Quickshell.Widgets
 //import Qt.labs.platform
 import QtQuick.Layouts
 import QtQuick.Controls
-FloatingWindow{
+PanelWindow{
     id: menu_list
     implicitWidth: 600
     implicitHeight: 340 //menu_list_layout.implicitHeight//300
     color: "transparent"
+    focusable: true
+    aboveWindows: true
+    exclusionMode: ExclusionMode.Enum
 
     property var application: DesktopEntries.applications.values
     property var filtered: application

@@ -8,11 +8,12 @@ import "../"
 PanelWindow {
     id: root
     exclusionMode: ExclusionMode.Ignore
-
+    WlrLayershell.layer: WlrLayer.Top
+    //property Toplevel active: ToplevelManager.activeToplevel
+    //visible: !(active.fullscreen || active.maximized)
     // exclusiveZone: 0
     // Component.onCompleted: bar_loader.active = true
     property int radii: 20
-
     anchors {
         top: true
         bottom: true
@@ -30,22 +31,23 @@ PanelWindow {
         anchors.fill: parent
         color: theme.background
         visible: false
+        //  layer.enabled: true
     }
+
     MultiEffect {
         id: effector
-        anchors.fill: back
+        anchors.fill: parent
         source: back
         maskEnabled: true
         maskInverted: true
         maskSource: mashshape
     }
     MultiEffect {
-        anchors.fill: region//parent
+        anchors.fill: parent
         shadowEnabled: true
         source: effector
-        shadowScale: 1
-        shadowBlur: 1
     }
+
     Item {
         id: region
         anchors.fill: back
@@ -63,45 +65,45 @@ PanelWindow {
                }
              }
             */
-            layer.samples: 100
             clip: true
             opacity: 0.2
             ShapePath {
                 id: shpth
                 fillColor: "red"
+                strokeWidth: 0
                 property bool open: P_data.dash_open
-                property int dashwidth: 750
+                property int dashwidth: 850
                 property real dasheight: 530
                 property real coordinatewidth: dashwidth / 2
                 property real coordinateheight: open ? dasheight + 35 : 35
                 property real cornerradius: open ? 20 : 0
                 property real cornerradius2: open2 ? 20 : 0
                 property bool open2: P_data.bat_open
-                property int bat_pan_width: 300
-                property int bat_pan_height: 400
-                property real bat_coord_width: open2 ? coordinatewidth : 0
+                property int bat_pan_width: 390
+                property int bat_pan_height: 390
+                property real bat_coord_width: open2 ? bat_pan_width : 0
                 Behavior on bat_coord_width {
                     NumberAnimation {
-                        duration: 400
-                        easing.type: Easing.OutQuad
+                        duration: 600
+                        easing.type: Easing.OutExpo
                     }
                 }
                 Behavior on coordinateheight {
                     NumberAnimation {
-                        duration: 400
-                        easing.type: Easing.OutQuad
+                        duration: 600
+                        easing.type: Easing.OutExpo
                     }
                 }
                 Behavior on cornerradius {
                     NumberAnimation {
-                        duration: 400
-                        easing.type: Easing.Linear
+                        duration: 600
+                        easing.type: Easing.InOutExpo
                     }
                 }
                 Behavior on cornerradius2 {
                     NumberAnimation {
-                        duration: 400
-                        easing.type: Easing.Linear
+                        duration: 600
+                        easing.type: Easing.InOutExpo
                     }
                 }
                 startX: 800
@@ -179,7 +181,7 @@ PanelWindow {
                     relativeX: -20
                     relativeY: -15
                     radiusX: 20
-                    radiusY: -15
+                    radiusY: 15
                 }
                 PathLine {
                     x: 5
@@ -189,7 +191,7 @@ PanelWindow {
                     relativeX: 20
                     relativeY: -15
                     radiusX: 20
-                    radiusY: -15
+                    radiusY: 15
                 }
                 PathLine {
                     x: shpth.startX - shpth.coordinatewidth - shpth.cornerradius

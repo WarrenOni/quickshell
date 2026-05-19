@@ -3,7 +3,7 @@ import QtQuick
 import Qt.labs.folderlistmodel
 import Quickshell
 
-FloatingWindow {
+PanelWindow{
     id: wall
     implicitWidth: 1750
     implicitHeight: 800

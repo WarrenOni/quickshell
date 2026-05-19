@@ -2,9 +2,11 @@ import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
 import QtQuick
-//import QtQuick.Shapes
+import Quickshell.Wayland
+import QtQuick.Shapes
 import QtQuick.Effects
 import QtQuick.Layouts
+
 import "../"
 import "./Reusable/"
 
@@ -14,6 +16,7 @@ PanelWindow {
     // Corner{anchors.right: mainbar.right;anchors.top:mainbar.bottom;deg:90}
     ///////////
     id: bar
+    WlrLayershell.layer: WlrLayer.Top
     //-------vol
     property string whispering: P_data.whispering
     property int volume: P_data.volume
@@ -40,11 +43,9 @@ PanelWindow {
         Quickshell.execDetached(["wpctl", "set-volume", "-l", "1", "@DEFAULT_AUDIO_SINK@", "2%-"]);
     }
     implicitHeight: 35
-    exclusiveZone: 35
+    exclusiveZone: 30
     color: "transparent"
-    Rectangle{id:bar_fill;width:parent.width;height:bar.exclusiveZone;color:theme.background;visible:!P_data.wrapperlayout}
-    Loader{anchors.left: bar_fill.left;anchors.top:bar_fill.bottom;sourceComponent:Corners{}active:!P_data.wrapperlayout}
-    Loader{anchors.right:bar_fill.right;anchors.top:bar_fill.bottom;sourceComponent:Corners{rotation:90}active:!P_data.wrapperlayout}
+
     anchors {
         top: true
         left: true
@@ -62,13 +63,12 @@ PanelWindow {
         property bool open: false
         //asynchronous: true
         active: false
-        visible: open
+        visible: P_data.dash_open
         function dash_starter() {
             menu2.active = true;
-            menu2.open = !menu2.open;
+            P_data.dash_open = !P_data.dash_open;
         }
         sourceComponent: Extnded_clk {
-            open: menu2.visible
             bar_window: bar
             bar_height: bar.exclusiveZone
             bar_width: bar.width
@@ -108,33 +108,48 @@ PanelWindow {
         }
     }
     Item {
-        height: bar.exclusiveZone
-        width: parent.width
-        RowLayout {
-            anchors.fill: parent
+        anchors.fill: parent
+        Rectangle {
+            anchors.left: parent.left
             anchors.leftMargin: 15
-            spacing: 5
-
-            // 🔹 Workspaces
-            Repeater {
+            anchors.verticalCenter: parent.verticalCenter
+            color: theme.on_primary
+            width: workspaces.width + 10
+            height: 25
+            radius: 20
+            Row {
                 id: workspaces
-                model: Hyprland.workspaces
-
-                Rectangle {
-                    implicitHeight: 20
-                    implicitWidth: 20
-                    radius: 10
-                    color: modelData.active ? theme.primary : theme.on_primary
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: Hyprland.dispatch("workspace " + modelData.id)
+                anchors.centerIn: parent
+                spacing: 3
+                Repeater {
+                    anchors.centerIn: parent
+                    model: Hyprland.workspaces
+                    delegate: Rectangle {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: modelData.active ? 40 : 23
+                        border.width: 0.5
+                        border.color: theme.on_primary
+                        Behavior on width {
+                            NumberAnimation {
+                                duration: 250
+                                easing.type: Easing.Bezier
+                            }
+                        }
+                        Text {
+                            anchors.centerIn: parent
+                            anchors.verticalCenterOffset: 2
+                            text: ["", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"][modelData.id] || modelData.id
+                            visible: modelData.active
+                            font.family: "方正楷体简体"
+                            font.bold: true
+                            font.pixelSize: 15
+                            // renderType: Text.QtRendering
+                        }
+                        height: 18
+                        radius: 10
+                        color: modelData.active ? theme.secondary : theme.primary_container
                     }
                 }
-            }
-
-            Item {
-                Layout.fillWidth: true
             }
         }
         // 🔹 Clock
@@ -161,12 +176,10 @@ PanelWindow {
                 font.italic: true
                 font.bold: true
                 font.letterSpacing: 3
-                font.family: "Orbitron"
+                font.family: "Noto Serif Black"//"Orbitron"
                 text: P_data.current_time
             }
         }
-
-        
 
         Item {
             id: vol_hoverer
@@ -220,8 +233,13 @@ PanelWindow {
                 }
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: P_data.media_player_vis=!P_data.media_player_vis
-                    onWheel: wheel => {if(wheel.angleDelta.y < 0)bar.volume_up();if(wheel.angleDelta.y > 0)bar.volume_down();}
+                    onClicked: P_data.media_player_vis = !P_data.media_player_vis
+                    onWheel: wheel => {
+                        if (wheel.angleDelta.y < 0)
+                            bar.volume_up();
+                        if (wheel.angleDelta.y > 0)
+                            bar.volume_down();
+                    }
                 }
             }
             Rectangle {
@@ -248,76 +266,114 @@ PanelWindow {
             }
         }
 
-        Rectangle{
+        Rectangle {
             id: info_panel
             anchors.right: parent.right
-            anchors.rightMargin:15
-            anchors.verticalCenter:parent.verticalCenter
-            width: info_panel_row.width+7
-            height: parent.height-10
+            anchors.rightMargin: 15
+            anchors.verticalCenter: parent.verticalCenter
+            width: info_panel_row.width + 7
+            height: parent.height - 10
             color: theme.primary_container
             radius: 20
-            Row{
+            Row {
                 id: info_panel_row
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin: 3.5
                 spacing: 4
-                HoverPills{
-                    height: info_panel.height-4
-                    width: hovered ? 125:25
-                    Behavior on width{NumberAnimation{duration:300;easing.type:Easing.OutQuad}}
-                    icon: P_data.wifiData.connected ? P_data.wifiData.connected.icon: ""
+                HoverPills {
+                    height: info_panel.height - 4
+                    width: hovered ? 125 : 25
+                    Behavior on width {
+                        NumberAnimation {
+                            duration: 300
+                            easing.type: Easing.OutQuad
+                        }
+                    }
+                    icon: P_data.wifiData.connected ? P_data.wifiData.connected.icon : ""
                     text: P_data.wifiData.connected ? P_data.wifiData.connected.ssid : ""
                     textsize: 8
                     iconsize: 15
                     visible: P_data.wifiData.connected ? true : false
                 }
-                HoverPills{
+                HoverPills {
                     id: volume_control
-                    height: info_panel.height-4
-                    width: hovered ? 60:25
-                    Behavior on width{NumberAnimation{duration:300;easing.type:Easing.OutQuad}}
-                    icon: {
-                        if(volume===0||volumeMuted)return "\ueee8"
-                        if(volume<=33)return "\uf026"
-                        if(volume<=66)return "\uf027"
-                        if(volume<=100)return "\uf028"
+                    height: info_panel.height - 4
+                    width: hovered ? 60 : 25
+                    Behavior on width {
+                        NumberAnimation {
+                            duration: 300
+                            easing.type: Easing.OutQuad
                         }
+                    }
+                    icon: {
+                        if (volume === 0 || volumeMuted)
+                            return "\ueee8";
+                        if (volume <= 33)
+                            return "\uf026";
+                        if (volume <= 66)
+                            return "\uf027";
+                        if (volume <= 100)
+                            return "\uf028";
+                    }
                     font: "Pixelon"
                     text: volumeMuted ? "Mute" : volume + "%"
-                    MouseArea{
+                    MouseArea {
                         anchors.fill: parent
-                        onWheel: wheel => {if(wheel.angleDelta.y < 0)bar.volume_up();if(wheel.angleDelta.y > 0)bar.volume_down();}
+                        onWheel: wheel => {
+                            if (wheel.angleDelta.y < 0)
+                                bar.volume_up();
+                            if (wheel.angleDelta.y > 0)
+                                bar.volume_down();
+                        }
                         onClicked: Quickshell.execDetached(["wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"])
                     }
                 }
-                HoverPills{
+                HoverPills {
                     id: brightness_controll
-                    height: info_panel.height-4
+                    height: info_panel.height - 4
                     width: hovered ? 50 : 25
-                    Behavior on width{NumberAnimation{duration:300;easing.type:Easing.OutQuad}}
-                    iconsize:14
+                    Behavior on width {
+                        NumberAnimation {
+                            duration: 300
+                            easing.type: Easing.OutQuad
+                        }
+                    }
+                    iconsize: 14
                     icon: "\uf522"
                     font: "Pixelon"
                 }
-                HoverPills{
-                    height: info_panel.height-4
-                    width: hovered ? 55: 25
-                    Behavior on width{NumberAnimation{duration:300;easing.type:Easing.OutQuad}}
-                    iconsize:16
-                    property int percent: P_data.power.displayDevice.percentage*100;
-                    icon: {if (percent<=15) return "\uf244"
-                            else if (percent<=30) return "\uf243"
-                            else if (percent<=50) return "\uf242"
-                            else if (percent<=75) return "\uf241"
-                            else if (percent<=100) return "\uf240"
-                            }
+                HoverPills {
+                    height: info_panel.height - 4
+                    width: hovered ? 55 : 25
+                    Behavior on width {
+                        NumberAnimation {
+                            duration: 300
+                            easing.type: Easing.OutQuad
+                        }
+                    }
+                    iconsize: 16
+                    property int percent: P_data.power.displayDevice.percentage * 100
+                    icon: {
+                        if (percent <= 15)
+                            return "\uf244";
+                        else if (percent <= 30)
+                            return "\uf243";
+                        else if (percent <= 50)
+                            return "\uf242";
+                        else if (percent <= 75)
+                            return "\uf241";
+                        else if (percent <= 100)
+                            return "\uf240";
+                    }
                     font: "Pixelon"
-                    text: percent+"%"
-                    MouseArea{
+                    text: percent + "%"
+                    MouseArea {
                         anchors.fill: parent
-                        onClicked:{bat_menu.active=true;P_data.bat_open=!P_data.bat_open}
+                        onClicked: {
+                            bat_menu.active = true;
+                            P_data.bat_open = !P_data.bat_open;
+                        }
                     }
                 }
             }
@@ -337,8 +393,13 @@ PanelWindow {
             implicitWidth: 28.5 * tray.count
             implicitHeight: 25
             opacity: bar.systemTray.items.count != 0 ? 1 : 0
-            visible: opacity !=0
-            Behavior on anchors.rightMargin{NumberAnimation{duration:200;easing.type:Easing.OutExpo}}
+            visible: opacity != 0
+            Behavior on anchors.rightMargin {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.OutExpo
+                }
+            }
             Behavior on implicitWidth {
                 NumberAnimation {
                     duration: 600
@@ -385,21 +446,23 @@ PanelWindow {
                             height: 14
                             radius: 20
                             color: "transparent"
-                            NumberAnimation on opacity{from:0;to:1;duration:300}
-                            RectangularShadow{
-                            anchors.fill: parent
-                            spread:0
+                            NumberAnimation on opacity {
+                                from: 0
+                                to: 1
+                                duration: 300
+                            }
+                            RectangularShadow {
+                                anchors.fill: parent
+                                spread: 0
                             }
                             Image {
                                 anchors.fill: parent
                                 source: modelData.icon
-                                antialiasing:true
-                                mipmap:true
+                                antialiasing: true
+                                mipmap: true
                                 fillMode: Image.PreserveAspectFit
                             }
-                           
                         }
-                        
                     }
                 }
             }
