@@ -25,6 +25,7 @@ PanelWindow {
         item: effector
         intersection: Intersection.Subtract
     }
+    //asf
     Rectangle {
         id: back
         //z:0
